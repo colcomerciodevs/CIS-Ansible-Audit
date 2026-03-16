@@ -1,8 +1,8 @@
 ---
 - name: Auditoría de controles (Oracle/RHEL 8-9) con reporte Excel
   hosts: OCI
-  gather_facts: yes
-  become: yes
+  gather_facts: true
+  become: true
   vars_files:
     - group_vars/all/audit_controls.yml
 
@@ -31,9 +31,9 @@
       failed_when: false
 
 
-#Si el control define pass_if_regex, solo se marca “Cumple” cuando hay match en stdout.
-#Si no define pass_if_regex, se usa el rc == 0 como criterio de éxito.
-#Si algún fail_if_regex hace match, el control falla aunque lo demás diga que pasa.
+# Si el control define pass_if_regex, solo se marca “Cumple” cuando hay match en stdout.
+# Si no define pass_if_regex, se usa el rc == 0 como criterio de éxito.
+# Si algún fail_if_regex hace match, el control falla aunque lo demás diga que pasa.
     - name: Evaluar resultados por control
       vars:
         pairs: "{{ audit_controls | zip(exec_batch.results | default([])) | list }}"

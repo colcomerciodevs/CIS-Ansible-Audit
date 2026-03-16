@@ -1,0 +1,25 @@
+skip_list:
+  - schema
+  - role-name
+  - risky-shell-pipe
+  - experimental
+  - var-naming[no-role-prefix]
+  - var-spacing
+  - name[play]
+  - name[casing]
+  - name[template]
+  - key-order[task]
+
+  # Aquí empiezan las etiquetas de yamllint:
+  - trailing-spaces
+  - empty-lines
+  - line-length
+  - indentation
+  - new-line-at-end-of-file
+  - braces
+  - truthy
+
+exclude_paths:
+  - roles/cis_security/files/
+  - roles/cis_security/handlers/
+  - roles/cis_security/vars/
