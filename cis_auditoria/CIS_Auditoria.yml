@@ -1,6 +1,6 @@
 ---
 - name: Auditoría CIS Benchmark (Oracle Linux / RHEL 8-9)
-  hosts: OCI
+  hosts: PRUEBA
   gather_facts: true
   become: true
 
