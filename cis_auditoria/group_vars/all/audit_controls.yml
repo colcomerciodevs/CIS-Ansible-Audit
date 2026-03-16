@@ -422,59 +422,111 @@ audit_controls:
   # Sección 1.7 - Banners de advertencia
   ######################################################################
 
+    ######################################################################
+  # Sección 1.7 - Banners de advertencia
+  ######################################################################
+
   - id: CIS-1.7.1
     name: "/etc/motd presente con contenido"
     os_scope:
       - RHEL
       - OL
-    command: "test -s /etc/motd"
-    pass_if_regex: []
-    fail_if_regex: []
+    command: >
+      bash -lc 'if [ -s /etc/motd ]; then
+        echo "exists_and_not_empty";
+      else
+        echo "missing_or_empty";
+        exit 1;
+      fi'
+    pass_if_regex:
+      - '^exists_and_not_empty$'
+    fail_if_regex:
+      - '^missing_or_empty$'
 
   - id: CIS-1.7.2
     name: "/etc/issue presente con contenido"
     os_scope:
       - RHEL
       - OL
-    command: "test -s /etc/issue"
-    pass_if_regex: []
-    fail_if_regex: []
+    command: >
+      bash -lc 'if [ -s /etc/issue ]; then
+        echo "exists_and_not_empty";
+      else
+        echo "missing_or_empty";
+        exit 1;
+      fi'
+    pass_if_regex:
+      - '^exists_and_not_empty$'
+    fail_if_regex:
+      - '^missing_or_empty$'
 
   - id: CIS-1.7.3
     name: "/etc/issue.net presente con contenido"
     os_scope:
       - RHEL
       - OL
-    command: "test -s /etc/issue.net"
-    pass_if_regex: []
-    fail_if_regex: []
+    command: >
+      bash -lc 'if [ -s /etc/issue.net ]; then
+        echo "exists_and_not_empty";
+      else
+        echo "missing_or_empty";
+        exit 1;
+      fi'
+    pass_if_regex:
+      - '^exists_and_not_empty$'
+    fail_if_regex:
+      - '^missing_or_empty$'
 
   - id: CIS-1.7.4
-    name: "/etc/motd existe (stat)"
+    name: "/etc/motd existe"
     os_scope:
       - RHEL
       - OL
-    command: "stat /etc/motd"
-    pass_if_regex: []
-    fail_if_regex: []
+    command: >
+      bash -lc 'if [ -e /etc/motd ]; then
+        echo "exists";
+      else
+        echo "missing";
+        exit 1;
+      fi'
+    pass_if_regex:
+      - '^exists$'
+    fail_if_regex:
+      - '^missing$'
 
   - id: CIS-1.7.5
-    name: "/etc/issue existe (stat)"
+    name: "/etc/issue existe"
     os_scope:
       - RHEL
       - OL
-    command: "stat /etc/issue"
-    pass_if_regex: []
-    fail_if_regex: []
+    command: >
+      bash -lc 'if [ -e /etc/issue ]; then
+        echo "exists";
+      else
+        echo "missing";
+        exit 1;
+      fi'
+    pass_if_regex:
+      - '^exists$'
+    fail_if_regex:
+      - '^missing$'
 
   - id: CIS-1.7.6
-    name: "/etc/issue.net existe (stat)"
+    name: "/etc/issue.net existe"
     os_scope:
       - RHEL
       - OL
-    command: "stat /etc/issue.net"
-    pass_if_regex: []
-    fail_if_regex: []
+    command: >
+      bash -lc 'if [ -e /etc/issue.net ]; then
+        echo "exists";
+      else
+        echo "missing";
+        exit 1;
+      fi'
+    pass_if_regex:
+      - '^exists$'
+    fail_if_regex:
+      - '^missing$'
 
   ######################################################################
   # Sección 2.1 - Servicios de propósito especial
@@ -843,9 +895,13 @@ audit_controls:
     command: >
       bash -lc 'ca=$(sysctl -n net.ipv4.conf.all.send_redirects 2>/dev/null || echo);
                 cd=$(sysctl -n net.ipv4.conf.default.send_redirects 2>/dev/null || echo);
-                if [[ "$ca" == "0" && "$cd" == "0" ]]; then exit 0; fi;
-                grep -RqsE "^\s*net\.ipv4\.conf\.(all|default)\.send_redirects\s*=\s*0\b" /etc/sysctl.conf /etc/sysctl.d && exit 0;
-                exit 1'
+                if [[ "$ca" == "0" && "$cd" == "0" ]]; then
+                  echo "all=0 default=0"; exit 0;
+                fi;
+                if grep -RqsE "^\s*net\.ipv4\.conf\.(all|default)\.send_redirects\s*=\s*0\b" /etc/sysctl.conf /etc/sysctl.d; then
+                  echo "persisted=0"; exit 0;
+                fi;
+                echo "all=$ca default=$cd"; exit 1'
     pass_if_regex: []
     fail_if_regex: []
 
@@ -856,9 +912,13 @@ audit_controls:
       - OL
     command: >
       bash -lc 'v=$(sysctl -n net.ipv4.ip_forward 2>/dev/null || echo);
-                if [[ "$v" == "0" ]]; then exit 0; fi;
-                grep -RqsE "^\s*net\.ipv4\.ip_forward\s*=\s*0\b" /etc/sysctl.conf /etc/sysctl.d && exit 0;
-                exit 1'
+                if [[ "$v" == "0" ]]; then
+                  echo "ip_forward=0"; exit 0;
+                fi;
+                if grep -RqsE "^\s*net\.ipv4\.ip_forward\s*=\s*0\b" /etc/sysctl.conf /etc/sysctl.d; then
+                  echo "persisted=0"; exit 0;
+                fi;
+                echo "ip_forward=$v"; exit 1'
     pass_if_regex: []
     fail_if_regex: []
 
@@ -874,9 +934,13 @@ audit_controls:
     command: >
       bash -lc 'a=$(sysctl -n net.ipv4.conf.all.accept_source_route 2>/dev/null || echo);
                 d=$(sysctl -n net.ipv4.conf.default.accept_source_route 2>/dev/null || echo);
-                if [[ "$a" == "0" && "$d" == "0" ]]; then exit 0; fi;
-                grep -RqsE "^\s*net\.ipv4\.conf\.(all|default)\.accept_source_route\s*=\s*0\b" /etc/sysctl.conf /etc/sysctl.d && exit 0;
-                exit 1'
+                if [[ "$a" == "0" && "$d" == "0" ]]; then
+                  echo "all=0 default=0"; exit 0;
+                fi;
+                if grep -RqsE "^\s*net\.ipv4\.conf\.(all|default)\.accept_source_route\s*=\s*0\b" /etc/sysctl.conf /etc/sysctl.d; then
+                  echo "persisted=0"; exit 0;
+                fi;
+                echo "all=$a default=$d"; exit 1'
     pass_if_regex: []
     fail_if_regex: []
 
@@ -888,9 +952,13 @@ audit_controls:
     command: >
       bash -lc 'a=$(sysctl -n net.ipv4.conf.all.accept_redirects 2>/dev/null || echo);
                 d=$(sysctl -n net.ipv4.conf.default.accept_redirects 2>/dev/null || echo);
-                if [[ "$a" == "0" && "$d" == "0" ]]; then exit 0; fi;
-                grep -RqsE "^\s*net\.ipv4\.conf\.(all|default)\.accept_redirects\s*=\s*0\b" /etc/sysctl.conf /etc/sysctl.d && exit 0;
-                exit 1'
+                if [[ "$a" == "0" && "$d" == "0" ]]; then
+                  echo "all=0 default=0"; exit 0;
+                fi;
+                if grep -RqsE "^\s*net\.ipv4\.conf\.(all|default)\.accept_redirects\s*=\s*0\b" /etc/sysctl.conf /etc/sysctl.d; then
+                  echo "persisted=0"; exit 0;
+                fi;
+                echo "all=$a default=$d"; exit 1'
     pass_if_regex: []
     fail_if_regex: []
 
@@ -902,9 +970,13 @@ audit_controls:
     command: >
       bash -lc 'a=$(sysctl -n net.ipv4.conf.all.secure_redirects 2>/dev/null || echo);
                 d=$(sysctl -n net.ipv4.conf.default.secure_redirects 2>/dev/null || echo);
-                if [[ "$a" == "0" && "$d" == "0" ]]; then exit 0; fi;
-                grep -RqsE "^\s*net\.ipv4\.conf\.(all|default)\.secure_redirects\s*=\s*0\b" /etc/sysctl.conf /etc/sysctl.d && exit 0;
-                exit 1'
+                if [[ "$a" == "0" && "$d" == "0" ]]; then
+                  echo "all=0 default=0"; exit 0;
+                fi;
+                if grep -RqsE "^\s*net\.ipv4\.conf\.(all|default)\.secure_redirects\s*=\s*0\b" /etc/sysctl.conf /etc/sysctl.d; then
+                  echo "persisted=0"; exit 0;
+                fi;
+                echo "all=$a default=$d"; exit 1'
     pass_if_regex: []
     fail_if_regex: []
 
@@ -916,9 +988,13 @@ audit_controls:
     command: >
       bash -lc 'a=$(sysctl -n net.ipv4.conf.all.log_martians 2>/dev/null || echo);
                 d=$(sysctl -n net.ipv4.conf.default.log_martians 2>/dev/null || echo);
-                if [[ "$a" == "1" && "$d" == "1" ]]; then exit 0; fi;
-                grep -RqsE "^\s*net\.ipv4\.conf\.(all|default)\.log_martians\s*=\s*1\b" /etc/sysctl.conf /etc/sysctl.d && exit 0;
-                exit 1'
+                if [[ "$a" == "1" && "$d" == "1" ]]; then
+                  echo "all=1 default=1"; exit 0;
+                fi;
+                if grep -RqsE "^\s*net\.ipv4\.conf\.(all|default)\.log_martians\s*=\s*1\b" /etc/sysctl.conf /etc/sysctl.d; then
+                  echo "persisted=1"; exit 0;
+                fi;
+                echo "all=$a default=$d"; exit 1'
     pass_if_regex: []
     fail_if_regex: []
 
@@ -929,9 +1005,13 @@ audit_controls:
       - OL
     command: >
       bash -lc 'v=$(sysctl -n net.ipv4.icmp_echo_ignore_broadcasts 2>/dev/null || echo);
-                if [[ "$v" == "1" ]]; then exit 0; fi;
-                grep -RqsE "^\s*net\.ipv4\.icmp_echo_ignore_broadcasts\s*=\s*1\b" /etc/sysctl.conf /etc/sysctl.d && exit 0;
-                exit 1'
+                if [[ "$v" == "1" ]]; then
+                  echo "icmp_echo_ignore_broadcasts=1"; exit 0;
+                fi;
+                if grep -RqsE "^\s*net\.ipv4\.icmp_echo_ignore_broadcasts\s*=\s*1\b" /etc/sysctl.conf /etc/sysctl.d; then
+                  echo "persisted=1"; exit 0;
+                fi;
+                echo "icmp_echo_ignore_broadcasts=$v"; exit 1'
     pass_if_regex: []
     fail_if_regex: []
 
@@ -942,9 +1022,13 @@ audit_controls:
       - OL
     command: >
       bash -lc 'v=$(sysctl -n net.ipv4.icmp_ignore_bogus_error_responses 2>/dev/null || echo);
-                if [[ "$v" == "1" ]]; then exit 0; fi;
-                grep -RqsE "^\s*net\.ipv4\.icmp_ignore_bogus_error_responses\s*=\s*1\b" /etc/sysctl.conf /etc/sysctl.d && exit 0;
-                exit 1'
+                if [[ "$v" == "1" ]]; then
+                  echo "icmp_ignore_bogus_error_responses=1"; exit 0;
+                fi;
+                if grep -RqsE "^\s*net\.ipv4\.icmp_ignore_bogus_error_responses\s*=\s*1\b" /etc/sysctl.conf /etc/sysctl.d; then
+                  echo "persisted=1"; exit 0;
+                fi;
+                echo "icmp_ignore_bogus_error_responses=$v"; exit 1'
     pass_if_regex: []
     fail_if_regex: []
 
@@ -956,9 +1040,13 @@ audit_controls:
     command: >
       bash -lc 'a=$(sysctl -n net.ipv4.conf.all.rp_filter 2>/dev/null || echo);
                 d=$(sysctl -n net.ipv4.conf.default.rp_filter 2>/dev/null || echo);
-                if [[ "$a" =~ ^[12]$ && "$d" =~ ^[12]$ ]]; then exit 0; fi;
-                grep -RqsE "^\s*net\.ipv4\.conf\.(all|default)\.rp_filter\s*=\s*[12]\b" /etc/sysctl.conf /etc/sysctl.d && exit 0;
-                exit 1'
+                if [[ "$a" =~ ^[12]$ && "$d" =~ ^[12]$ ]]; then
+                  echo "all=$a default=$d"; exit 0;
+                fi;
+                if grep -RqsE "^\s*net\.ipv4\.conf\.(all|default)\.rp_filter\s*=\s*[12]\b" /etc/sysctl.conf /etc/sysctl.d; then
+                  echo "persisted=[1|2]"; exit 0;
+                fi;
+                echo "all=$a default=$d"; exit 1'
     pass_if_regex: []
     fail_if_regex: []
 
@@ -969,9 +1057,13 @@ audit_controls:
       - OL
     command: >
       bash -lc 'v=$(sysctl -n net.ipv4.tcp_syncookies 2>/dev/null || echo);
-                if [[ "$v" == "1" ]]; then exit 0; fi;
-                grep -RqsE "^\s*net\.ipv4\.tcp_syncookies\s*=\s*1\b" /etc/sysctl.conf /etc/sysctl.d && exit 0;
-                exit 1'
+                if [[ "$v" == "1" ]]; then
+                  echo "tcp_syncookies=1"; exit 0;
+                fi;
+                if grep -RqsE "^\s*net\.ipv4\.tcp_syncookies\s*=\s*1\b" /etc/sysctl.conf /etc/sysctl.d; then
+                  echo "persisted=1"; exit 0;
+                fi;
+                echo "tcp_syncookies=$v"; exit 1'
     pass_if_regex: []
     fail_if_regex: []
 
@@ -981,15 +1073,16 @@ audit_controls:
       - RHEL
       - OL
     command: >
-      bash -lc 'ok=0;
-        ca=$(sysctl -n net.ipv6.conf.all.accept_ra 2>/dev/null || echo);
-        cd=$(sysctl -n net.ipv6.conf.default.accept_ra 2>/dev/null || echo);
-        if [[ "$ca" == "0" && "$cd" == "0" ]]; then echo "accept_ra disabled"; exit 0; fi;
-        if grep -RqsE "^\s*net\.ipv6\.conf\.(all|default)\.accept_ra\s*=\s*0" /etc/sysctl.conf /etc/sysctl.d 2>/dev/null; then
-          echo "accept_ra disabled"; exit 0; fi;
-        echo "accept_ra not disabled"; exit 1'
-    pass_if_regex:
-      - "^accept_ra disabled$"
+      bash -lc 'ca=$(sysctl -n net.ipv6.conf.all.accept_ra 2>/dev/null || echo);
+                cd=$(sysctl -n net.ipv6.conf.default.accept_ra 2>/dev/null || echo);
+                if [[ "$ca" == "0" && "$cd" == "0" ]]; then
+                  echo "all=0 default=0"; exit 0;
+                fi;
+                if grep -RqsE "^\s*net\.ipv6\.conf\.(all|default)\.accept_ra\s*=\s*0\b" /etc/sysctl.conf /etc/sysctl.d 2>/dev/null; then
+                  echo "persisted=0"; exit 0;
+                fi;
+                echo "all=$ca default=$cd"; exit 1'
+    pass_if_regex: []
     fail_if_regex: []
 
   ######################################################################
@@ -1075,19 +1168,34 @@ audit_controls:
     os_scope:
       - RHEL
       - OL
-    command: "systemctl is-enabled crond"
-    pass_if_regex: []
-    fail_if_regex: []
+    command: >
+      bash -lc 'v=$(systemctl is-enabled crond 2>/dev/null || true);
+      if [ -n "$v" ]; then
+        echo "crond=$v";
+        [[ "$v" =~ ^(enabled|static|generated|alias)$ ]] && exit 0 || exit 1;
+      else
+        echo "crond=unknown";
+        exit 1;
+      fi'
+    pass_if_regex:
+      - '^crond=enabled$'
+      - '^crond=static$'
+      - '^crond=generated$'
+      - '^crond=alias$'
+    fail_if_regex:
+      - '^crond=unknown$'
+      - '^crond=disabled$'
+      - '^crond=masked$'
 
   - id: CIS-5.1.2
     name: "Permisos de /etc/crontab (600/640 root:root)"
     os_scope:
       - RHEL
       - OL
-    command: "stat -c '%a %U %G' /etc/crontab"
+    command: "stat -c 'mode=%a owner=%U group=%G file=%n' /etc/crontab"
     pass_if_regex:
-      - '^600 root root$'
-      - '^640 root root$'
+      - '^mode=600 owner=root group=root file=/etc/crontab$'
+      - '^mode=640 owner=root group=root file=/etc/crontab$'
     fail_if_regex: []
 
   - id: CIS-5.1.3
@@ -1095,9 +1203,9 @@ audit_controls:
     os_scope:
       - RHEL
       - OL
-    command: "stat -c '%a %U %G' /etc/cron.hourly"
+    command: "stat -c 'mode=%a owner=%U group=%G file=%n' /etc/cron.hourly"
     pass_if_regex:
-      - '^700 root root$'
+      - '^mode=700 owner=root group=root file=/etc/cron.hourly$'
     fail_if_regex: []
 
   - id: CIS-5.1.4
@@ -1105,9 +1213,9 @@ audit_controls:
     os_scope:
       - RHEL
       - OL
-    command: "stat -c '%a %U %G' /etc/cron.daily"
+    command: "stat -c 'mode=%a owner=%U group=%G file=%n' /etc/cron.daily"
     pass_if_regex:
-      - '^700 root root$'
+      - '^mode=700 owner=root group=root file=/etc/cron.daily$'
     fail_if_regex: []
 
   - id: CIS-5.1.5
@@ -1115,9 +1223,9 @@ audit_controls:
     os_scope:
       - RHEL
       - OL
-    command: "stat -c '%a %U %G' /etc/cron.weekly"
+    command: "stat -c 'mode=%a owner=%U group=%G file=%n' /etc/cron.weekly"
     pass_if_regex:
-      - '^700 root root$'
+      - '^mode=700 owner=root group=root file=/etc/cron.weekly$'
     fail_if_regex: []
 
   - id: CIS-5.1.6
@@ -1125,9 +1233,9 @@ audit_controls:
     os_scope:
       - RHEL
       - OL
-    command: "stat -c '%a %U %G' /etc/cron.monthly"
+    command: "stat -c 'mode=%a owner=%U group=%G file=%n' /etc/cron.monthly"
     pass_if_regex:
-      - '^700 root root$'
+      - '^mode=700 owner=root group=root file=/etc/cron.monthly$'
     fail_if_regex: []
 
   - id: CIS-5.1.7
@@ -1135,9 +1243,9 @@ audit_controls:
     os_scope:
       - RHEL
       - OL
-    command: "stat -c '%a %U %G' /etc/cron.d"
+    command: "stat -c 'mode=%a owner=%U group=%G file=%n' /etc/cron.d"
     pass_if_regex:
-      - '^700 root root$'
+      - '^mode=700 owner=root group=root file=/etc/cron.d$'
     fail_if_regex: []
 
   - id: CIS-5.1.8
@@ -1145,24 +1253,33 @@ audit_controls:
     os_scope:
       - RHEL
       - OL
-    command: "stat -c '%a %U %G' /etc/cron.allow; [ ! -e /etc/cron.deny ] && echo deny_absent || echo deny_present"
+    command: >
+      bash -lc 'perm=$(stat -c "mode=%a owner=%U group=%G file=%n" /etc/cron.allow 2>/dev/null || echo "cron.allow_missing");
+      deny=$([ ! -e /etc/cron.deny ] && echo "cron.deny=absent" || echo "cron.deny=present");
+      echo "$perm | $deny";
+      [[ "$perm" == "mode=600 owner=root group=root file=/etc/cron.allow" && "$deny" == "cron.deny=absent" ]]'
     pass_if_regex:
-      - '^600 root root$'
-      - '^deny_absent$'
+      - '^mode=600 owner=root group=root file=/etc/cron.allow \| cron\.deny=absent$'
     fail_if_regex:
-      - '^deny_present$'
+      - 'cron\.deny=present'
+      - '^cron\.allow_missing'
 
   - id: CIS-5.1.9
     name: "at restringido (/etc/at.allow con 600 root:root y sin at.deny)"
     os_scope:
       - RHEL
       - OL
-    command: "stat -c '%a %U %G' /etc/at.allow; [ ! -e /etc/at.deny ] && echo deny_absent || echo deny_present"
+    command: >
+      bash -lc 'perm=$(stat -c "mode=%a owner=%U group=%G file=%n" /etc/at.allow 2>/dev/null || echo "at.allow_missing");
+      deny=$([ ! -e /etc/at.deny ] && echo "at.deny=absent" || echo "at.deny=present");
+      echo "$perm | $deny";
+      [[ "$perm" == "mode=600 owner=root group=root file=/etc/at.allow" && "$deny" == "at.deny=absent" ]]'
     pass_if_regex:
-      - '^600 root root$'
-      - '^deny_absent$'
+      - '^mode=600 owner=root group=root file=/etc/at.allow \| at\.deny=absent$'
     fail_if_regex:
-      - '^deny_present$'
+      - 'at\.deny=present'
+      - '^at\.allow_missing'
+
 
   ######################################################################
   # Sección 5.2 - Configurar SUDO
@@ -1206,17 +1323,31 @@ audit_controls:
       - OL
     command: >
       bash -lc '
-        out=$(grep -RIP "^[[:space:]]*[^#].*NOPASSWD" /etc/sudoers /etc/sudoers.d 2>/dev/null || true);
-        echo "$out" |
-          awk -F"[[:space:]]+" '"'"'{u=$1; n=split(u,a,","); ex=0;
-            for(i=1;i<=n;i++){ if (a[i] ~ /^({{ excluded_users_regex }})$/) ex=1 }
-            if(!ex) print }'"'"' |
-          grep -q . &&
-          { echo found; exit 1; } || { echo none; exit 0; }'
+      allowed="root admin tux proactiva iacolcoauto ansible_test halt shutdown sync nfsnobody oracle postgres pos alktstwms alktstems";
+
+      hits=$(grep -RIP "^[[:space:]]*[^#].*NOPASSWD" /etc/sudoers /etc/sudoers.d 2>/dev/null || true);
+
+      bad=$(echo "$hits" | while read line; do
+        user=$(echo "$line" | awk "{print \$1}")
+        skip=0
+        for a in $allowed; do
+          [ "$user" = "$a" ] && skip=1
+        done
+        [ $skip -eq 0 ] && echo "$line"
+      done)
+
+      if [ -n "$bad" ]; then
+        echo "$bad"
+        exit 1
+      else
+        echo "none"
+        exit 0
+      fi
+      '
     pass_if_regex:
       - '^none$'
     fail_if_regex:
-      - '^found$'
+      - 'NOPASSWD'
 
   - id: CIS-5.2.5
     name: "Prohibir !authenticate en sudoers"
@@ -1519,11 +1650,16 @@ audit_controls:
       - OL
     command: >
       awk '/^[[:space:]]*PASS_MAX_DAYS[[:space:]]+/ {v=$2}
-          END{ if(v!="" && v<=365) {print "ok"} else {print "bad"; exit 1} }' /etc/login.defs
+          END{
+            if(v!="" && v<=365) {
+              print "PASS_MAX_DAYS=" v; exit 0
+            } else {
+              print "PASS_MAX_DAYS=" (v=="" ? "undefined" : v); exit 1
+            }
+          }' /etc/login.defs
     pass_if_regex:
-      - "^ok$"
-    fail_if_regex:
-      - "^bad$"
+      - '^PASS_MAX_DAYS=([0-9]|[1-9][0-9]|[12][0-9][0-9]|3[0-5][0-9]|360|361|362|363|364|365)$'
+    fail_if_regex: []
 
   - id: CIS-5.5.2
     name: "PASS_MIN_DAYS >= 1"
@@ -1532,11 +1668,16 @@ audit_controls:
       - OL
     command: >
       awk '/^[[:space:]]*PASS_MIN_DAYS[[:space:]]+/ {v=$2}
-          END{ if(v!="" && v>=1) {print "ok"} else {print "bad"; exit 1} }' /etc/login.defs
+          END{
+            if(v!="" && v>=1) {
+              print "PASS_MIN_DAYS=" v; exit 0
+            } else {
+              print "PASS_MIN_DAYS=" (v=="" ? "undefined" : v); exit 1
+            }
+          }' /etc/login.defs
     pass_if_regex:
-      - "^ok$"
-    fail_if_regex:
-      - "^bad$"
+      - '^PASS_MIN_DAYS=([1-9][0-9]*)$'
+    fail_if_regex: []
 
   - id: CIS-5.5.3
     name: "PASS_WARN_AGE >= 7"
@@ -1545,11 +1686,16 @@ audit_controls:
       - OL
     command: >
       awk '/^[[:space:]]*PASS_WARN_AGE[[:space:]]+/ {v=$2}
-          END{ if(v!="" && v>=7) {print "ok"} else {print "bad"; exit 1} }' /etc/login.defs
+          END{
+            if(v!="" && v>=7) {
+              print "PASS_WARN_AGE=" v; exit 0
+            } else {
+              print "PASS_WARN_AGE=" (v=="" ? "undefined" : v); exit 1
+            }
+          }' /etc/login.defs
     pass_if_regex:
-      - "^ok$"
-    fail_if_regex:
-      - "^bad$"
+      - '^PASS_WARN_AGE=([7-9]|[1-9][0-9]+)$'
+    fail_if_regex: []
 
   - id: CIS-5.5.4
     name: "INACTIVE <= 30 (>=0)"
@@ -1558,11 +1704,16 @@ audit_controls:
       - OL
     command: >
       sh -lc 'i=$(useradd -D | awk -F= "/^INACTIVE=/{print \$2}");
-              if [ -n "$i" ] && [ "$i" -le 30 ] && [ "$i" -ge 0 ]; then echo ok; else echo bad; exit 1; fi'
+              if [ -n "$i" ] && [ "$i" -le 30 ] && [ "$i" -ge 0 ]; then
+                echo "INACTIVE=$i";
+                exit 0;
+              else
+                echo "INACTIVE=${i:-undefined}";
+                exit 1;
+              fi'
     pass_if_regex:
-      - "^ok$"
-    fail_if_regex:
-      - "^bad$"
+      - '^INACTIVE=([0-9]|[12][0-9]|30)$'
+    fail_if_regex: []
 
   - id: CIS-5.5.5
     name: "Sin cambios de contraseña fechados en el futuro"
@@ -1582,22 +1733,22 @@ audit_controls:
           ts=$(date -d "$d" +%s 2>/dev/null) || ts=0
           now=$(date +%s)
           if [ "$ts" -gt "$now" ]; then
-            echo "future:$u"
+            echo "future:$u:$d"
             bad=1
           fi
         done
 
         if [ "$bad" -eq 0 ]; then
-          echo ok
+          echo "No future password dates found"
           exit 0
         else
           exit 1
         fi
       '
     pass_if_regex:
-      - "^ok$"
+      - '^No future password dates found$'
     fail_if_regex:
-      - "^future"
+      - '^future:'
 
   - id: CIS-5.5.6
     name: "Cuentas del sistema sin shell de login (UID < UID_MIN)"
@@ -1615,13 +1766,18 @@ audit_controls:
         (\$3<m && \$1!~ex){
           if (\$7 !~ re) { print \"bad:\" \$1 \":\" \$7; bad=1 }
         }
-        END{ if(bad==0) print \"ok\"; exit bad }
+        END{
+          if(bad==0) {
+            print \"All system accounts use nologin/false\"
+          }
+          exit bad
+        }
         " /etc/passwd
       '
     pass_if_regex:
-      - "^ok$"
+      - '^All system accounts use nologin/false$'
     fail_if_regex:
-      - "^bad:"
+      - '^bad:'
 
   - id: CIS-5.5.7
     name: "root pertenece a GID 0"
@@ -1638,9 +1794,18 @@ audit_controls:
       - RHEL
       - OL
     command: >
-      sh -c "grep -E '^\s*umask\s+(027|077)\b' /etc/bashrc /etc/profile /etc/profile.d/* ~/.bashrc ~/.profile 2>/dev/null | grep -q ."
-    pass_if_regex: []
-    fail_if_regex: []
+      bash -lc 'line=$(grep -E "^\s*umask\s+(027|077)\b" /etc/bashrc /etc/profile /etc/profile.d/* ~/.bashrc ~/.profile 2>/dev/null | head -1);
+                if [ -n "$line" ]; then
+                  echo "$line";
+                  exit 0;
+                else
+                  echo "umask_not_set";
+                  exit 1;
+                fi'
+    pass_if_regex:
+      - 'umask (027|077)'
+    fail_if_regex:
+      - '^umask_not_set$'
 
   - id: CIS-5.5.9
     name: "TMOUT configurado (presencia)"
@@ -1648,9 +1813,18 @@ audit_controls:
       - RHEL
       - OL
     command: >
-      sh -c "grep -E '^\s*TMOUT=\s*[0-9]+' /etc/bashrc /etc/profile 2>/dev/null | grep -q ."
-    pass_if_regex: []
-    fail_if_regex: []
+      bash -lc 'line=$(grep -E "^\s*TMOUT=\s*[0-9]+" /etc/bashrc /etc/profile 2>/dev/null | head -1);
+                if [ -n "$line" ]; then
+                  echo "$line";
+                  exit 0;
+                else
+                  echo "tmout_not_set";
+                  exit 1;
+                fi'
+    pass_if_regex:
+      - '^TMOUT='
+    fail_if_regex:
+      - '^tmout_not_set$'
 
   - id: CIS-5.5.10
     name: "Restricción de 'su' al grupo wheel (PAM)"
