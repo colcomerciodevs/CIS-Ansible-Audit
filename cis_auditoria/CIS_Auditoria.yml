@@ -1,0 +1,114 @@
+---
+- name: Auditoría de controles (Oracle/RHEL 8-9) con reporte Excel
+  hosts: OCI
+  gather_facts: yes
+  become: yes
+  vars_files:
+    - group_vars/all/audit_controls.yml
+
+  tasks:
+
+    - name: Inicializar resultados (control_results)
+      set_fact:
+        control_results: []
+
+    - name: Obtener IP del host para el nombre del archivo
+      set_fact:
+        audit_host_ip: >-
+          {{ hostvars[inventory_hostname].ansible_host
+             | default(ansible_facts.default_ipv4.address
+             | default(ansible_facts.all_ipv4_addresses | first | default(inventory_hostname))) }}
+
+    - name: Ejecutar comandos de validación por control
+      ansible.builtin.shell: "{{ item.command }}"
+      args:
+        executable: /bin/bash
+      loop: "{{ audit_controls }}"
+      loop_control:
+        label: "{{ item.id }}: {{ item.name }}"
+      register: exec_batch
+      changed_when: false
+      failed_when: false
+
+
+#Si el control define pass_if_regex, solo se marca “Cumple” cuando hay match en stdout.
+#Si no define pass_if_regex, se usa el rc == 0 como criterio de éxito.
+#Si algún fail_if_regex hace match, el control falla aunque lo demás diga que pasa.
+    - name: Evaluar resultados por control
+      vars:
+        pairs: "{{ audit_controls | zip(exec_batch.results | default([])) | list }}"
+      set_fact:
+        control_results: >-
+          {{ (control_results | default([])) + [ {
+            'id':      (item.0.id      | default('')),
+            'name':    (item.0.name    | default('')),
+            'command': (item.0.command | default('')),
+            'rc':      (item.1.rc      | default(1)),
+            'stdout':  (item.1.stdout  | default('')),
+            'stderr':  (item.1.stderr  | default('')),
+            'passed':
+              (
+                (
+                  (item.0.pass_if_regex | default([]) | length) > 0
+                  and (
+                    (item.1.stdout | default(''))
+                      is search('(?m)(?:' ~ (item.0.pass_if_regex | join(')|(?:')) ~ ')',
+                                ignorecase=False, multiline=True)
+                  )
+                )
+                or
+                (
+                  (item.0.pass_if_regex | default([]) | length) == 0
+                  and ((item.1.rc | default(1)) == 0)
+                )
+              )
+              and not (
+                (item.0.fail_if_regex | default([]) | length) > 0
+                and (
+                  (item.1.stdout | default(''))
+                    is search('(?m)(?:' ~ (item.0.fail_if_regex | join(')|(?:')) ~ ')',
+                              ignorecase=False, multiline=True)
+                )
+              )
+          }] }}
+      loop: "{{ pairs }}"
+      loop_control:
+        label: "{{ item.0.id }}"
+
+
+    - debug:
+        var: control_results
+
+    # Opción A: no tocamos el script; enviamos tal cual los campos que espera
+    - name: Preparar datos para el reporte (usar esquema del script)
+      set_fact:
+        audit_results: "{{ control_results }}"
+
+    - name: Crear carpeta local para el reporte
+      ansible.builtin.file:
+        path: "./_audit_reports"
+        state: directory
+        mode: "0755"
+      delegate_to: localhost
+      run_once: false
+
+    - name: Escribir JSON con resultados en el controlador
+      ansible.builtin.copy:
+        content: "{{ {'host': inventory_hostname, 'ip': audit_host_ip, 'results': audit_results} | to_nice_json }}"
+        dest: "./_audit_reports/{{ inventory_hostname }}.json"
+        mode: "0644"
+      delegate_to: localhost
+      run_once: false
+
+    - name: Generar Excel por host (usa openpyxl en localhost)
+      ansible.builtin.command: >
+        {{ ansible_playbook_python }} ./scripts/write_excel_report.py
+        --input ./_audit_reports/{{ inventory_hostname }}.json
+        --output ./_audit_reports/Audit_{{ audit_host_ip }}.xlsx
+      delegate_to: localhost
+      run_once: false
+      changed_when: false
+
+    - name: Mostrar ruta del reporte
+      ansible.builtin.debug:
+        msg: "Reporte: ./_audit_reports/Audit_{{ audit_host_ip }}.xlsx"

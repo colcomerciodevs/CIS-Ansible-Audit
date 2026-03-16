@@ -1,0 +1,19 @@
+---
+- hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Probar contra 'install /bin/true ' (con espacio final)
+      debug:
+        msg: "{{ 'install /bin/true ' is search('(?m)install\\s+/bin/(true|false)\\s*$') }}"
+
+    - name: Probar contra 'install /bin/false'
+      debug:
+        msg: "{{ 'install /bin/false' is search('(?m)install\\s+/bin/(true|false)\\s*$') }}"
+
+    - name: Probar texto multi-línea como en udf
+      vars:
+        sample: |
+          insmod /lib/modules/foo.ko.xz
+          install /bin/true 
+      debug:
+        msg: "{{ sample is search('(?m)install\\s+/bin/(true|false)\\s*$') }}"

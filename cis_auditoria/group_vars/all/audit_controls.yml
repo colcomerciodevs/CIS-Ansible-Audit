@@ -1,0 +1,1387 @@
+# Lista de controles a auditar.
+# Complete/ajuste la lista con sus comandos EXACTOS según su columna "Oracle / RHEL 8-9".
+# Para cada control:
+# - id: código corto
+# - name: descripción del control
+# - os_scope: 'RHEL', 'OL', 'SLES', 'ANY' (para filtrar si desea con 'when')
+# - command: comando de validación
+# - pass_if_regex: (opcional) lista de regex que DEBEN aparecer en stdout/stderr para considerar CUMPLE
+# - fail_if_regex: (opcional) lista de regex que NO deben aparecer (si aparecen => NO CUMPLE)
+#
+# Ejemplos incluidos; reemplace/añada los suyos.
+audit_controls:
+
+  ######################################################################
+  # Sección 1.1 - Configuración del Sistema de Archivos
+  ######################################################################
+
+  - id: CIS-1.1.1
+    name: "Deshabilitar cramfs"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: >
+      bash -lc '
+        if modprobe -n -v cramfs 2>/dev/null | grep -Eq "^\s*install\s+/bin/(false|true)\b"; then echo blocked; exit 0; fi
+        if lsmod | awk "{print \$1}" | grep -qx cramfs; then echo loaded; exit 1; fi
+        if modinfo -n cramfs >/dev/null 2>&1; then echo available; exit 1; else echo absent; exit 0; fi'
+    pass_if_regex: ["^blocked$","^absent$"]
+    fail_if_regex:  ["^loaded$","^available$"]
+
+  - id: CIS-1.1.2
+    name: "Deshabilitar squashfs"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: >
+      bash -lc '
+        if modprobe -n -v squashfs 2>/dev/null | grep -Eq "^\s*install\s+/bin/(false|true)\b"; then echo blocked; exit 0; fi
+        if lsmod | awk "{print \$1}" | grep -qx squashfs; then echo loaded; exit 1; fi
+        if modinfo -n squashfs >/dev/null 2>&1; then echo available; exit 1; else echo absent; exit 0; fi'
+    pass_if_regex: ["^blocked$","^absent$"]
+    fail_if_regex:  ["^loaded$","^available$"]
+
+  - id: CIS-1.1.3
+    name: "Deshabilitar udf"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: >
+      bash -lc '
+        if modprobe -n -v udf 2>/dev/null | grep -Eq "^\s*install\s+/bin/(false|true)\b"; then echo blocked; exit 0; fi
+        if lsmod | awk "{print \$1}" | grep -qx udf; then echo loaded; exit 1; fi
+        if modinfo -n udf >/dev/null 2>&1; then echo available; exit 1; else echo absent; exit 0; fi'
+    pass_if_regex: ["^blocked$","^absent$"]
+    fail_if_regex:  ["^loaded$","^available$"]
+
+
+  - id: CIS-1.1.4
+    name: "No permitir vfat en /etc/fstab (si no se requiere)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "grep -Ei '\\svfat\\s' /etc/fstab >/dev/null 2>&1 && echo present || echo absent"
+    pass_if_regex: ['^absent$']
+    fail_if_regex: ['^present$']
+
+  - id: CIS-1.1.5
+    name: "/tmp en partición separada (montado)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "findmnt --kernel /tmp"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.6
+    name: "/tmp con nodev"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "findmnt -no OPTIONS /tmp | tr ',' '\\n' | grep -Fx nodev"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.7
+    name: "/tmp con nosuid"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "findmnt -no OPTIONS /tmp | tr ',' '\\n' | grep -Fx nosuid"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.8
+    name: "/tmp con noexec"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "findmnt -no OPTIONS /tmp | tr ',' '\\n' | grep -Fx noexec"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.9
+    name: "/dev/shm montado"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "findmnt --kernel /dev/shm"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.10
+    name: "/dev/shm con nodev"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "findmnt -no OPTIONS /dev/shm | tr ',' '\\n' | grep -Fx nodev"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.11
+    name: "/dev/shm con nosuid"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "findmnt -no OPTIONS /dev/shm | tr ',' '\\n' | grep -Fx nosuid"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.12
+    name: "/dev/shm con noexec"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "findmnt -no OPTIONS /dev/shm | tr ',' '\\n' | grep -Fx noexec"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.13
+    name: "/var en partición separada (montado)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "findmnt --kernel /var"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.14
+    name: "/var con nodev"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "findmnt -no OPTIONS /var | tr ',' '\\n' | grep -Fx nodev"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.15
+    name: "/var con nosuid"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "findmnt -no OPTIONS /var | tr ',' '\\n' | grep -Fx nosuid"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.16
+    name: "/var con noexec (no aplicable en RHEL/OL)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "bash -lc 'echo not_applicable'"
+    pass_if_regex: ['^not_applicable$']
+    fail_if_regex: []
+
+  - id: CIS-1.1.17
+    name: "/var/tmp en partición separada (montado)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "findmnt --kernel /var/tmp"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.18
+    name: "/var/tmp con nodev"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "findmnt -no OPTIONS /var/tmp | tr ',' '\\n' | grep -Fx nodev"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.19
+    name: "/var/tmp con nosuid"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "findmnt -no OPTIONS /var/tmp | tr ',' '\\n' | grep -Fx nosuid"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.20
+    name: "/var/tmp con noexec"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "findmnt -no OPTIONS /var/tmp | tr ',' '\\n' | grep -Fx noexec"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.21
+    name: "/var/log en partición separada (montado)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "findmnt --kernel /var/log"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.22
+    name: "/var/log con nodev"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "findmnt -no OPTIONS /var/log | tr ',' '\\n' | grep -Fx nodev"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.23
+    name: "/var/log con nosuid"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "findmnt -no OPTIONS /var/log | tr ',' '\\n' | grep -Fx nosuid"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.24
+    name: "/var/log con noexec"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "findmnt -no OPTIONS /var/log | tr ',' '\\n' | grep -Fx noexec"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.25
+    name: "/var/log/audit en partición separada (montado)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "findmnt --kernel /var/log/audit"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.26
+    name: "/var/log/audit con nodev"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "findmnt -no OPTIONS /var/log/audit | tr ',' '\\n' | grep -Fx nodev"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.27
+    name: "/var/log/audit con nosuid"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "findmnt -no OPTIONS /var/log/audit | tr ',' '\\n' | grep -Fx nosuid"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.28
+    name: "/var/log/audit con noexec"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "findmnt -no OPTIONS /var/log/audit | tr ',' '\\n' | grep -Fx noexec"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.29
+    name: "/home en partición separada (montado)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "findmnt --kernel /home"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.30
+    name: "/home con nodev"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "findmnt -no OPTIONS /home | tr ',' '\\n' | grep -Fx nodev"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.31
+    name: "/home con nosuid"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "findmnt -no OPTIONS /home | tr ',' '\\n' | grep -Fx nosuid"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.32
+    name: "Control 1.1.32 (no aplicable según CIS)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "bash -lc 'echo not_applicable'"
+    pass_if_regex: ['^not_applicable$']
+    fail_if_regex: []
+
+  - id: CIS-1.1.33
+    name: "Control 1.1.33 (no aplicable según CIS)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "bash -lc 'echo not_applicable'"
+    pass_if_regex: ['^not_applicable$']
+    fail_if_regex: []
+
+  - id: CIS-1.1.34
+    name: "Control 1.1.34 (no aplicable según CIS)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "bash -lc 'echo not_applicable'"
+    pass_if_regex: ['^not_applicable$']
+    fail_if_regex: []
+
+  - id: CIS-1.1.35
+    name: "Cuotas de usuario activas en /home (usrquota)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "findmnt -no OPTIONS /home | tr ',' '\\n' | grep -Fx usrquota"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.36
+    name: "Cuotas de grupo activas en /home (grpquota)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "findmnt -no OPTIONS /home | tr ',' '\\n' | grep -Fx grpquota"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.37
+    name: "Sin directorios world-writable sin sticky bit"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "sh -c \"if df --local -P | awk 'NR!=1 {print $6}' | xargs -I '{}' find '{}' -xdev -type d -perm -0002 ! -perm -1000 2>/dev/null | grep -q .; then exit 1; fi\""
+    pass_if_regex: []
+    fail_if_regex: []
+
+  
+  - id: "CIS-1.1.38"
+    name: "autofs deshabilitado/enmascarado"
+    os_scope: "RHEL/OL"
+    command: >
+      bash -lc 'if systemctl list-unit-files --type=service | awk "{print \$1}" | grep -qx autofs.service; then
+        systemctl is-enabled autofs || true;
+      else
+        echo not-installed;
+      fi'
+    pass_if_regex: ["^disabled$", "^masked$", "^not-installed$"]
+    fail_if_regex: []
+
+  - id: "CIS-1.1.39"
+    name: "usb-storage no cargado"
+    os_scope: "RHEL/OL"
+    command: >
+      bash -lc 'if lsmod | awk "{print \$1}" | grep -qx usb_storage; then echo loaded; exit 1; else echo not-loaded; fi'
+    pass_if_regex: ["^not-loaded$"]
+    fail_if_regex: ["^loaded$"]
+
+  ######################################################################
+  # Sección 1.7 - Banners de advertencia
+  ######################################################################
+
+  - id: CIS-1.7.1
+    name: "/etc/motd presente con contenido"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "test -s /etc/motd"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.7.2
+    name: "/etc/issue presente con contenido"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "test -s /etc/issue"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.7.3
+    name: "/etc/issue.net presente con contenido"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "test -s /etc/issue.net"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.7.4
+    name: "/etc/motd existe (stat)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "stat /etc/motd"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.7.5
+    name: "/etc/issue existe (stat)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "stat /etc/issue"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.7.6
+    name: "/etc/issue.net existe (stat)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "stat /etc/issue.net"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  ######################################################################
+  # Sección 2.1 - Servicios de propósito especial
+  ######################################################################
+
+  - id: CIS-2.1.1
+    name: "chrony instalado"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "rpm -q chrony"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-2.1.2
+    name: "ntp/ntpdate no instalados (se usa chrony)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "rpm -q ntp ntpdate >/dev/null 2>&1 && echo present || echo absent"
+    pass_if_regex: ['^absent$']
+    fail_if_regex: ['^present$']
+
+  - id: CIS-2.1.3
+    name: "chrony configurado (server/pool presentes)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "grep -E '^(server|pool)\\s+\\S+' /etc/chrony.conf"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-2.1.4
+    name: "xinetd no instalado"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "rpm -q xinetd >/dev/null 2>&1 && echo present || echo absent"
+    pass_if_regex: ['^absent$']
+    fail_if_regex: ['^present$']
+
+  - id: CIS-2.1.5
+    name: "Xorg (servidor gráfico) no instalado en servidores"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "rpm -q xorg-x11-server-common >/dev/null 2>&1 && echo present || echo absent"
+    pass_if_regex: ['^absent$']
+    fail_if_regex: ['^present$']
+
+  - id: CIS-2.1.6
+    name: "Avahi no instalado"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "rpm -q avahi-autoipd avahi >/dev/null 2>&1 && echo present || echo absent"
+    pass_if_regex: ['^absent$']
+    fail_if_regex: ['^present$']
+
+  - id: CIS-2.1.7
+    name: "CUPS no instalado (servidor de impresión)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "rpm -q cups >/dev/null 2>&1 && echo present || echo absent"
+    pass_if_regex: ['^absent$']
+    fail_if_regex: ['^present$']
+
+  - id: CIS-2.1.8
+    name: "DHCP server no instalado"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "rpm -q dhcp-server >/dev/null 2>&1 && echo present || echo absent"
+    pass_if_regex: ['^absent$']
+    fail_if_regex: ['^present$']
+
+  - id: CIS-2.1.9
+    name: "OpenLDAP servers (no aplicable/omitido según notas)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "bash -lc 'echo not_applicable'"
+    pass_if_regex: ['^not_applicable$']
+    fail_if_regex: []
+
+  - id: CIS-2.1.10
+    name: "NFS server deshabilitado/enmascarado (si instalado)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "systemctl is-enabled nfs-server 2>/dev/null || echo disabled"
+    pass_if_regex: ['^disabled$','^masked$']
+    fail_if_regex: []
+
+  - id: CIS-2.1.11
+    name: "BIND (DNS) no instalado"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "rpm -q bind >/dev/null 2>&1 && echo present || echo absent"
+    pass_if_regex: ['^absent$']
+    fail_if_regex: ['^present$']
+
+  - id: CIS-2.1.12
+    name: "FTP no instalado (paquete ftp)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "rpm -q ftp >/dev/null 2>&1 && echo present || echo absent"
+    pass_if_regex: ['^absent$']
+    fail_if_regex: ['^present$']
+
+  - id: CIS-2.1.13
+    name: "vsftpd no instalado"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "rpm -q vsftpd >/dev/null 2>&1 && echo present || echo absent"
+    pass_if_regex: ['^absent$']
+    fail_if_regex: ['^present$']
+
+  - id: CIS-2.1.14
+    name: "tftp-server no instalado"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "rpm -q tftp-server >/dev/null 2>&1 && echo present || echo absent"
+    pass_if_regex: ['^absent$']
+    fail_if_regex: ['^present$']
+
+  - id: CIS-2.1.15
+    name: "Servidores web no instalados (httpd/nginx)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "rpm -q httpd nginx >/dev/null 2>&1 && echo present || echo absent"
+    pass_if_regex: ['^absent$']
+    fail_if_regex: ['^present$']
+
+  - id: CIS-2.1.16
+    name: "IMAP/POP no instalados (dovecot/cyrus-imapd)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "rpm -q dovecot cyrus-imapd >/dev/null 2>&1 && echo present || echo absent"
+    pass_if_regex: ['^absent$']
+    fail_if_regex: ['^present$']
+
+  - id: CIS-2.1.17
+    name: "Samba no instalado"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "rpm -q samba >/dev/null 2>&1 && echo present || echo absent"
+    pass_if_regex: ['^absent$']
+    fail_if_regex: ['^present$']
+
+  - id: CIS-2.1.18
+    name: "Squid no instalado"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "rpm -q squid >/dev/null 2>&1 && echo present || echo absent"
+    pass_if_regex: ['^absent$']
+    fail_if_regex: ['^present$']
+
+  - id: CIS-2.1.19
+    name: "SNMP no instalado (net-snmp)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "rpm -q net-snmp >/dev/null 2>&1 && echo present || echo absent"
+    pass_if_regex: ['^absent$']
+    fail_if_regex: ['^present$']
+
+  - id: CIS-2.1.20
+    name: "SMTP no expuesto (solo loopback)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "sh -c \"if ss -H -lntu | awk '\\$5 ~ /:25$/' | grep -E -v '(^127\\.0\\.0\\.1:25$|^\\[::1\\]:25$)' | grep -q .; then echo open; else echo closed; fi\""
+    pass_if_regex: ['^closed$']
+    fail_if_regex: ['^open$']
+
+  - id: CIS-2.1.21
+    name: "telnet-server no instalado"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "rpm -q telnet-server >/dev/null 2>&1 && echo present || echo absent"
+    pass_if_regex: ['^absent$']
+    fail_if_regex: ['^present$']
+
+  - id: CIS-2.1.22
+    name: "rsync no instalado (servidor)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "rpm -q rsync >/dev/null 2>&1 && echo present || echo absent"
+    pass_if_regex: ['^absent$']
+    fail_if_regex: ['^present$']
+
+  - id: CIS-2.1.23
+    name: "NIS server (ypserv) no instalado"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "rpm -q ypserv >/dev/null 2>&1 && echo present || echo absent"
+    pass_if_regex: ['^absent$']
+    fail_if_regex: ['^present$']
+
+  ######################################################################
+  # Sección 2.2 - Clientes de Servicios
+  ######################################################################
+
+  - id: CIS-2.2.1
+    name: "NIS client (ypbind) no instalado"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "rpm -q ypbind >/dev/null 2>&1 && echo present || echo absent"
+    pass_if_regex: ['^absent$']
+    fail_if_regex: ['^present$']
+
+  - id: CIS-2.2.2
+    name: "rsh cliente no instalado"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "rpm -q rsh >/dev/null 2>&1 && echo present || echo absent"
+    pass_if_regex: ['^absent$']
+    fail_if_regex: ['^present$']
+
+  - id: CIS-2.2.3
+    name: "talk cliente no instalado"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "rpm -q talk >/dev/null 2>&1 && echo present || echo absent"
+    pass_if_regex: ['^absent$']
+    fail_if_regex: ['^present$']
+
+  - id: CIS-2.2.4
+    name: "telnet cliente no instalado"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "rpm -q telnet >/dev/null 2>&1 && echo present || echo absent"
+    pass_if_regex: ['^absent$']
+    fail_if_regex: ['^present$']
+
+  - id: CIS-2.2.5
+    name: "OpenLDAP clients no instalados"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "rpm -q openldap-clients >/dev/null 2>&1 && echo present || echo absent"
+    pass_if_regex: ['^absent$']
+    fail_if_regex: ['^present$']
+
+  - id: CIS-2.2.6
+    name: "tftp cliente no instalado"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "rpm -q tftp >/dev/null 2>&1 && echo present || echo absent"
+    pass_if_regex: ['^absent$']
+    fail_if_regex: ['^present$']
+
+  - id: CIS-2.2.7
+    name: "rpcbind no instalado (cliente)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "rpm -q rpcbind >/dev/null 2>&1 && echo present || echo absent"
+    pass_if_regex: ['^absent$']
+    fail_if_regex: ['^present$']
+
+  ######################################################################
+  # Sección 3.1 - Deshabilitar dispositivos/protocolos de red no usados
+  ######################################################################
+
+  - id: CIS-3.1.1
+    name: "Deshabilitar IPv6 (parámetros presentes en sysctl)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "grep -E 'net\\.ipv6\\.conf\\.(all|default)\\.disable_ipv6' /etc/sysctl.conf /etc/sysctl.d/*"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-3.1.2
+    name: "WiFi deshabilitado (nmcli radio wifi disabled)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "nmcli radio wifi | grep -ix disabled"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  ######################################################################
+  # Sección 3.2 - Parámetros de Red (Host Only)
+  ######################################################################
+
+  - id: CIS-3.2.1
+    name: "send_redirects deshabilitado (all/default)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: >
+      bash -lc 'ca=$(sysctl -n net.ipv4.conf.all.send_redirects 2>/dev/null || echo);
+                cd=$(sysctl -n net.ipv4.conf.default.send_redirects 2>/dev/null || echo);
+                if [[ "$ca" == "0" && "$cd" == "0" ]]; then exit 0; fi;
+                grep -RqsE "^\s*net\.ipv4\.conf\.(all|default)\.send_redirects\s*=\s*0\b" /etc/sysctl.conf /etc/sysctl.d && exit 0;
+                exit 1'
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-3.2.2
+    name: "ip_forward deshabilitado"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: >
+      bash -lc 'v=$(sysctl -n net.ipv4.ip_forward 2>/dev/null || echo);
+                if [[ "$v" == "0" ]]; then exit 0; fi;
+                grep -RqsE "^\s*net\.ipv4\.ip_forward\s*=\s*0\b" /etc/sysctl.conf /etc/sysctl.d && exit 0;
+                exit 1'
+    pass_if_regex: []
+    fail_if_regex: []
+
+  ######################################################################
+  # Sección 3.3 - Parámetros de Red (Host & Router)
+  ######################################################################
+
+  - id: CIS-3.3.1
+    name: "accept_source_route deshabilitado (all/default)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: >
+      bash -lc 'a=$(sysctl -n net.ipv4.conf.all.accept_source_route 2>/dev/null || echo);
+                d=$(sysctl -n net.ipv4.conf.default.accept_source_route 2>/dev/null || echo);
+                if [[ "$a" == "0" && "$d" == "0" ]]; then exit 0; fi;
+                grep -RqsE "^\s*net\.ipv4\.conf\.(all|default)\.accept_source_route\s*=\s*0\b" /etc/sysctl.conf /etc/sysctl.d && exit 0;
+                exit 1'
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-3.3.2
+    name: "accept_redirects deshabilitado (all/default)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: >
+      bash -lc 'a=$(sysctl -n net.ipv4.conf.all.accept_redirects 2>/dev/null || echo);
+                d=$(sysctl -n net.ipv4.conf.default.accept_redirects 2>/dev/null || echo);
+                if [[ "$a" == "0" && "$d" == "0" ]]; then exit 0; fi;
+                grep -RqsE "^\s*net\.ipv4\.conf\.(all|default)\.accept_redirects\s*=\s*0\b" /etc/sysctl.conf /etc/sysctl.d && exit 0;
+                exit 1'
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-3.3.3
+    name: "secure_redirects deshabilitado (all/default)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: >
+      bash -lc 'a=$(sysctl -n net.ipv4.conf.all.secure_redirects 2>/dev/null || echo);
+                d=$(sysctl -n net.ipv4.conf.default.secure_redirects 2>/dev/null || echo);
+                if [[ "$a" == "0" && "$d" == "0" ]]; then exit 0; fi;
+                grep -RqsE "^\s*net\.ipv4\.conf\.(all|default)\.secure_redirects\s*=\s*0\b" /etc/sysctl.conf /etc/sysctl.d && exit 0;
+                exit 1'
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-3.3.4
+    name: "log_martians habilitado (all/default)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: >
+      bash -lc 'a=$(sysctl -n net.ipv4.conf.all.log_martians 2>/dev/null || echo);
+                d=$(sysctl -n net.ipv4.conf.default.log_martians 2>/dev/null || echo);
+                if [[ "$a" == "1" && "$d" == "1" ]]; then exit 0; fi;
+                grep -RqsE "^\s*net\.ipv4\.conf\.(all|default)\.log_martians\s*=\s*1\b" /etc/sysctl.conf /etc/sysctl.d && exit 0;
+                exit 1'
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-3.3.5
+    name: "icmp_echo_ignore_broadcasts habilitado"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: >
+      bash -lc 'v=$(sysctl -n net.ipv4.icmp_echo_ignore_broadcasts 2>/dev/null || echo);
+                if [[ "$v" == "1" ]]; then exit 0; fi;
+                grep -RqsE "^\s*net\.ipv4\.icmp_echo_ignore_broadcasts\s*=\s*1\b" /etc/sysctl.conf /etc/sysctl.d && exit 0;
+                exit 1'
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-3.3.6
+    name: "icmp_ignore_bogus_error_responses habilitado"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: >
+      bash -lc 'v=$(sysctl -n net.ipv4.icmp_ignore_bogus_error_responses 2>/dev/null || echo);
+                if [[ "$v" == "1" ]]; then exit 0; fi;
+                grep -RqsE "^\s*net\.ipv4\.icmp_ignore_bogus_error_responses\s*=\s*1\b" /etc/sysctl.conf /etc/sysctl.d && exit 0;
+                exit 1'
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-3.3.7
+    name: "rp_filter habilitado (all/default)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: >
+      bash -lc 'a=$(sysctl -n net.ipv4.conf.all.rp_filter 2>/dev/null || echo);
+                d=$(sysctl -n net.ipv4.conf.default.rp_filter 2>/dev/null || echo);
+                # Acepta 1 (loose) o 2 (strict) como "habilitado"
+                if [[ "$a" =~ ^[12]$ && "$d" =~ ^[12]$ ]]; then exit 0; fi;
+                grep -RqsE "^\s*net\.ipv4\.conf\.(all|default)\.rp_filter\s*=\s*[12]\b" /etc/sysctl.conf /etc/sysctl.d && exit 0;
+                exit 1'
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-3.3.8
+    name: "tcp_syncookies habilitado"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: >
+      bash -lc 'v=$(sysctl -n net.ipv4.tcp_syncookies 2>/dev/null || echo);
+                if [[ "$v" == "1" ]]; then exit 0; fi;
+                grep -RqsE "^\s*net\.ipv4\.tcp_syncookies\s*=\s*1\b" /etc/sysctl.conf /etc/sysctl.d && exit 0;
+                exit 1'
+    pass_if_regex: []
+    fail_if_regex: []
+ 
+  - id: "CIS-3.3.9"
+    name: "IPv6 accept_ra deshabilitado (all/default)"
+    os_scope: "RHEL/OL"
+    command: >
+      bash -lc 'ok=0;
+        ca=$(sysctl -n net.ipv6.conf.all.accept_ra 2>/dev/null || echo);
+        cd=$(sysctl -n net.ipv6.conf.default.accept_ra 2>/dev/null || echo);
+        if [[ "$ca" == "0" && "$cd" == "0" ]]; then echo "accept_ra disabled"; exit 0; fi;
+        if grep -RqsE "^\s*net\.ipv6\.conf\.(all|default)\.accept_ra\s*=\s*0" /etc/sysctl.conf /etc/sysctl.d 2>/dev/null; then
+          echo "accept_ra disabled"; exit 0; fi;
+        echo "accept_ra not disabled"; exit 1'
+    pass_if_regex: ["^accept_ra disabled$"]
+    fail_if_regex: []
+
+  ######################################################################
+  # Sección 3.4 - Protocolos de Red No Comunes
+  ######################################################################
+
+  - id: CIS-3.4.1
+    name: "Deshabilitar DCCP"
+    os_scope: RHEL/OL
+    command: >
+      bash -lc '
+        if modprobe -n -v dccp 2>/dev/null | grep -Eq "^\s*install\s+/bin/(false|true)\b"; then
+          echo blocked; exit 0;
+        fi
+        if lsmod | awk "{print \$1}" | grep -qx dccp; then
+          echo loaded; exit 1;
+        fi
+        if modinfo -n dccp >/dev/null 2>&1; then
+          echo available; exit 1;
+        else
+          echo absent; exit 0;
+        fi'
+    pass_if_regex: ["^blocked$","^absent$"]
+    fail_if_regex:  ["^loaded$","^available$"]
+
+  - id: CIS-3.4.2
+    name: "Deshabilitar SCTP"
+    os_scope: RHEL/OL
+    command: >
+      bash -lc '
+        if modprobe -n -v sctp 2>/dev/null | grep -Eq "^\s*install\s+/bin/(false|true)\b"; then
+          echo blocked; exit 0;
+        fi
+        if lsmod | awk "{print \$1}" | grep -qx sctp; then
+          echo loaded; exit 1;
+        fi
+        if modinfo -n sctp >/dev/null 2>&1; then
+          echo available; exit 1;
+        else
+          echo absent; exit 0;
+        fi'
+    pass_if_regex: ["^blocked$","^absent$"]
+    fail_if_regex:  ["^loaded$","^available$"]
+
+
+  - id: CIS-3.4.3
+    name: "RDS (no aplicable/omitido según notas)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "bash -lc 'echo not_applicable'"
+    pass_if_regex: ['^not_applicable$']
+    fail_if_regex: []
+
+  - id: CIS-3.4.4
+    name: "TIPC (no aplicable/omitido según notas)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "bash -lc 'echo not_applicable'"
+    pass_if_regex: ['^not_applicable$']
+    fail_if_regex: []
+
+  ######################################################################
+  # Sección 5.1 - Jobs programados (cron/at)
+  ######################################################################
+
+  - id: CIS-5.1.1
+    name: "crond habilitado (systemctl)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "systemctl is-enabled crond"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-5.1.2
+    name: "Permisos de /etc/crontab (600/640 root:root)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "stat -c '%a %U %G' /etc/crontab"
+    pass_if_regex: ['^600 root root$','^640 root root$']
+    fail_if_regex: []
+
+  - id: CIS-5.1.3
+    name: "Permisos de /etc/cron.hourly (700 root:root)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "stat -c '%a %U %G' /etc/cron.hourly"
+    pass_if_regex: ['^700 root root$']
+    fail_if_regex: []
+
+  - id: CIS-5.1.4
+    name: "Permisos de /etc/cron.daily (700 root:root)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "stat -c '%a %U %G' /etc/cron.daily"
+    pass_if_regex: ['^700 root root$']
+    fail_if_regex: []
+
+  - id: CIS-5.1.5
+    name: "Permisos de /etc/cron.weekly (700 root:root)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "stat -c '%a %U %G' /etc/cron.weekly"
+    pass_if_regex: ['^700 root root$']
+    fail_if_regex: []
+
+  - id: CIS-5.1.6
+    name: "Permisos de /etc/cron.monthly (700 root:root)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "stat -c '%a %U %G' /etc/cron.monthly"
+    pass_if_regex: ['^700 root root$']
+    fail_if_regex: []
+
+  - id: CIS-5.1.7
+    name: "Permisos de /etc/cron.d (700 root:root)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "stat -c '%a %U %G' /etc/cron.d"
+    pass_if_regex: ['^700 root root$']
+    fail_if_regex: []
+
+  - id: CIS-5.1.8
+    name: "cron restringido (/etc/cron.allow con 600 root:root y sin cron.deny)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "stat -c '%a %U %G' /etc/cron.allow; [ ! -e /etc/cron.deny ] && echo deny_absent || echo deny_present"
+    pass_if_regex: ['^600 root root$','^deny_absent$']
+    fail_if_regex: ['^deny_present$']
+
+  - id: CIS-5.1.9
+    name: "at restringido (/etc/at.allow con 600 root:root y sin at.deny)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "stat -c '%a %U %G' /etc/at.allow; [ ! -e /etc/at.deny ] && echo deny_absent || echo deny_present"
+    pass_if_regex: ['^600 root root$','^deny_absent$']
+    fail_if_regex: ['^deny_present$']
+
+  ######################################################################
+  # Sección 5.2 - Configurar SUDO
+  ######################################################################
+
+  - id: CIS-5.2.1
+    name: "sudo instalado"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "rpm -q sudo"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: "CIS-5.2.2"
+    name: "Defaults use_pty habilitado en sudoers"
+    os_scope: "RHEL/OL"
+    command: >
+      bash -lc 'grep -rPi "^[[:space:]]*Defaults[[:space:]]+([^#\n\r]+,)?use_pty(,[[:space:]]*\S+)*[[:space:]]*(#.*)?$" /etc/sudoers* 2>/dev/null || true'
+    pass_if_regex: ["use_pty"]
+    fail_if_regex: []
+
+  - id: "CIS-5.2.3"
+    name: "logfile definido en sudoers"
+    os_scope: "RHEL/OL"
+    command: >
+      bash -lc 'grep -rPsi "^[[:space:]]*Defaults[[:space:]]+([^#]+,[[:space:]]*)?logfile[[:space:]]*=[[:space:]]*(\"|\\'\\')?\\S+(\"|\\'\\')?(,[[:space:]]*\\S+)*[[:space:]]*(#.*)?$" /etc/sudoers* 2>/dev/null || true'
+    pass_if_regex: ["logfile"]
+    fail_if_regex: []
+
+  - id: CIS-5.2.4
+    name: "Prohibir NOPASSWD en sudoers (excluyendo usuarios permitidos)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and
+          ansible_facts.distribution_major_version in ["8","9"]
+    command: >
+      bash -lc '
+        # Buscar líneas activas con NOPASSWD
+        out=$(grep -RIP "^[[:space:]]*[^#].*NOPASSWD" /etc/sudoers /etc/sudoers.d 2>/dev/null || true);
+        # Filtrar las que NO pertenezcan a usuarios permitidos (primer campo puede ser lista separada por comas)
+        echo "$out" |
+          awk -F"[[:space:]]+" '"'"'{u=$1; n=split(u,a,","); ex=0;
+            for(i=1;i<=n;i++){ if (a[i] ~ /^({{ excluded_users_regex }})$/) ex=1 }
+            if(!ex) print }'"'"' |
+          grep -q . &&
+          { echo found; exit 1; } || { echo none; exit 0; }'
+    pass_if_regex: ['^none$']
+    fail_if_regex:  ['^found$']
+
+
+  - id: CIS-5.2.5
+    name: "Prohibir !authenticate en sudoers"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "sh -c \"! grep -r '^[^#].*!authenticate' /etc/sudoers* 2>/dev/null | grep -q .\""
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: "CIS-5.2.6"
+    name: "timestamp_timeout definido en sudoers"
+    os_scope: "RHEL/OL"
+    command: >
+      bash -lc 'grep -rhoP "timestamp_timeout=\K[0-9]+" /etc/sudoers* 2>/dev/null || true'
+    pass_if_regex: ["^[0-9]+$"]
+    fail_if_regex: []
+
+
+  - id: CIS-5.2.7
+    name: "Restricción de su con pam_wheel (use_uid/grupo)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "grep -Pi '^[[:space:]]*auth[[:space:]]+(required|requisite)[[:space:]]+pam_wheel\\.so.*(use_uid|group=)' /etc/pam.d/su"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-5.2.8
+    name: "authselect: perfil custom presente (si aplica)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "authselect list | grep -E '^-[[:space:]]*custom'"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-5.2.9
+    name: "faillock presente en PAM (password-auth/system-auth)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "grep pam_faillock.so /etc/pam.d/password-auth /etc/pam.d/system-auth"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  ######################################################################
+  # Sección 5.3 - Configurar Servidor SSH
+  ######################################################################
+
+  - id: CIS-5.3.1
+    name: "/etc/ssh/sshd_config existe (stat)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "stat /etc/ssh/sshd_config"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-5.3.2
+    name: "Claves privadas de host presentes (archivos existen)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "find /etc/ssh -xdev -type f -name 'ssh_host_*_key' -exec stat {} \\;"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-5.3.3
+    name: "Claves públicas de host presentes (archivos existen)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "find /etc/ssh -xdev -type f -name 'ssh_host_*_key.pub' -exec stat {} \\;"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-5.3.4
+    name: "Allow/Deny Users/Groups configurados (si aplica)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "grep -Pi '^[[:space:]]*(allow|deny)(users|groups)[[:space:]]+\\S+' /etc/ssh/sshd_config"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-5.3.5
+    name: "LogLevel INFO o VERBOSE"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "sshd -T | grep -E '^loglevel (INFO|VERBOSE)$'"
+    pass_if_regex: ['^loglevel (INFO|VERBOSE)$']
+    fail_if_regex: []
+
+  - id: CIS-5.3.6
+    name: "X11Forwarding no"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "sshd -T | grep -E '^x11forwarding no$'"
+    pass_if_regex: ['^x11forwarding no$']
+    fail_if_regex: []
+
+  - id: CIS-5.3.7
+    name: "MaxAuthTries <= 4"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "sshd -T | grep -E '^maxauthtries ([1-4])$'"
+    pass_if_regex: ['^maxauthtries ([1-4])$']
+    fail_if_regex: []
+
+  - id: CIS-5.3.8
+    name: "IgnoreRhosts yes"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "sshd -T | grep -E '^ignorerhosts yes$'"
+    pass_if_regex: ['^ignorerhosts yes$']
+    fail_if_regex: []
+
+  - id: CIS-5.3.9
+    name: "HostbasedAuthentication no"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "sshd -T | grep -E '^hostbasedauthentication no$'"
+    pass_if_regex: ['^hostbasedauthentication no$']
+    fail_if_regex: []
+
+  - id: CIS-5.3.10
+    name: "PermitRootLogin no/prohibit-password"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "sshd -T | grep -E '^permitrootlogin (no|prohibit-password)$'"
+    pass_if_regex: ['^permitrootlogin (no|prohibit-password)$']
+    fail_if_regex: []
+
+  - id: CIS-5.3.11
+    name: "PermitEmptyPasswords no"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "sshd -T | grep -E '^permitemptypasswords no$'"
+    pass_if_regex: ['^permitemptypasswords no$']
+    fail_if_regex: []
+
+  - id: CIS-5.3.12
+    name: "PermitUserEnvironment no"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "sshd -T | grep -E '^permituserenvironment no$'"
+    pass_if_regex: ['^permituserenvironment no$']
+    fail_if_regex: []
+
+  - id: CIS-5.3.13
+    name: "ClientAlive* definidos (presencia)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "sshd -T | grep -E '^(clientaliveinterval|clientalivecountmax) '"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-5.3.14
+    name: "LoginGraceTime definido (<=60s recomendado)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "sshd -T | grep -E '^logingracetime '"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: "CIS-5.3.15"
+    name: "Banner configurado (no 'none')"
+    os_scope: "RHEL/OL"
+    command: >
+      bash -lc '
+        host="$(hostname)";
+        ip="$(getent hosts "$host" | awk "NR==1{print \$1}")";
+        sshd -T -C user=root -C host="$host" -C addr="$ip" 2>/dev/null \
+          | awk '\''$1=="banner" && $2!="none"{print $2}'\'' || true
+      '
+    pass_if_regex: ["^/"]     # hay una ruta (típicamente /etc/issue(.net))
+    fail_if_regex: []
+
+  - id: CIS-5.3.16
+    name: "SSH: UsePAM habilitado"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "sshd -T | grep -E '^usepam yes$'"
+    pass_if_regex:
+    - "^usepam yes$"
+    fail_if_regex: []
+
+  - id: CIS-5.3.17
+    name: "SSH: AllowTcpForwarding deshabilitado"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "sshd -T | grep -E '^allowtcpforwarding no$'"
+    pass_if_regex:
+    - "^allowtcpforwarding no$"
+    fail_if_regex: []
+
+  - id: CIS-5.3.18
+    name: "SSH: MaxStartups definido"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "sshd -T | grep -E '^maxstartups '"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-5.3.19
+    name: "SSH: MaxSessions ≤ 10"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "sshd -T | grep -E '^maxsessions (10|[1-9])$'"
+    pass_if_regex:
+      - "^maxsessions (10|[1-9])$"
+    fail_if_regex: []
+
+  # --------------------------------------------------------------------
+  # 5.4 - Configurar PAM
+  # --------------------------------------------------------------------
+
+  - id: CIS-5.4.1
+    name: "PAM: pwquality y políticas (minlen/minclass)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: >
+      grep -E '\bpam_pwquality\.so\b' /etc/pam.d/system-auth /etc/pam.d/password-auth;
+      grep -E '^(minlen|minclass|\s*\S*credit\s*=)' /etc/security/pwquality.conf
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-5.4.2
+    name: "PAM: faillock (deny y unlock_time definidos)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: >
+      grep -E '^\s*deny\s*=\s*[1-5]\b' /etc/security/faillock.conf;
+      grep -E '^\s*unlock_time\s*=' /etc/security/faillock.conf
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-5.4.3
+    name: "PAM: historial de contraseñas (remember ≥ 5)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: >
+      grep -P '^\s*password\s+(requisite|sufficient)\s+(pam_pwhistory\.so|pam_unix\.so)\s+([^#\n\r]+\s+)?remember=([5-9]|[1-9][0-9]+)\s*(\s+.*)?$'
+      /etc/pam.d/system-auth
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-5.4.4
+    name: "PAM: cifrado SHA512 en sistema"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: >
+      grep -Ei '^\s*crypt_style\s*=\s*sha512\b' /etc/libuser.conf;
+      grep -Ei '^\s*ENCRYPT_METHOD\s+SHA512\b' /etc/login.defs;
+      grep -P -- '^\s*password\s+(requisite|required|sufficient)\s+pam_unix\.so(\s+[^#\n\r]+)?\s+sha512\b.*$'
+      /etc/pam.d/password-auth /etc/pam.d/system-auth
+    pass_if_regex: []
+    fail_if_regex: []
+
+  # --------------------------------------------------------------------
+  # 5.5 - Entorno y cuentas de usuario
+  # --------------------------------------------------------------------
+
+  - id: "CIS-5.5.1"
+    name: "PASS_MAX_DAYS <= 365"
+    os_scope: "RHEL/OL"
+    command: >
+      awk '/^[[:space:]]*PASS_MAX_DAYS[[:space:]]+/ {v=$2}
+          END{ if(v!="" && v<=365) {print "ok"} else {print "bad"; exit 1} }' /etc/login.defs
+    pass_if_regex: ["^ok$"]
+    fail_if_regex: ["^bad$"]
+
+  - id: "CIS-5.5.2"
+    name: "PASS_MIN_DAYS >= 1"
+    os_scope: "RHEL/OL"
+    command: >
+      awk '/^[[:space:]]*PASS_MIN_DAYS[[:space:]]+/ {v=$2}
+          END{ if(v!="" && v>=1) {print "ok"} else {print "bad"; exit 1} }' /etc/login.defs
+    pass_if_regex: ["^ok$"]
+    fail_if_regex: ["^bad$"]
+
+  - id: "CIS-5.5.3"
+    name: "PASS_WARN_AGE >= 7"
+    os_scope: "RHEL/OL"
+    command: >
+      awk '/^[[:space:]]*PASS_WARN_AGE[[:space:]]+/ {v=$2}
+          END{ if(v!="" && v>=7) {print "ok"} else {print "bad"; exit 1} }' /etc/login.defs
+    pass_if_regex: ["^ok$"]
+    fail_if_regex: ["^bad$"]
+
+  - id: "CIS-5.5.4"
+    name: "INACTIVE <= 30 (>=0)"
+    os_scope: "RHEL/OL"
+    command: >
+      sh -lc 'i=$(useradd -D | awk -F= "/^INACTIVE=/{print \$2}");
+              if [ -n "$i" ] && [ "$i" -le 30 ] && [ "$i" -ge 0 ]; then echo ok; else echo bad; exit 1; fi'
+    pass_if_regex: ["^ok$"]
+    fail_if_regex: ["^bad$"]
+
+
+  - id: CIS-5.5.5
+    name: "Sin cambios de contraseña fechados en el futuro"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and
+          ansible_facts.distribution_major_version in ["8","9"]
+    command: >
+      bash -lc '
+        bad=0
+        # Construir lista de usuarios con contraseña "real" (campo 2 de shadow no comienza por ! o *)
+        mapfile -t USERS < <(awk -F: "(\$2 !~ /^[!*]/){print \$1}" /etc/shadow 2>/dev/null |
+                            grep -Ev "^({{ excluded_users_regex }})$" || true)
+
+        for u in "${USERS[@]}"; do
+          # saltar líneas vacías por seguridad
+          [ -z "$u" ] && continue
+          # obtener "Last password change" (puede ser 'never')
+          d=$(chage --list "$u" 2>/dev/null | awk -F": " "/^Last password change/{print \$2}")
+          [ "$d" = "never" ] || [ -z "$d" ] && continue
+          ts=$(date -d "$d" +%s 2>/dev/null) || ts=0
+          now=$(date +%s)
+          if [ "$ts" -gt "$now" ]; then
+            echo "future:$u"
+            bad=1
+          fi
+        done
+
+        if [ "$bad" -eq 0 ]; then
+          echo ok
+          exit 0
+        else
+          exit 1
+        fi
+      '
+    pass_if_regex: ["^ok$"]
+    fail_if_regex: ["^future"]
+
+
+  - id: CIS-5.5.6
+    name: "Cuentas del sistema sin shell de login (UID < UID_MIN)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and
+          ansible_facts.distribution_major_version in ["8","9"]
+    command: >
+      bash -lc '
+        min=$(awk "/^[[:space:]]*UID_MIN[[:space:]]+/{print \$2}" /etc/login.defs);
+        awk -F: -v m="$min" \
+            -v ex="^({{ excluded_users_regex }})$" \
+            -v re="^(/usr)?/sbin/nologin(/)?$|^(/usr)?/bin/false(/)?$" \
+        "
+        BEGIN{bad=0}
+        (\$3<m && \$1!~ex){
+          if (\$7 !~ re) { print \"bad:\" \$1 \":\" \$7; bad=1 }
+        }
+        END{ if(bad==0) print \"ok\"; exit bad }
+        " /etc/passwd
+      '
+    pass_if_regex: ["^ok$"]
+    fail_if_regex: ["^bad:"]
+
+
+
+  - id: CIS-5.5.7
+    name: "root pertenece a GID 0"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: "awk -F: '/^root:/{print $4}' /etc/passwd | grep -x 0"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-5.5.8
+    name: "Umask por defecto 027/077 en perfiles globales/usuarios"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: >
+      sh -c "grep -E '^\s*umask\s+(027|077)\b' /etc/bashrc /etc/profile /etc/profile.d/* ~/.bashrc ~/.profile 2>/dev/null | grep -q ."
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-5.5.9
+    name: "TMOUT configurado (presencia)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: >
+      sh -c "grep -E '^\s*TMOUT=\s*[0-9]+' /etc/bashrc /etc/profile 2>/dev/null | grep -q ."
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-5.5.10
+    name: "Restricción de 'su' al grupo wheel (PAM)"
+    os_scope: RHEL/OL
+    when: (ansible_facts.distribution in ["RedHat","RedHat Enterprise Linux","OracleLinux"]) and ansible_facts.distribution_major_version in ["8","9"]
+    command: 'grep -E "^\s*auth\s+(required|requisite)\s+pam_wheel\.so" /etc/pam.d/su'
+    pass_if_regex: []
+    fail_if_regex: []
+
+
