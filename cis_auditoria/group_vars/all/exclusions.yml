@@ -1,3 +1,14 @@
+# ============================================================================
+# Exclusiones para validaciones CIS
+# ============================================================================
+#
+# Se usa principalmente para excluir cuentas técnicas o cuentas permitidas
+# en controles de sudo, shadow, shells, etc.
+#
+# Este valor se usa como regex dentro de varios controles.
+# Ajusta la lista según tu ambiente.
+# ============================================================================
+
 # group_vars/all/exclusions.yml
 excluded_users:
   - root

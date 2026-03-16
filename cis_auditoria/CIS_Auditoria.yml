@@ -1,114 +1,281 @@
 ---
-- name: Auditoría de controles (Oracle/RHEL 8-9) con reporte Excel
+- name: Auditoría CIS Benchmark (Oracle Linux / RHEL 8-9)
   hosts: OCI
   gather_facts: true
   become: true
+
   vars_files:
     - group_vars/all/audit_controls.yml
+    - group_vars/all/exclusions.yml
+
+  vars:
+    # Mapeo del sistema operativo detectado a una etiqueta simple
+    # que usaremos para filtrar controles por os_scope.
+    current_os_family: >-
+      {{
+        'OL' if ansible_facts.distribution == 'OracleLinux'
+        else 'RHEL' if ansible_facts.distribution in ['RedHat', 'RedHat Enterprise Linux']
+        else 'OTHER'
+      }}
 
   tasks:
 
-    - name: Inicializar resultados (control_results)
-      set_fact:
+    #####################################################################
+    # AUDIT | Inicialización
+    #####################################################################
+
+    - name: AUDIT | Inicializar lista de resultados
+      ansible.builtin.set_fact:
         control_results: []
 
-    - name: Obtener IP del host para el nombre del archivo
-      set_fact:
+    - name: AUDIT | Obtener IP del host para reportes
+      ansible.builtin.set_fact:
         audit_host_ip: >-
-          {{ hostvars[inventory_hostname].ansible_host
-             | default(ansible_facts.default_ipv4.address
-             | default(ansible_facts.all_ipv4_addresses | first | default(inventory_hostname))) }}
+          {{
+            hostvars[inventory_hostname].ansible_host
+            | default(
+                ansible_facts.default_ipv4.address
+                | default(
+                    ansible_facts.all_ipv4_addresses | first | default(inventory_hostname)
+                  )
+              )
+          }}
 
-    - name: Ejecutar comandos de validación por control
-      ansible.builtin.shell: "{{ item.command }}"
-      args:
-        executable: /bin/bash
-      loop: "{{ audit_controls }}"
+    - name: AUDIT | Construir lista de controles aplicables al sistema operativo
+      ansible.builtin.set_fact:
+        applicable_controls: >-
+          {{
+            audit_controls
+            | selectattr('os_scope', 'defined')
+            | selectattr('os_scope', 'contains', current_os_family)
+            | list
+          }}
+
+    - name: AUDIT | Mostrar cantidad de controles aplicables
+      ansible.builtin.debug:
+        msg:
+          - "Host: {{ inventory_hostname }}"
+          - "Sistema detectado: {{ ansible_facts.distribution }} {{ ansible_facts.distribution_major_version }}"
+          - "Tipo de alcance usado: {{ current_os_family }}"
+          - "Controles aplicables: {{ applicable_controls | length }}"
+
+    #####################################################################
+    # AUDIT | Ejecutar controles con command
+    #####################################################################
+    # Estos controles deben ser comandos simples, sin:
+    # - pipes
+    # - redirecciones
+    # - bash -lc
+    # - awk/grep encadenado
+    #####################################################################
+
+    - name: AUDIT | Ejecutar controles simples con command
+      ansible.builtin.command:
+        argv:
+          - /bin/bash
+          - -lc
+          - "{{ item.command }}"
+      loop: "{{ applicable_controls | selectattr('use_shell', 'equalto', false) | list }}"
       loop_control:
         label: "{{ item.id }}: {{ item.name }}"
-      register: exec_batch
+      register: exec_command_batch
       changed_when: false
       failed_when: false
 
+    #####################################################################
+    # AUDIT | Ejecutar controles con shell
+    #####################################################################
+    # Estos controles sí requieren shell porque usan:
+    # - pipes
+    # - grep / awk / sed
+    # - && / ||
+    # - redirecciones
+    # - scripts bash -lc
+    #####################################################################
 
-# Si el control define pass_if_regex, solo se marca “Cumple” cuando hay match en stdout.
-# Si no define pass_if_regex, se usa el rc == 0 como criterio de éxito.
-# Si algún fail_if_regex hace match, el control falla aunque lo demás diga que pasa.
-    - name: Evaluar resultados por control
-      vars:
-        pairs: "{{ audit_controls | zip(exec_batch.results | default([])) | list }}"
-      set_fact:
+    - name: AUDIT | Ejecutar controles avanzados con shell
+      ansible.builtin.shell: "{{ item.command }}"  # noqa command-instead-of-shell
+      args:
+        executable: /bin/bash
+      loop: "{{ applicable_controls | selectattr('use_shell', 'equalto', true) | list }}"
+      loop_control:
+        label: "{{ item.id }}: {{ item.name }}"
+      register: exec_shell_batch
+      changed_when: false
+      failed_when: false
+
+    #####################################################################
+    # AUDIT | Unificar resultados de command + shell
+    #####################################################################
+
+    - name: AUDIT | Unificar resultados de ejecución
+      ansible.builtin.set_fact:
+        exec_all_results: >-
+          {{
+            (exec_command_batch.results | default([]))
+            + (exec_shell_batch.results | default([]))
+          }}
+
+    #####################################################################
+    # AUDIT | Evaluar resultados
+    #####################################################################
+    # Reglas:
+    # 1. Si stdout contiene "not_applicable" => No aplicable
+    # 2. Si pass_if_regex existe, debe hacer match para cumplir
+    # 3. Si no hay pass_if_regex, rc == 0 cuenta como cumple
+    # 4. Si fail_if_regex hace match, NO cumple
+    # 5. Se guarda además evidencia para el Excel/JSON
+    #####################################################################
+
+    - name: AUDIT | Evaluar resultados por control
+      ansible.builtin.set_fact:
         control_results: >-
-          {{ (control_results | default([])) + [ {
-            'id':      (item.0.id      | default('')),
-            'name':    (item.0.name    | default('')),
-            'command': (item.0.command | default('')),
-            'rc':      (item.1.rc      | default(1)),
-            'stdout':  (item.1.stdout  | default('')),
-            'stderr':  (item.1.stderr  | default('')),
-            'passed':
+          {{
+            (control_results | default([])) + [
+              {
+                'id': (item.0.id | default('')),
+                'name': (item.0.name | default('')),
+                'section': (item.0.section | default('')),
+                'category': (item.0.category | default('')),
+                'command': (item.0.command | default('')),
+                'os_scope': (item.0.os_scope | default([])),
+                'rc': (item.1.rc | default(1)),
+                'stdout': (item.1.stdout | default('')),
+                'stderr': (item.1.stderr | default('')),
+                'passed': passed_result,
+                'status': status_result,
+                'evidence': evidence_result
+              }
+            ]
+          }}
+      vars:
+        pairs: "{{ applicable_controls | zip(exec_all_results | default([])) | list }}"
+
+        stdout_text: "{{ item.1.stdout | default('') | trim }}"
+        stderr_text: "{{ item.1.stderr | default('') | trim }}"
+
+        pass_match: >-
+          {{
+            (item.0.pass_if_regex | default([]) | length) > 0
+            and
+            (
+              (item.1.stdout | default(''))
+              is search('(?m)(?:' ~ (item.0.pass_if_regex | join(')|(?:')) ~ ')')
+            )
+          }}
+
+        fail_match: >-
+          {{
+            (item.0.fail_if_regex | default([]) | length) > 0
+            and
+            (
+              (item.1.stdout | default(''))
+              is search('(?m)(?:' ~ (item.0.fail_if_regex | join(')|(?:')) ~ ')')
+            )
+          }}
+
+        passed_result: >-
+          {{
+            (
+              pass_match
+              or
               (
-                (
-                  (item.0.pass_if_regex | default([]) | length) > 0
-                  and (
-                    (item.1.stdout | default(''))
-                      is search('(?m)(?:' ~ (item.0.pass_if_regex | join(')|(?:')) ~ ')',
-                                ignorecase=False, multiline=True)
-                  )
-                )
-                or
-                (
-                  (item.0.pass_if_regex | default([]) | length) == 0
-                  and ((item.1.rc | default(1)) == 0)
-                )
+                (item.0.pass_if_regex | default([]) | length) == 0
+                and ((item.1.rc | default(1)) == 0)
               )
-              and not (
-                (item.0.fail_if_regex | default([]) | length) > 0
-                and (
-                  (item.1.stdout | default(''))
-                    is search('(?m)(?:' ~ (item.0.fail_if_regex | join(')|(?:')) ~ ')',
-                              ignorecase=False, multiline=True)
-                )
-              )
-          }] }}
+            )
+            and not fail_match
+          }}
+
+        status_result: >-
+          {{
+            'No aplicable'
+            if stdout_text == 'not_applicable'
+            else 'Cumple'
+            if passed_result
+            else 'No cumple'
+          }}
+
+        evidence_result: >-
+          {{
+            (stdout_text | regex_replace('\n+', ' | '))
+            if (stdout_text | length > 0)
+            else (
+              (stderr_text | regex_replace('\n+', ' | '))
+              if (stderr_text | length > 0)
+              else 'Sin salida; rc=' ~ (item.1.rc | default(1) | string)
+            )
+          }}
       loop: "{{ pairs }}"
       loop_control:
-        label: "{{ item.0.id }}"
+        label: "{{ item.0.id }}: {{ item.0.name }}"
 
+    #####################################################################
+    # AUDIT | Resumen final
+    #####################################################################
 
-    - debug:
-        var: control_results
+    - name: AUDIT | Mostrar resumen de auditoría
+      ansible.builtin.debug:
+        msg:
+          - "Host: {{ inventory_hostname }}"
+          - "IP: {{ audit_host_ip }}"
+          - "Total controles: {{ control_results | length }}"
+          - "Cumplen: {{ control_results | selectattr('status', 'equalto', 'Cumple') | list | length }}"
+          - "No cumplen: {{ control_results | selectattr('status', 'equalto', 'No cumple') | list | length }}"
+          - "No aplicables: {{ control_results | selectattr('status', 'equalto', 'No aplicable') | list | length }}"
 
-    # Opción A: no tocamos el script; enviamos tal cual los campos que espera
-    - name: Preparar datos para el reporte (usar esquema del script)
-      set_fact:
-        audit_results: "{{ control_results }}"
+    #####################################################################
+    # REPORT | Crear salida JSON local
+    #####################################################################
 
-    - name: Crear carpeta local para el reporte
+    - name: REPORT | Crear carpeta local para reportes
       ansible.builtin.file:
         path: "./_audit_reports"
         state: directory
         mode: "0755"
       delegate_to: localhost
-      run_once: false
 
-    - name: Escribir JSON con resultados en el controlador
+    - name: REPORT | Escribir JSON con resultados
       ansible.builtin.copy:
-        content: "{{ {'host': inventory_hostname, 'ip': audit_host_ip, 'results': audit_results} | to_nice_json }}"
+        content: >-
+          {{
+            {
+              'host': inventory_hostname,
+              'ip': audit_host_ip,
+              'distribution': ansible_facts.distribution,
+              'distribution_major_version': ansible_facts.distribution_major_version,
+              'results': control_results
+            } | to_nice_json
+          }}
         dest: "./_audit_reports/{{ inventory_hostname }}.json"
         mode: "0644"
       delegate_to: localhost
-      run_once: false
 
-    - name: Generar Excel por host (usa openpyxl en localhost)
+    #####################################################################
+    # REPORT | Generar Excel
+    #####################################################################
+    # Se asume que ya existe el script:
+    # ./scripts/write_excel_report.py
+    #
+    # Ese script debería leer:
+    # - id
+    # - name
+    # - section
+    # - category
+    # - status
+    # - evidence
+    # - rc
+    # - command
+    #####################################################################
+
+    - name: REPORT | Generar Excel por host
       ansible.builtin.command: >
         {{ ansible_playbook_python }} ./scripts/write_excel_report.py
         --input ./_audit_reports/{{ inventory_hostname }}.json
-        --output ./_audit_reports/Audit_{{ audit_host_ip }}.xlsx
+        --output ./_audit_reports/Audit_{{ inventory_hostname }}_{{ audit_host_ip }}.xlsx
       delegate_to: localhost
-      run_once: false
       changed_when: false
 
-    - name: Mostrar ruta del reporte
+    - name: REPORT | Mostrar ubicación del reporte
       ansible.builtin.debug:
-        msg: "Reporte: ./_audit_reports/Audit_{{ audit_host_ip }}.xlsx"
+        msg: "Reporte generado: ./_audit_reports/Audit_{{ inventory_hostname }}_{{ audit_host_ip }}.xlsx"
