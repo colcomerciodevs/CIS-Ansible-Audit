@@ -19,4 +19,4 @@ MASTER02 ansible_host=172.25.98.228
 
 
 [PRUEBA]
-ansibletest ansible_host=10.181.
+ansibletest ansible_host=10.181.6.38
