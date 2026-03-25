@@ -89,6 +89,7 @@ def normalize_result(item: Dict[str, Any], host: str, ip: str) -> Dict[str, Any]
     section = item.get("section", "")
     category = item.get("category", "")
     rationale = item.get("rationale", "")
+    exclusions = safe_text(item.get("exclusions", ""))
 
     command = (
         item.get("command")
@@ -144,6 +145,7 @@ def normalize_result(item: Dict[str, Any], host: str, ip: str) -> Dict[str, Any]
         "stdout": stdout,
         "stderr": stderr,
         "rationale": rationale,
+        "exclusions": exclusions,
     }
 
 
@@ -210,6 +212,7 @@ def build_detail_sheet(wb: Workbook, normalized_results: List[Dict[str, Any]]) -
         "COMANDO DE VALIDACION",
         "RESULTADO",
         "EVIDENCIA / MOTIVO",
+        "EXCLUSIONES",
         "RC",
         "STDOUT",
         "STDERR",
@@ -229,6 +232,7 @@ def build_detail_sheet(wb: Workbook, normalized_results: List[Dict[str, Any]]) -
             result["command"],
             result["status"],
             result["evidence"],
+            result["exclusions"],
             result["rc"],
             result["stdout"],
             result["stderr"],

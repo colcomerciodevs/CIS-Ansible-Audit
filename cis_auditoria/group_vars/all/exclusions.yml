@@ -27,5 +27,11 @@ excluded_users:
   - alktstwms
   - alktstems
 
+sudoers_exclude_nopasswd_users:
+  - tux
+  - proactiva
+  - iacolcoauto
+  - ansible_test
+
 # Regex listo para usar con grep/awk (escapa caracteres especiales)
 excluded_users_regex: "{{ excluded_users | map('regex_escape') | join('|') }}"

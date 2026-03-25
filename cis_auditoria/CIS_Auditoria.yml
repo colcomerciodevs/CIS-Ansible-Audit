@@ -153,7 +153,8 @@
                 'stderr': (item.1.stderr | default('')),
                 'passed': passed_result,
                 'status': status_result,
-                'evidence': evidence_result
+                'evidence': evidence_result,
+                'exclusions': exclusions_result
               }
             ]
           }}
@@ -218,6 +219,20 @@
               if (stderr_text | length > 0)
               else 'Sin salida; rc=' ~ (item.1.rc | default(1) | string)
             )
+          }}
+
+        exclusions_result: >-
+          {{
+            (
+              stdout_text
+              | regex_replace('(?s).*exclusions=([^|]*).*', '\1')
+              | trim
+            )
+            if (
+              item.0.id in ['CIS-5.1.8', 'CIS-5.1.9', 'CIS-5.2.4', 'CIS-5.2.7']
+              and 'exclusions=' in stdout_text
+            )
+            else ''
           }}
       loop: "{{ pairs }}"
       loop_control:
