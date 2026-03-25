@@ -1794,6 +1794,23 @@ audit_controls:
     command: >
       bash -lc '
         min=$(awk "/^[[:space:]]*UID_MIN[[:space:]]+/{print \$2}" /etc/login.defs);
+
+        excl_data=$(for u in {{ excluded_users | join(" ") }}; do
+          shell=$(getent passwd "$u" | awk -F: "{print \$7}");
+          [ -z "$shell" ] && shell="not_found";
+
+          pstat=$(passwd -S "$u" 2>/dev/null | awk "{print \$2}");
+          if [ "$pstat" = "L" ]; then
+            locked="yes";
+          elif [ -z "$pstat" ]; then
+            locked="unknown";
+          else
+            locked="no";
+          fi;
+
+          echo "${u}:shell=${shell},locked=${locked}";
+        done | paste -sd "; " -);
+
         awk -F: -v m="$min" \
             -v ex="^({{ excluded_users_regex }})$" \
             -v re="^(/usr)?/sbin/nologin(/)?$|^(/usr)?/bin/false(/)?$" \
@@ -1809,6 +1826,8 @@ audit_controls:
           exit bad
         }
         " /etc/passwd
+
+        echo "exclusions=${excl_data}"
       '
     pass_if_regex:
       - '^All system accounts use nologin/false$'
@@ -1850,15 +1869,15 @@ audit_controls:
       - OL
     command: >
       bash -lc 'line=$(grep -E "^\s*TMOUT=\s*[0-9]+" /etc/bashrc /etc/profile 2>/dev/null | head -1);
-                if [ -n "$line" ]; then
-                  echo "$line";
-                  exit 0;
-                else
-                  echo "tmout_not_set";
-                  exit 1;
-                fi'
+      if [ -n "$line" ]; then
+        echo "$line";
+        exit 0;
+      else
+        echo "tmout_not_set";
+        exit 1;
+      fi'
     pass_if_regex:
-      - '^TMOUT='
+      - 'TMOUT=\s*[0-9]+'
     fail_if_regex:
       - '^tmout_not_set$'
 
