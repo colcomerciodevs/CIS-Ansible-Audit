@@ -10,22 +10,24 @@
 # ============================================================================
 
 # group_vars/all/exclusions.yml
+
+## exclusion de PAM
 excluded_users:
-  - root
-  - admin
-  - tux
-  - proactiva
-  - iacolcoauto
-  - ansible_test
-  - halt
-  - shutdown
-  - sync
-  - nfsnobody
-  - oracle
-  - postgres
-  - pos
-  - alktstwms
-  - alktstems
+  - root ## superusuario por defecto
+# - admin ## admin de algunos servidores , para nuevos servdiores no se debe tener en cuenta 
+  - tux ## Usuario admin global
+  - proactiva ## usuario de proactiva
+  - iacolcoauto ## usuario de automatizacion NNTDATA
+  - ansible_test ## usuario de automatizacion CORBETA
+  - halt Se usa ## internamente por el sistema
+  - shutdown ## Se usa internamente por el sistema
+  - sync ## Fuerza a escribir buffers de disco a almacenamiento
+  - nfsnobody ## Usuario de seguridad para NFS
+# - oracle ## usuario de BD
+# - postgres ## usuario de BD 
+# - pos ## usuario de Geopos
+# - alktstwms ## usuario de WMS
+# - alktstems ## usuario de WMS
 
 sudoers_exclude_nopasswd_users:
   - tux
