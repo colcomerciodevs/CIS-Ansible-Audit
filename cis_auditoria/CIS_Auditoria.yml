@@ -229,7 +229,7 @@
               | trim
             )
             if (
-              item.0.id in ['CIS-5.1.8', 'CIS-5.1.9', 'CIS-5.2.4', 'CIS-5.2.7']
+              item.0.id in ['CIS-5.1.8', 'CIS-5.1.9', 'CIS-5.2.4', 'CIS-5.2.7', 'CIS-5.5.6']
               and 'exclusions=' in stdout_text
             )
             else ''
