@@ -432,8 +432,12 @@ audit_controls:
       - RHEL
       - OL
     command: >
-      bash -lc 'if [ -s /etc/motd ]; then
+      bash -lc '
+      if [ -s /etc/motd ]; then
         echo "exists_and_not_empty";
+        echo "---CONTENT---";
+        cat /etc/motd;
+        exit 0;
       else
         echo "missing_or_empty";
         exit 1;
@@ -449,8 +453,12 @@ audit_controls:
       - RHEL
       - OL
     command: >
-      bash -lc 'if [ -s /etc/issue ]; then
+      bash -lc '
+      if [ -s /etc/issue ]; then
         echo "exists_and_not_empty";
+        echo "---CONTENT---";
+        cat /etc/issue;
+        exit 0;
       else
         echo "missing_or_empty";
         exit 1;
@@ -466,8 +474,12 @@ audit_controls:
       - RHEL
       - OL
     command: >
-      bash -lc 'if [ -s /etc/issue.net ]; then
+      bash -lc '
+      if [ -s /etc/issue.net ]; then
         echo "exists_and_not_empty";
+        echo "---CONTENT---";
+        cat /etc/issue.net;
+        exit 0;
       else
         echo "missing_or_empty";
         exit 1;
