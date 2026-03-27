@@ -1,0 +1,659 @@
+# ============================================================================
+# Explicación de comandos - CIS Benchmark
+# Oracle Linux / RHEL 8-9
+# ============================================================================
+# Este archivo mapea cada control (id) con la explicación funcional del comando
+# usado en la auditoría.
+# ============================================================================
+
+audit_command_descriptions:
+
+# ============================================================================
+# SECTION 1.1 - Filesystem Configuration
+# ============================================================================
+
+  CIS-1.1.1: >-
+    Ejecuta en un subshell (bash -lc) una secuencia de validaciones sobre el
+    módulo cramfs: primero inspecciona con modprobe -n -v si existe una regla
+    install /bin/false o /bin/true (módulo deshabilitado → blocked, exit 0),
+    luego verifica con lsmod si el módulo está cargado en el kernel (loaded,
+    exit 1), después comprueba con modinfo -n si el módulo existe en el sistema
+    (available, exit 1) y, si no existe, retorna absent (exit 0).
+
+  CIS-1.1.2: >-
+    Valida el estado del módulo squashfs en el sistema: primero verifica si está
+    explícitamente bloqueado para carga mediante una regla install /bin/false o
+    /bin/true (cumple → blocked), luego comprueba si el módulo está actualmente
+    cargado en memoria (no cumple → loaded), y finalmente determina si el
+    módulo existe en el sistema aunque no esté cargado (no cumple → available)
+    o si no está presente (cumple → absent).
+
+  CIS-1.1.3: >-
+    Valida el estado del módulo udf en el sistema: primero verifica si está
+    bloqueado para su carga mediante una regla install /bin/false o /bin/true
+    (cumple → blocked), luego comprueba si el módulo está actualmente cargado
+    en memoria (no cumple → loaded), y finalmente determina si el módulo existe
+    en el sistema aunque no esté cargado (no cumple → available) o si no está
+    presente (cumple → absent).
+
+  CIS-1.1.4: >-
+    Verifica si existe un sistema de archivos vfat definido en /etc/fstab,
+    devolviendo present o absent sin mostrar salida estándar ni errores.
+
+  CIS-1.1.5: >-
+    Consulta en la tabla de montajes del kernel si /tmp está montado y muestra
+    sus detalles actuales.
+
+  CIS-1.1.6: >-
+    Extrae las opciones de montaje de /tmp, las separa por línea y valida si
+    incluye la opción exacta nodev.
+
+  CIS-1.1.7: >-
+    Verifica si /tmp tiene configurada la opción de seguridad nosuid en sus
+    flags de montaje.
+
+  CIS-1.1.8: >-
+    Comprueba si /tmp tiene habilitada la opción noexec para impedir ejecución
+    de binarios.
+
+  CIS-1.1.9: >-
+    Valida si /dev/shm está montado en el kernel y muestra su configuración
+    actual.
+
+  CIS-1.1.10: >-
+    Verifica si /dev/shm tiene la opción nodev configurada.
+
+  CIS-1.1.11: >-
+    Comprueba si /dev/shm tiene la opción nosuid.
+
+  CIS-1.1.12: >-
+    Valida si /dev/shm tiene la opción noexec.
+
+  CIS-1.1.13: >-
+    Consulta si /var está montado y muestra su configuración desde el kernel.
+
+  CIS-1.1.14: >-
+    Verifica si /var tiene la opción nodev.
+
+  CIS-1.1.15: >-
+    Comprueba si /var tiene la opción nosuid.
+
+  CIS-1.1.16: >-
+    Omitido.
+
+  CIS-1.1.17: >-
+    Valida si /var/tmp está montado y obtiene su configuración actual.
+
+  CIS-1.1.18: >-
+    Verifica si /var/tmp tiene la opción nodev.
+
+  CIS-1.1.19: >-
+    Comprueba si /var/tmp tiene la opción nosuid.
+
+  CIS-1.1.20: >-
+    Valida si /var/tmp tiene la opción noexec.
+
+  CIS-1.1.21: >-
+    Consulta si /var/log está montado en el kernel.
+
+  CIS-1.1.22: >-
+    Verifica si /var/log tiene la opción nodev.
+
+  CIS-1.1.23: >-
+    Comprueba si /var/log tiene la opción nosuid.
+
+  CIS-1.1.24: >-
+    Valida si /var/log tiene la opción noexec.
+
+  CIS-1.1.25: >-
+    Verifica si /var/log/audit está montado y muestra su estado.
+
+  CIS-1.1.26: >-
+    Comprueba si /var/log/audit tiene la opción nodev.
+
+  CIS-1.1.27: >-
+    Valida si /var/log/audit tiene la opción nosuid.
+
+  CIS-1.1.28: >-
+    Verifica si /var/log/audit tiene la opción noexec.
+
+  CIS-1.1.29: >-
+    Consulta si /home está montado en el kernel.
+
+  CIS-1.1.30: >-
+    Verifica si /home tiene la opción nodev.
+
+  CIS-1.1.31: >-
+    Comprueba si /home tiene la opción nosuid.
+
+  CIS-1.1.32: >-
+    Omitido.
+
+  CIS-1.1.33: >-
+    Omitido.
+
+  CIS-1.1.34: >-
+    Omitido.
+
+  CIS-1.1.35: >-
+    Valida que el filesystem montado en /home tenga habilitada la opción
+    usrquota (cuotas por usuario); si la encuentra → cumple, si no → no cumple.
+
+  CIS-1.1.36: >-
+    Valida que el filesystem montado en /home tenga habilitada la opción
+    grpquota (cuotas por grupo); si la encuentra → cumple, si no → no cumple.
+
+  CIS-1.1.37: >-
+    Valida si existen directorios locales con permisos inseguros: recorre todos
+    los puntos de montaje locales, busca directorios con permiso de escritura
+    para otros (-perm -0002) que no tienen el sticky bit (! -perm -1000), y si
+    encuentra al menos uno retorna error (exit 1 → no cumple); si no encuentra
+    ninguno → cumple.
+
+  CIS-1.1.38: >-
+    Valida si el servicio autofs está instalado y habilitado en el sistema:
+    primero verifica si existe la unidad autofs.service; si existe, consulta si
+    está habilitada (enabled/disabled → salida informativa), y si no está
+    instalada retorna not-installed.
+
+  CIS-1.1.39: >-
+    Valida si el módulo del kernel usb_storage (soporte para dispositivos de
+    almacenamiento USB) está actualmente cargado en memoria: si está presente en
+    lsmod → retorna loaded (no cumple), y si no está cargado → not-loaded
+    (cumple).
+
+
+# ============================================================================
+# SECTION 1.7 - Command Line Warning Banners
+# ============================================================================
+
+  CIS-1.7.1: >-
+    Valida que el archivo /etc/motd exista y no esté vacío utilizando la
+    condición -s; si el archivo existe y tiene contenido retorna
+    exists_and_not_empty (cumple), si no existe o está vacío retorna
+    missing_or_empty (no cumple).
+
+  CIS-1.7.2: >-
+    Valida que el archivo /etc/issue exista y no esté vacío; si contiene texto
+    retorna exists_and_not_empty (cumple), si está vacío o no existe retorna
+    missing_or_empty (no cumple).
+
+  CIS-1.7.3: >-
+    Valida que el archivo /etc/issue.net exista y no esté vacío; si contiene
+    información retorna exists_and_not_empty (cumple), si está vacío o no existe
+    retorna missing_or_empty (no cumple).
+
+  CIS-1.7.4: >-
+    Verifica únicamente la existencia del archivo /etc/motd; si existe retorna
+    exists (cumple), si no existe retorna missing (no cumple).
+
+  CIS-1.7.5: >-
+    Verifica únicamente la existencia del archivo /etc/issue; si existe retorna
+    exists (cumple), si no existe retorna missing (no cumple).
+
+  CIS-1.7.6: >-
+    Verifica únicamente la existencia del archivo /etc/issue.net; si existe
+    retorna exists (cumple), si no existe retorna missing (no cumple).
+
+
+  # ============================================================================
+# SECTION 2.1 - Time Synchronization and Special Purpose Services
+# ============================================================================
+
+  CIS-2.1.1: >-
+    Valida si el paquete chrony está instalado en el sistema; si está
+    instalado, rpm -q muestra la versión del paquete (cumple), y si no está
+    instalado indica que no está presente (no cumple).
+
+  CIS-2.1.2: >-
+    Verifica si los paquetes ntp y ntpdate están instalados; si ambos existen
+    retorna present, y si alguno falta retorna absent.
+
+  CIS-2.1.3: >-
+    Valida que en la configuración de chrony existan servidores o pools NTP
+    definidos; si encuentra entradas válidas retorna cumplimiento, y si no hay
+    configuración retorna no cumple.
+
+  CIS-2.1.4: >-
+    Valida si el paquete xinetd está instalado en el sistema; si existe retorna
+    present (no cumple), y si no está instalado retorna absent (cumple).
+
+  CIS-2.1.5: >-
+    Valida si el paquete xorg-x11-server-common está instalado en el sistema;
+    si existe retorna present (no cumple), y si no está instalado retorna
+    absent (cumple).
+
+  CIS-2.1.6: >-
+    Valida si los paquetes avahi-autoipd y avahi están instalados; si ambos
+    existen retorna present (no cumple), y si alguno no está instalado retorna
+    absent (cumple).
+
+  CIS-2.1.7: >-
+    Valida si el paquete cups está instalado en el sistema; si existe retorna
+    present (no cumple), y si no está instalado retorna absent (cumple).
+
+  CIS-2.1.8: >-
+    Valida si el paquete dhcp-server está instalado en el sistema; si existe
+    retorna present (no cumple), y si no está instalado retorna absent
+    (cumple).
+
+  CIS-2.1.9: >-
+    Omitida.
+
+  CIS-2.1.10: >-
+    Valida si el servicio nfs-server está habilitado en el sistema; si aparece
+    como enabled (no cumple), y si está deshabilitado o no existe retorna
+    disabled (cumple).
+
+  CIS-2.1.11: >-
+    Valida si el paquete bind está instalado en el sistema; si existe retorna
+    present (no cumple), y si no está instalado retorna absent (cumple).
+
+  CIS-2.1.12: >-
+    Valida si el paquete ftp está instalado en el sistema; si existe retorna
+    present (no cumple), y si no está instalado retorna absent (cumple).
+
+  CIS-2.1.13: >-
+    Valida si el paquete vsftpd está instalado en el sistema; si existe retorna
+    present (no cumple), y si no está instalado retorna absent (cumple).
+
+  CIS-2.1.14: >-
+    Valida si el paquete tftp-server está instalado en el sistema; si existe
+    retorna present (no cumple), y si no está instalado retorna absent
+    (cumple).
+
+  CIS-2.1.15: >-
+    Valida si alguno de los paquetes httpd o nginx está instalado en el
+    sistema; si encuentra ambos retorna present (no cumple), y si falta alguno
+    retorna absent (cumple según la lógica exacta del comando).
+
+  CIS-2.1.16: >-
+    Valida si los paquetes dovecot y cyrus-imapd están instalados; si ambos
+    existen retorna present (no cumple), y si alguno no está instalado retorna
+    absent (cumple).
+
+  CIS-2.1.17: >-
+    Valida si el paquete samba está instalado en el sistema; si existe retorna
+    present (no cumple), y si no está instalado retorna absent (cumple).
+
+  CIS-2.1.18: >-
+    Valida si el paquete squid está instalado en el sistema; si existe retorna
+    present (no cumple), y si no está instalado retorna absent (cumple).
+
+  CIS-2.1.19: >-
+    Valida si el paquete net-snmp está instalado en el sistema; si existe
+    retorna present (no cumple), y si no está instalado retorna absent
+    (cumple).
+
+  CIS-2.1.20: >-
+    Valida si existe algún servicio escuchando en el puerto 25/TCP en
+    direcciones distintas de loopback; si encuentra un listener externo retorna
+    open (no cumple), y si no encuentra exposición externa retorna closed
+    (cumple).
+
+  CIS-2.1.21: >-
+    Valida si el paquete telnet-server está instalado en el sistema; si existe
+    retorna present (no cumple), y si no está instalado retorna absent
+    (cumple).
+
+  CIS-2.1.22: >-
+    Valida si el paquete rsync está instalado en el sistema; si existe retorna
+    present (no cumple), y si no está instalado retorna absent (cumple).
+
+  CIS-2.1.23: >-
+    Valida si el paquete ypserv está instalado en el sistema; si existe retorna
+    present (no cumple), y si no está instalado retorna absent (cumple).
+
+# ============================================================================
+# SECTION 2.2 - Client Services
+# ============================================================================
+
+  CIS-2.2.1: >-
+    Valida si el paquete ypbind está instalado en el sistema; si existe retorna
+    present (no cumple), y si no está instalado retorna absent (cumple).
+
+  CIS-2.2.2: >-
+    Valida si el paquete rsh está instalado en el sistema; si existe retorna
+    present (no cumple), y si no está instalado retorna absent (cumple).
+
+  CIS-2.2.3: >-
+    Valida si el paquete talk está instalado en el sistema; si existe retorna
+    present (no cumple), y si no está instalado retorna absent (cumple).
+
+  CIS-2.2.4: >-
+    Valida si el paquete telnet está instalado en el sistema; si existe retorna
+    present (no cumple), y si no está instalado retorna absent (cumple).
+
+  CIS-2.2.5: >-
+    Valida si el paquete openldap-clients está instalado en el sistema; si
+    existe retorna present (no cumple), y si no está instalado retorna absent
+    (cumple).
+
+  CIS-2.2.6: >-
+    Valida si el paquete tftp está instalado en el sistema; si existe retorna
+    present (no cumple), y si no está instalado retorna absent (cumple).
+
+  CIS-2.2.7: >-
+    Valida si el paquete rpcbind está instalado en el sistema; si existe
+    retorna present (no cumple), y si no está instalado retorna absent
+    (cumple).
+
+# ============================================================================
+# SECTION 3.1 - Network Parameters (Host Only)
+# ============================================================================
+
+  CIS-3.1.1: >-
+    Valida si en la configuración de sysctl están definidos los parámetros
+    net.ipv6.conf.all.disable_ipv6 y net.ipv6.conf.default.disable_ipv6;
+    si existen entradas configuradas → evidencia de deshabilitación de IPv6
+    (cumple según política), si no → no cumple.
+
+  CIS-3.1.2: >-
+    Valida si la interfaz WiFi está deshabilitada mediante nmcli; si el comando
+    retorna disabled → cumple, si está habilitada → no cumple.
+
+# ============================================================================
+# SECTION 3.2 - Network Parameters (IPv4)
+# ============================================================================
+
+  CIS-3.2.1: >-
+    Valida que send_redirects esté deshabilitado en IPv4 (all y default en 0);
+    primero verifica el valor en ejecución con sysctl y, si no cumple, valida
+    si está configurado de forma persistente en sysctl.conf o sysctl.d; si
+    cumple en runtime o persistencia → cumple, si no → no cumple.
+
+  CIS-3.2.2: >-
+    Valida que el reenvío de paquetes IPv4 (ip_forward) esté deshabilitado;
+    si el valor es 0 o está configurado de forma persistente → cumple, si está
+    habilitado → no cumple.
+
+# ============================================================================
+# SECTION 3.3 - Network Parameters (IPv4 Hardening)
+# ============================================================================
+
+  CIS-3.3.1: >-
+    Valida que accept_source_route esté deshabilitado en IPv4 (all y default en 0);
+    si ambos valores están en 0 o configurados de forma persistente → cumple,
+    si no → no cumple.
+
+  CIS-3.3.2: >-
+    Valida que accept_redirects esté deshabilitado en IPv4 (all y default en 0);
+    si cumple en ejecución o está persistido → cumple, si no → no cumple.
+
+  CIS-3.3.3: >-
+    Valida que secure_redirects esté deshabilitado en IPv4 (all y default en 0);
+    si cumple o está configurado de forma persistente → cumple, si no → no cumple.
+
+  CIS-3.3.4: >-
+    Valida que el sistema registre paquetes sospechosos (log_martians) en IPv4;
+    si los valores all y default están en 1 o persistidos → cumple, si no → no cumple.
+
+  CIS-3.3.5: >-
+    Valida que el sistema ignore respuestas ICMP a broadcast
+    (icmp_echo_ignore_broadcasts=1); si está activo o persistido → cumple,
+    si no → no cumple.
+
+  CIS-3.3.6: >-
+    Valida que el sistema ignore respuestas ICMP inválidas
+    (icmp_ignore_bogus_error_responses=1); si está activo o persistido → cumple,
+    si no → no cumple.
+
+  CIS-3.3.7: >-
+    Valida que el filtro de rutas inversas (rp_filter) esté configurado en modo
+    seguro (1 o 2) para all y default; si cumple o está persistido → cumple,
+    si no → no cumple.
+
+  CIS-3.3.8: >-
+    Valida que la protección contra ataques SYN flood (tcp_syncookies) esté
+    habilitada; si el valor es 1 o está configurado de forma persistente →
+    cumple, si no → no cumple.
+
+  CIS-3.3.9: >-
+    Valida que accept_ra de IPv6 esté deshabilitado (all y default en 0);
+    si cumple en ejecución o está persistido → cumple, si no → no cumple.
+
+# ============================================================================
+# SECTION 3.4 - Uncommon Network Protocols
+# ============================================================================
+
+  CIS-3.4.1: >-
+    Valida el estado del módulo del kernel dccp; si está bloqueado mediante
+    modprobe (install /bin/false o true) → cumple, si está cargado o disponible
+    en el sistema → no cumple, y si no existe → cumple.
+
+  CIS-3.4.2: >-
+    Valida el estado del módulo del kernel sctp; si está bloqueado → cumple,
+    si está cargado o disponible → no cumple, y si no existe → cumple.
+
+  CIS-3.4.3: >-
+    Omitida.
+
+  CIS-3.4.4: >-
+    Omitida.
+
+
+# ============================================================================
+# SECTION 5.1 - Cron Configuration
+# ============================================================================
+
+  CIS-5.1.1: >-
+    Valida que el servicio crond esté habilitado en el sistema; si retorna
+    enabled, static o equivalente → cumple, si está deshabilitado o desconocido
+    → no cumple.
+
+  CIS-5.1.2: >-
+    Valida los permisos, propietario y grupo del archivo /etc/crontab
+    utilizando stat; se usa para verificar que tenga configuración segura
+    (por ejemplo modo 600/640 y owner root).
+
+  CIS-5.1.3: >-
+    Valida los permisos, propietario y grupo del directorio /etc/cron.hourly;
+    asegura que tenga configuración segura (700 root:root).
+
+  CIS-5.1.4: >-
+    Valida los permisos, propietario y grupo del directorio /etc/cron.daily;
+    asegura que tenga configuración segura (700 root:root).
+
+  CIS-5.1.5: >-
+    Valida los permisos, propietario y grupo del directorio /etc/cron.weekly;
+    asegura que tenga configuración segura (700 root:root).
+
+  CIS-5.1.6: >-
+    Valida los permisos, propietario y grupo del directorio /etc/cron.monthly;
+    asegura que tenga configuración segura (700 root:root).
+
+  CIS-5.1.7: >-
+    Valida los permisos, propietario y grupo del directorio /etc/cron.d;
+    asegura que tenga configuración segura (700 root:root).
+
+  CIS-5.1.8: >-
+    Valida que /etc/cron.allow exista con permisos 600 y que /etc/cron.deny no
+    exista; si ambas condiciones se cumplen → cumple, si no → no cumple.
+
+  CIS-5.1.9: >-
+    Valida que /etc/at.allow exista con permisos 600 y que /etc/at.deny no
+    exista; si ambas condiciones se cumplen → cumple, si no → no cumple.
+
+# ============================================================================
+# SECTION 5.2 - Sudo Configuration
+# ============================================================================
+
+  CIS-5.2.1: >-
+    Valida si el paquete sudo está instalado en el sistema; si existe → cumple,
+    si no → no cumple.
+
+  CIS-5.2.2: >-
+    Valida que en la configuración de sudoers esté habilitado el uso de
+    pseudo-terminal (use_pty); si está configurado → cumple, si no → no cumple.
+
+  CIS-5.2.3: >-
+    Valida que sudo registre logs mediante la directiva logfile; si está
+    configurado → cumple, si no → no cumple.
+
+  CIS-5.2.4: >-
+    Valida que no existan reglas NOPASSWD para usuarios no autorizados en
+    sudoers; si no hay coincidencias indebidas → cumple, si existen → no cumple.
+
+  CIS-5.2.5: >-
+    Valida que no exista la opción !authenticate en sudoers (evita autenticación);
+    si no existe → cumple, si existe → no cumple.
+
+  CIS-5.2.6: >-
+    Muestra el valor de timestamp_timeout en sudoers para controlar la duración
+    de la sesión privilegiada; el cumplimiento depende de la política definida.
+
+  CIS-5.2.7: >-
+    Valida que el uso de su esté restringido mediante pam_wheel (use_uid o group);
+    si está configurado → cumple, si no → no cumple.
+
+  CIS-5.2.8: >-
+    Valida si existen perfiles personalizados (custom) en authselect; si existen
+    requiere validación según política.
+
+  CIS-5.2.9: >-
+    Valida que el módulo pam_faillock esté presente en PAM (password-auth y
+    system-auth); si está configurado → cumple, si no → no cumple.
+
+# ============================================================================
+# SECTION 5.3 - SSH Configuration
+# ============================================================================
+
+  CIS-5.3.1: >-
+    Muestra los metadatos del archivo /etc/ssh/sshd_config (permisos,
+    propietario, grupo y fechas) para validar configuración segura.
+
+  CIS-5.3.2: >-
+    Muestra los metadatos de las llaves privadas del host SSH en /etc/ssh
+    (ssh_host_*_key) para verificar que tengan permisos seguros.
+
+  CIS-5.3.3: >-
+    Muestra los metadatos de las llaves públicas del host SSH en /etc/ssh
+    (ssh_host_*_key.pub) para validar sus atributos.
+
+  CIS-5.3.4: >-
+    Valida si existen directivas AllowUsers, AllowGroups, DenyUsers o DenyGroups
+    en sshd_config; si existen → cumple, si no → no cumple.
+
+  CIS-5.3.5: >-
+    Valida que el nivel de log de SSH esté en INFO o VERBOSE; si coincide →
+    cumple, si no → no cumple.
+
+  CIS-5.3.6: >-
+    Valida que X11Forwarding esté deshabilitado; si retorna no → cumple,
+    si está habilitado → no cumple.
+
+  CIS-5.3.7: >-
+    Valida que MaxAuthTries esté entre 1 y 4; si cumple → cumple, si no →
+    no cumple.
+
+  CIS-5.3.8: >-
+    Valida que IgnoreRhosts esté habilitado; si retorna yes → cumple,
+    si no → no cumple.
+
+  CIS-5.3.9: >-
+    Valida que HostbasedAuthentication esté deshabilitado; si retorna no →
+    cumple, si no → no cumple.
+
+  CIS-5.3.10: >-
+    Valida que PermitRootLogin esté configurado como no o prohibit-password;
+    si cumple → cumple, si no → no cumple.
+
+  CIS-5.3.11: >-
+    Valida que no se permitan contraseñas vacías (PermitEmptyPasswords no);
+    si cumple → cumple, si no → no cumple.
+
+  CIS-5.3.12: >-
+    Valida que PermitUserEnvironment esté deshabilitado; si cumple → cumple,
+    si no → no cumple.
+
+  CIS-5.3.13: >-
+    Muestra los valores de ClientAliveInterval y ClientAliveCountMax para
+    controlar sesiones inactivas; cumplimiento depende de política.
+
+  CIS-5.3.14: >-
+    Muestra el valor de LoginGraceTime para validar el tiempo permitido de login;
+    cumplimiento depende de política.
+
+  CIS-5.3.15: >-
+    Valida que SSH tenga configurado un banner distinto de none; si existe →
+    cumple, si no → no cumple.
+
+  CIS-5.3.16: >-
+    Valida que UsePAM esté habilitado en SSH; si retorna yes → cumple,
+    si no → no cumple.
+
+  CIS-5.3.17: >-
+    Valida que AllowTcpForwarding esté deshabilitado; si retorna no → cumple,
+    si no → no cumple.
+
+  CIS-5.3.18: >-
+    Muestra el valor de MaxStartups para validar control de conexiones;
+    cumplimiento depende de política.
+
+  CIS-5.3.19: >-
+    Valida que MaxSessions esté entre 1 y 10; si cumple → cumple,
+    si no → no cumple.
+
+# ============================================================================
+# SECTION 5.4 - PAM Configuration
+# ============================================================================
+
+  CIS-5.4.1: >-
+    Valida que el módulo pam_pwquality esté configurado y muestra parámetros
+    como minlen, minclass y complejidad; cumplimiento depende de valores.
+
+  CIS-5.4.2: >-
+    Valida que faillock tenga parámetros deny (1-5) y unlock_time definidos;
+    si ambos existen → cumple, si no → no cumple.
+
+  CIS-5.4.3: >-
+    Valida que el historial de contraseñas (remember) sea de al menos 5;
+    si cumple → cumple, si no → no cumple.
+
+  CIS-5.4.4: >-
+    Valida que el cifrado de contraseñas use SHA512 en libuser, login.defs
+    y PAM; si está configurado → cumple, si no → no cumple.
+
+# ============================================================================
+# SECTION 5.5 - Password Policy and Accounts
+# ============================================================================
+
+  CIS-5.5.1: >-
+    Valida que PASS_MAX_DAYS sea menor o igual a 365; si cumple → cumple,
+    si no → no cumple.
+
+  CIS-5.5.2: >-
+    Valida que PASS_MIN_DAYS sea mayor o igual a 1; si cumple → cumple,
+    si no → no cumple.
+
+  CIS-5.5.3: >-
+    Valida que PASS_WARN_AGE sea mayor o igual a 7; si cumple → cumple,
+    si no → no cumple.
+
+  CIS-5.5.4: >-
+    Valida que INACTIVE esté entre 0 y 30 días para cuentas nuevas;
+    si cumple → cumple, si no → no cumple.
+
+  CIS-5.5.5: >-
+    Valida que no existan usuarios con fecha de cambio de contraseña en el
+    futuro; si no hay casos → cumple, si existen → no cumple.
+
+  CIS-5.5.6: >-
+    Valida que las cuentas del sistema (UID < UID_MIN) tengan shell nologin
+    o false; si todas cumplen → cumple, si alguna no → no cumple.
+
+  CIS-5.5.7: >-
+    Valida que el usuario root tenga grupo primario GID 0; si cumple →
+    cumple, si no → no cumple.
+
+  CIS-5.5.8: >-
+    Valida que la umask esté configurada como 027 o 077 en perfiles de shell;
+    si existe → cumple, si no → no cumple.
+
+  CIS-5.5.9: >-
+    Valida que TMOUT esté configurado para cerrar sesiones inactivas;
+    si existe → cumple, si no → no cumple.
+
+  CIS-5.5.10: >-
+    Valida que el uso de su esté restringido mediante pam_wheel en PAM;
+    si está configurado → cumple, si no → no cumple.

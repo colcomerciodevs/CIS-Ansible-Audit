@@ -7,6 +7,7 @@
   vars_files:
     - group_vars/all/audit_controls.yml
     - group_vars/all/exclusions.yml
+    - group_vars/all/audit_command_descriptions.yml
 
   vars:
     # Convierte la distribución detectada en una etiqueta simple
@@ -24,9 +25,10 @@
     # AUDIT | Inicialización
     #####################################################################
 
-    - name: AUDIT | Inicializar lista de resultados
+    - name: AUDIT | Inicializar listas de trabajo
       ansible.builtin.set_fact:
         control_results: []
+        normalized_controls: []
 
     - name: AUDIT | Obtener IP del host para reportes
       ansible.builtin.set_fact:
@@ -44,18 +46,10 @@
     #####################################################################
     # AUDIT | Normalizar controles
     #####################################################################
-    # Tu audit_controls.yml trae os_scope como lista:
-    #   os_scope:
-    #     - RHEL
-    #     - OL
-    #
-    # Si algún control no trae section/category/rationale,
-    # aquí se completan valores por defecto.
-    #####################################################################
 
     - name: AUDIT | Normalizar catálogo de controles
       ansible.builtin.set_fact:
-        normalized_controls: "{{ normalized_controls | default([]) + [ normalized_item ] }}"
+        normalized_controls: "{{ normalized_controls + [ normalized_item ] }}"
       vars:
         normalized_item:
           id: "{{ item.id | default('') }}"
@@ -100,17 +94,28 @@
           - "Controles aplicables: {{ applicable_controls | length }}"
 
     #####################################################################
-    # AUDIT | Ejecutar controles
+    # AUDIT | Validación de descripciones
     #####################################################################
-    # Se ejecutan todos con shell porque tu catálogo usa:
-    # - bash -lc
-    # - pipes
-    # - grep / awk / sed
-    # - && / ||
-    # - redirecciones
-    #
-    # Así evitamos depender del campo use_shell y también evitamos
-    # desorden entre control/comando/resultado.
+
+    - name: AUDIT | Identificar controles sin descripción
+      ansible.builtin.set_fact:
+        missing_command_descriptions: >-
+          {{
+            applicable_controls
+            | rejectattr('id', 'in', audit_command_descriptions.keys() | list)
+            | map(attribute='id')
+            | list
+          }}
+
+    - name: AUDIT | Mostrar controles sin descripción registrada
+      ansible.builtin.debug:
+        msg:
+          - "Los siguientes controles no tienen descripción en audit_command_descriptions.yml:"
+          - "{{ missing_command_descriptions }}"
+      when: missing_command_descriptions | length > 0
+
+    #####################################################################
+    # AUDIT | Ejecutar controles
     #####################################################################
 
     - name: AUDIT | Ejecutar controles CIS
@@ -127,19 +132,12 @@
     #####################################################################
     # AUDIT | Evaluar resultados
     #####################################################################
-    # Reglas:
-    # 1. Si stdout = not_applicable => No aplicable
-    # 2. Si pass_if_regex existe, debe hacer match para cumplir
-    # 3. Si no hay pass_if_regex, rc == 0 cuenta como cumple
-    # 4. Si fail_if_regex hace match => No cumple
-    # 5. evidence guarda stdout o stderr o rc si no hubo salida
-    #####################################################################
 
     - name: AUDIT | Evaluar resultados por control
       ansible.builtin.set_fact:
         control_results: >-
           {{
-            (control_results | default([])) + [
+            control_results + [
               {
                 'id': (item.0.id | default('')),
                 'name': (item.0.name | default('')),
@@ -147,6 +145,10 @@
                 'category': (item.0.category | default('')),
                 'rationale': (item.0.rationale | default('')),
                 'command': (item.0.command | default('')),
+                'command_description': (
+                  audit_command_descriptions[item.0.id]
+                  | default('Sin descripción registrada')
+                ),
                 'os_scope': (item.0.os_scope | default([])),
                 'rc': (item.1.rc | default(1)),
                 'stdout': (item.1.stdout | default('')),
@@ -159,8 +161,6 @@
             ]
           }}
       vars:
-        pairs: "{{ applicable_controls | zip(exec_all_results.results | default([])) | list }}"
-
         stdout_text: "{{ item.1.stdout | default('') | trim }}"
         stderr_text: "{{ item.1.stderr | default('') | trim }}"
 
@@ -234,7 +234,7 @@
             )
             else ''
           }}
-      loop: "{{ pairs }}"
+      loop: "{{ applicable_controls | zip(exec_all_results.results | default([])) | list }}"
       loop_control:
         label: "{{ item.0.id }}: {{ item.0.name }}"
 
@@ -251,6 +251,7 @@
           - "Cumplen: {{ control_results | selectattr('status', 'equalto', 'Cumple') | list | length }}"
           - "No cumplen: {{ control_results | selectattr('status', 'equalto', 'No cumple') | list | length }}"
           - "No aplicables: {{ control_results | selectattr('status', 'equalto', 'No aplicable') | list | length }}"
+          - "Sin descripción: {{ missing_command_descriptions | length }}"
 
     #####################################################################
     # REPORT | Crear salida JSON local
