@@ -31,6 +31,10 @@
         control_results: []
         normalized_controls: []
 
+    - name: AUDIT | Unir controles PRE + CIS
+      ansible.builtin.set_fact:
+        all_audit_controls: "{{ (pre_audit_controls | default([])) + (audit_controls | default([])) }}"
+
     - name: AUDIT | Obtener IP del host para reportes
       ansible.builtin.set_fact:
         audit_host_ip: >-
@@ -71,7 +75,7 @@
           command: "{{ item.command | default('') }}"
           pass_if_regex: "{{ item.pass_if_regex | default([]) }}"
           fail_if_regex: "{{ item.fail_if_regex | default([]) }}"
-      loop: "{{ audit_controls }}"
+      loop: "{{ all_audit_controls }}"
       loop_control:
         label: "{{ item.id | default('SIN-ID') }}"
 
