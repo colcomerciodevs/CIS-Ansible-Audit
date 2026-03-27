@@ -38,7 +38,7 @@ audit_command_descriptions:
 
   CIS-1.1.4: >-
     Verifica si existe un sistema de archivos vfat definido en /etc/fstab,
-    devolviendo present o absent sin mostrar salida estándar ni errores.
+    devolviendo present (no cumple) o absent (cumple) sin mostrar salida estándar ni errores.
 
   CIS-1.1.5: >-
     Consulta en la tabla de montajes del kernel si /tmp está montado y muestra
@@ -147,14 +147,14 @@ audit_command_descriptions:
     Valida si existen directorios locales con permisos inseguros: recorre todos
     los puntos de montaje locales, busca directorios con permiso de escritura
     para otros (-perm -0002) que no tienen el sticky bit (! -perm -1000), y si
-    encuentra al menos uno retorna error (exit 1 → no cumple); si no encuentra
-    ninguno → cumple.
+    encuentra al menos uno retorna error (exit 1 "RC=1" → no cumple); si no encuentra
+    ninguno "RC=0" → cumple.
 
   CIS-1.1.38: >-
     Valida si el servicio autofs está instalado y habilitado en el sistema:
     primero verifica si existe la unidad autofs.service; si existe, consulta si
     está habilitada (enabled/disabled → salida informativa), y si no está
-    instalada retorna not-installed.
+    instalada retorna not-installed → cumple.
 
   CIS-1.1.39: >-
     Valida si el módulo del kernel usb_storage (soporte para dispositivos de
@@ -207,12 +207,12 @@ audit_command_descriptions:
 
   CIS-2.1.2: >-
     Verifica si los paquetes ntp y ntpdate están instalados; si ambos existen
-    retorna present, y si alguno falta retorna absent.
+    retorna present (no cumple), y si alguno falta retorna absent (cumple).
 
   CIS-2.1.3: >-
     Valida que en la configuración de chrony existan servidores o pools NTP
     definidos; si encuentra entradas válidas retorna cumplimiento, y si no hay
-    configuración retorna no cumple.
+    configuración retorna no cumple, NOTA: 10.181.0.155 es el servidor NTP central.
 
   CIS-2.1.4: >-
     Valida si el paquete xinetd está instalado en el sistema; si existe retorna
@@ -345,7 +345,7 @@ audit_command_descriptions:
   CIS-3.1.1: >-
     Valida si en la configuración de sysctl están definidos los parámetros
     net.ipv6.conf.all.disable_ipv6 y net.ipv6.conf.default.disable_ipv6;
-    si existen entradas configuradas → evidencia de deshabilitación de IPv6
+    si existen entradas configuradas → evidencia de deshabilitación de IPv6 "=1"
     (cumple según política), si no → no cumple.
 
   CIS-3.1.2: >-
@@ -418,11 +418,11 @@ audit_command_descriptions:
 
   CIS-3.4.1: >-
     Valida el estado del módulo del kernel dccp; si está bloqueado mediante
-    modprobe (install /bin/false o true) → cumple, si está cargado o disponible
+    modprobe (install /bin/false o true) lo marca como blocked → cumple, si está cargado o disponible
     en el sistema → no cumple, y si no existe → cumple.
 
   CIS-3.4.2: >-
-    Valida el estado del módulo del kernel sctp; si está bloqueado → cumple,
+    Valida el estado del módulo del kernel sctp; si está bloqueado "blocked" → cumple,
     si está cargado o disponible → no cumple, y si no existe → cumple.
 
   CIS-3.4.3: >-
@@ -468,11 +468,13 @@ audit_command_descriptions:
 
   CIS-5.1.8: >-
     Valida que /etc/cron.allow exista con permisos 600 y que /etc/cron.deny no
-    exista; si ambas condiciones se cumplen → cumple, si no → no cumple.
+    exista; si ambas condiciones se cumplen → cumple, si no → no cumple 
+    NOTA= deben haber exclusiones presentes para user: root-tux (administradores Globales Linux).
 
   CIS-5.1.9: >-
     Valida que /etc/at.allow exista con permisos 600 y que /etc/at.deny no
-    exista; si ambas condiciones se cumplen → cumple, si no → no cumple.
+    exista; si ambas condiciones se cumplen → cumple, si no → no cumple 
+    NOTA= deben haber exclusiones presentes para user: root-tux (administradores Globales Linux).
 
 # ============================================================================
 # SECTION 5.2 - Sudo Configuration
@@ -492,19 +494,24 @@ audit_command_descriptions:
 
   CIS-5.2.4: >-
     Valida que no existan reglas NOPASSWD para usuarios no autorizados en
-    sudoers; si no hay coincidencias indebidas → cumple, si existen → no cumple.
+    sudoers; si no hay coincidencias indebidas → cumple, si existen → no cumple 
+    NOTA= deben haber exclusiones presentes para user: tux (administrador Global Linux)
+    NOTA= deben haber exclusiones presentes para user: ansible_test - iacolcoauto (Automatizacion)
+
 
   CIS-5.2.5: >-
     Valida que no exista la opción !authenticate en sudoers (evita autenticación);
-    si no existe → cumple, si existe → no cumple.
+    si no existe "RC=0" → cumple, si existe → no cumple.
 
   CIS-5.2.6: >-
     Muestra el valor de timestamp_timeout en sudoers para controlar la duración
-    de la sesión privilegiada; el cumplimiento depende de la política definida.
+    de la sesión privilegiada; el cumplimiento depende de la política definida (VALOR = 15).
 
   CIS-5.2.7: >-
     Valida que el uso de su esté restringido mediante pam_wheel (use_uid o group);
     si está configurado → cumple, si no → no cumple.
+    NOTA= deben haber exclusiones presentes para user: tux,aromero,csotomonte,jcastano (administrador nombrado Linux)
+   
 
   CIS-5.2.8: >-
     Valida si existen perfiles personalizados (custom) en authselect; si existen
@@ -533,14 +540,15 @@ audit_command_descriptions:
   CIS-5.3.4: >-
     Valida si existen directivas AllowUsers, AllowGroups, DenyUsers o DenyGroups
     en sshd_config; si existen → cumple, si no → no cumple.
+    NOTA= el grupo que permite el acceso ssh debe ser AllowGroups = ssh_access
 
   CIS-5.3.5: >-
     Valida que el nivel de log de SSH esté en INFO o VERBOSE; si coincide →
     cumple, si no → no cumple.
 
   CIS-5.3.6: >-
-    Valida que X11Forwarding esté deshabilitado; si retorna no → cumple,
-    si está habilitado → no cumple.
+    Valida que X11Forwarding esté deshabilitado; si retorna no  → cumple,
+    si está habilitado "RC=1" → no cumple.
 
   CIS-5.3.7: >-
     Valida que MaxAuthTries esté entre 1 y 4; si cumple → cumple, si no →
@@ -569,10 +577,12 @@ audit_command_descriptions:
   CIS-5.3.13: >-
     Muestra los valores de ClientAliveInterval y ClientAliveCountMax para
     controlar sesiones inactivas; cumplimiento depende de política.
+    NOTA = estos son los valores que debe de tener = clientaliveinterval 900 | clientalivecountmax 3
 
   CIS-5.3.14: >-
     Muestra el valor de LoginGraceTime para validar el tiempo permitido de login;
     cumplimiento depende de política.
+    NOTA = estos son los valores que debe de tener = logingracetime 60
 
   CIS-5.3.15: >-
     Valida que SSH tenga configurado un banner distinto de none; si existe →
@@ -589,6 +599,7 @@ audit_command_descriptions:
   CIS-5.3.18: >-
     Muestra el valor de MaxStartups para validar control de conexiones;
     cumplimiento depende de política.
+    NOTA = estos son los valores que debe de tener = maxstartups 10:30:60
 
   CIS-5.3.19: >-
     Valida que MaxSessions esté entre 1 y 10; si cumple → cumple,
@@ -605,6 +616,7 @@ audit_command_descriptions:
   CIS-5.4.2: >-
     Valida que faillock tenga parámetros deny (1-5) y unlock_time definidos;
     si ambos existen → cumple, si no → no cumple.
+    NOTA = estos son los valores que debe de tener - deny = 5 | unlock_time = 900
 
   CIS-5.4.3: >-
     Valida que el historial de contraseñas (remember) sea de al menos 5;
@@ -621,6 +633,7 @@ audit_command_descriptions:
   CIS-5.5.1: >-
     Valida que PASS_MAX_DAYS sea menor o igual a 365; si cumple → cumple,
     si no → no cumple.
+    NOTA = debe estar en 42
 
   CIS-5.5.2: >-
     Valida que PASS_MIN_DAYS sea mayor o igual a 1; si cumple → cumple,
@@ -639,8 +652,22 @@ audit_command_descriptions:
     futuro; si no hay casos → cumple, si existen → no cumple.
 
   CIS-5.5.6: >-
-    Valida que las cuentas del sistema (UID < UID_MIN) tengan shell nologin
-    o false; si todas cumplen → cumple, si alguna no → no cumple.
+    Valida que las cuentas del sistema (UID < UID_MIN) tengan configurado
+    un shell de no login como /usr/sbin/nologin o /usr/bin/false; si todas
+    las cuentas cumplen esta condición → cumple, si alguna permite acceso
+    interactivo (por ejemplo /bin/bash) → no cumple.
+    NOTA:Se excluyen de esta validación ciertas cuentas técnicas y administrativas
+    que, aunque pueden tener UID bajo, son necesarias para la operación del
+    sistema o de aplicaciones. Estas cuentas no deben ser modificadas:
+      - root: superusuario del sistema
+      - tux: usuario administrador global
+      - proactiva: usuario de monitoreo
+      - iacolcoauto: usuario de automatización NTTDATA
+      - ansible_test: usuario de automatización
+      - halt: cuenta interna del sistema
+      - shutdown: cuenta interna del sistema
+      - sync: sincronización de buffers de disco
+      - nfsnobody: usuario de seguridad para NFS
 
   CIS-5.5.7: >-
     Valida que el usuario root tenga grupo primario GID 0; si cumple →
@@ -653,7 +680,9 @@ audit_command_descriptions:
   CIS-5.5.9: >-
     Valida que TMOUT esté configurado para cerrar sesiones inactivas;
     si existe → cumple, si no → no cumple.
+    NOTA = debe estar en 900
 
   CIS-5.5.10: >-
     Valida que el uso de su esté restringido mediante pam_wheel en PAM;
     si está configurado → cumple, si no → no cumple.
+    NOTA= deben estar excluidos los usuarios administradores S.O (tux,aromero,csotomonte,jcastano)

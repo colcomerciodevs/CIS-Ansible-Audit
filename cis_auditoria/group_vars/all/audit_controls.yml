@@ -1886,6 +1886,25 @@ audit_controls:
     os_scope:
       - RHEL
       - OL
-    command: 'grep -E "^\s*auth\s+(required|requisite)\s+pam_wheel\.so" /etc/pam.d/su'
+    command: >
+      bash -lc '
+        line=$(grep -E "^\s*auth\s+(required|requisite)\s+pam_wheel\.so" /etc/pam.d/su | head -1 || true)
+
+        if [ -z "$line" ]; then
+          echo "pam_wheel_missing"
+          exit 1
+        fi
+
+        group=$(echo "$line" | grep -oE "group=[^[:space:]]+" | cut -d= -f2)
+        [ -z "$group" ] && group="wheel"
+
+        group_entry=$(getent group "$group" || true)
+        members=$(echo "$group_entry" | awk -F: "{print \$4}")
+        [ -z "$members" ] && members="sin_miembros"
+
+        echo "line=$line"
+        echo "exclusions=grupo:$group usuarios:$members"
+        exit 0
+      '
     pass_if_regex: []
     fail_if_regex: []

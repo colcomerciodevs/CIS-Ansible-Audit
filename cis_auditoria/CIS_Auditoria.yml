@@ -145,7 +145,7 @@
                 'category': (item.0.category | default('')),
                 'rationale': (item.0.rationale | default('')),
                 'command': (item.0.command | default('')),
-                'command_description': (
+                'explicacion_comando': (
                   audit_command_descriptions[item.0.id]
                   | default('Sin descripción registrada')
                 ),
@@ -229,7 +229,7 @@
               | trim
             )
             if (
-              item.0.id in ['CIS-5.1.8', 'CIS-5.1.9', 'CIS-5.2.4', 'CIS-5.2.7', 'CIS-5.5.6']
+              item.0.id in ['CIS-5.1.8', 'CIS-5.1.9', 'CIS-5.2.4', 'CIS-5.2.7', 'CIS-5.5.6', 'CIS-5.5.10']
               and 'exclusions=' in stdout_text
             )
             else ''

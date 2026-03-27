@@ -67,6 +67,22 @@ def style_data_area(ws) -> None:
             cell.alignment = Alignment(vertical="top", wrap_text=True)
 
 
+def color_status_cell(cell, status: str) -> None:
+    """
+    Colorea la celda de resultado según el estado.
+    """
+    normalized = (status or "").strip().lower()
+
+    if normalized == "cumple":
+        cell.fill = PatternFill("solid", fgColor=GREEN_FILL)
+    elif normalized == "no cumple":
+        cell.fill = PatternFill("solid", fgColor=RED_FILL)
+    elif normalized == "no aplicable":
+        cell.fill = PatternFill("solid", fgColor=GRAY_FILL)
+    else:
+        cell.fill = PatternFill("solid", fgColor=YELLOW_FILL)
+
+
 def normalize_result(item: Dict[str, Any], host: str, ip: str) -> Dict[str, Any]:
     """
     Normaliza cada resultado del JSON para que el Excel sea consistente.
@@ -99,6 +115,14 @@ def normalize_result(item: Dict[str, Any], host: str, ip: str) -> Dict[str, Any]
         or ""
     )
 
+    explicacion_comando = (
+        item.get("explicacion_comando")
+        or item.get("command_description")
+        or item.get("EXPLICACION_COMANDO")
+        or item.get("EXPLICACION COMANDO")
+        or ""
+    )
+
     rc = item.get("rc", "")
 
     stdout = safe_text(item.get("stdout", ""))
@@ -108,11 +132,9 @@ def normalize_result(item: Dict[str, Any], host: str, ip: str) -> Dict[str, Any]
     passed = item.get("passed", None)
 
     if not status:
-        # Fallback si no viene "status"
         if isinstance(passed, bool):
             status = "Cumple" if passed else "No cumple"
         else:
-            # Intentar inferir por stdout
             if stdout.strip().lower() == "not_applicable":
                 status = "No aplicable"
             elif rc == 0:
@@ -134,35 +156,20 @@ def normalize_result(item: Dict[str, Any], host: str, ip: str) -> Dict[str, Any]
     return {
         "host": host,
         "ip": ip,
-        "section": section,
-        "control_id": control_id,
-        "name": name,
-        "category": category,
-        "command": command,
-        "status": status,
+        "section": safe_text(section),
+        "control_id": safe_text(control_id),
+        "name": safe_text(name),
+        "category": safe_text(category),
+        "command": safe_text(command),
+        "explicacion_comando": safe_text(explicacion_comando),
+        "status": safe_text(status),
         "evidence": evidence,
         "rc": rc,
         "stdout": stdout,
         "stderr": stderr,
-        "rationale": rationale,
+        "rationale": safe_text(rationale),
         "exclusions": exclusions,
     }
-
-
-def color_status_cell(cell, status: str) -> None:
-    """
-    Colorea la celda de resultado según el estado.
-    """
-    normalized = (status or "").strip().lower()
-
-    if normalized == "cumple":
-        cell.fill = PatternFill("solid", fgColor=GREEN_FILL)
-    elif normalized == "no cumple":
-        cell.fill = PatternFill("solid", fgColor=RED_FILL)
-    elif normalized == "no aplicable":
-        cell.fill = PatternFill("solid", fgColor=GRAY_FILL)
-    else:
-        cell.fill = PatternFill("solid", fgColor=YELLOW_FILL)
 
 
 def build_summary_sheet(wb: Workbook, normalized_results: List[Dict[str, Any]], host: str, ip: str) -> None:
@@ -210,6 +217,7 @@ def build_detail_sheet(wb: Workbook, normalized_results: List[Dict[str, Any]]) -
         "DESCRIPCION",
         "CATEGORIA",
         "COMANDO DE VALIDACION",
+        "EXPLICACION COMANDO",
         "RESULTADO",
         "EVIDENCIA / MOTIVO",
         "EXCLUSIONES",
@@ -230,6 +238,7 @@ def build_detail_sheet(wb: Workbook, normalized_results: List[Dict[str, Any]]) -
             result["name"],
             result["category"],
             result["command"],
+            result["explicacion_comando"],
             result["status"],
             result["evidence"],
             result["exclusions"],
@@ -241,15 +250,11 @@ def build_detail_sheet(wb: Workbook, normalized_results: List[Dict[str, Any]]) -
         ws.append(row)
 
         # Colorear la columna RESULTADO
-        status_cell = ws.cell(row=ws.max_row, column=8)
+        status_cell = ws.cell(row=ws.max_row, column=9)
         color_status_cell(status_cell, result["status"])
 
-    # Congelar encabezado
     ws.freeze_panes = "A2"
-
-    # Autofiltro
     ws.auto_filter.ref = ws.dimensions
-
     style_data_area(ws)
     autosize(ws)
 

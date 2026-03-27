@@ -19,7 +19,7 @@ excluded_users:
   - proactiva ## usuario de proactiva
   - iacolcoauto ## usuario de automatizacion NNTDATA
   - ansible_test ## usuario de automatizacion CORBETA
-  - halt Se usa ## internamente por el sistema
+  - halt ## Se usa internamente por el sistema
   - shutdown ## Se usa internamente por el sistema
   - sync ## Fuerza a escribir buffers de disco a almacenamiento
   - nfsnobody ## Usuario de seguridad para NFS
