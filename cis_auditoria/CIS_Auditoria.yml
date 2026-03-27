@@ -5,6 +5,7 @@
   become: true
 
   vars_files:
+    - group_vars/all/pre_audit_controls.yml
     - group_vars/all/audit_controls.yml
     - group_vars/all/exclusions.yml
     - group_vars/all/audit_command_descriptions.yml

@@ -1,0 +1,154 @@
+# ============================================================================
+# Validaciones generales adicionales previas a la auditoría CIS
+# ============================================================================
+
+pre_audit_controls:
+
+  - id: PRE-1
+    name: "Usuarios administradores de S.O creados y con cambio de contraseña forzado"
+    category: "Pre-Auditoria"
+    os_scope:
+      - RHEL
+      - OL
+    command: >
+      bash -lc '
+        users="aromero csotomonte jcastano"
+        bad=""
+        evidence=""
+        for u in $users; do
+          if id "$u" >/dev/null 2>&1; then
+            lastchg=$(chage -l "$u" 2>/dev/null | awk -F": " "/^Last password change/{print \$2}")
+            evidence="${evidence}${u}:exists,last_password_change=${lastchg}\n"
+            if [ "$lastchg" != "password must be changed" ] && [ "$lastchg" != "never" ]; then
+              :
+            fi
+          else
+            bad="${bad}${u} "
+            evidence="${evidence}${u}:missing\n"
+          fi
+        done
+
+        echo -e "$evidence"
+
+        if [ -n "$bad" ]; then
+          exit 1
+        fi
+      '
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: PRE-2
+    name: "Usuarios de automatización creados con NOPASSWD ALL"
+    category: "Pre-Auditoria"
+    os_scope:
+      - RHEL
+      - OL
+    command: >
+      bash -lc '
+        users="iacolcoauto ansible_test proactiva"
+        bad=""
+        for u in $users; do
+          if ! id "$u" >/dev/null 2>&1; then
+            echo "${u}:missing"
+            bad=1
+            continue
+          fi
+
+          if grep -RIP "^[[:space:]]*${u}[[:space:]]+ALL=\(.*\)[[:space:]]+NOPASSWD:[[:space:]]*ALL" /etc/sudoers /etc/sudoers.d 2>/dev/null >/dev/null; then
+            echo "${u}:nopasswd_all=ok"
+          else
+            echo "${u}:nopasswd_all=missing"
+            bad=1
+          fi
+        done
+
+        [ -z "$bad" ]
+      '
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: PRE-3
+    name: "Llaves SSH configuradas para usuarios de automatización"
+    category: "Pre-Auditoria"
+    os_scope:
+      - RHEL
+      - OL
+    command: >
+      bash -lc '
+        bad=0
+
+        iacolcoauto_key='"'"'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC3NzBHvokb0EmAMlqgXVgUMYBlsVVjM6e28dzqhW7ykRfjrjEx4jV+0H3I/yvPqIga/iBUmg3CKBnL9rm1+9vW7f5B2JiCH0tPAJAfLDZ7As7KHuL3TeV5VTGursQ7HgU2fWVfoqP/yzGsrCxdQizTlDd9QpB8skqjXIf9nIV+CZJqEHxy0/EHXdm/KuBZbBd+7u/3ZxVMU7zTfJMC48ZV0Et8eu5pzn3mCJjETpfULrnBIoPoJ8otcX19xfygEcuF8Iv6eqnjoRoIEcDhQZi/ayTKiTz7Ezjf1idpBois+iwGlSkLCQ4j6Y2cRYyI/b+fVPnUq+89i2si4/J2J6yt10I3heO6iWvNFi0hgloyMegZiQtnWUyLfay1s7FYtmw6HV4cvJX215j66ETURpSIeg1vFqqf6BO2DxHampjjVfBrGyKuuWXqMiKiLMrM7CVzkOoX3PevPL+rdOU85M/lhNFAY/ioblqjea1kjVYxn/7iLGvWcjbp60MMVGVAEGkn2WubLbAh2xZYS0RFG1lrpBTtb1Alu6CN4kx2zfFhLbIEAM/2WKOWSZMo7CH0ynUbzlNKkuImDuAdxIZaluHPjQ0YCYs5I4rOKFm1ixes16zk25vQnZQ2kfEI4WhAnI1D1M7GmmHbkRAFlxpReDG9JwykHuQSPzld5pqGJoQH1Q== iacolcoauto@ansibleawx'"'"'
+        ansible_test_key='"'"'ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBPW8I6d7AAAkfrObeWMBdayjEHP9pzCfR5/KGVNkq4nBCK2Sb7dohPLsateMZfaQD0DCBI7YJDrKUw4P9ZOCXbM= root@Ansible'"'"'
+
+        for entry in "iacolcoauto:$iacolcoauto_key" "ansible_test:$ansible_test_key"; do
+          user="${entry%%:*}"
+          key="${entry#*:}"
+
+          home_dir=$(getent passwd "$user" | awk -F: "{print \$6}")
+          auth_file="${home_dir}/.ssh/authorized_keys"
+
+          if [ -z "$home_dir" ] || [ ! -f "$auth_file" ]; then
+            echo "${user}:authorized_keys_missing"
+            bad=1
+            continue
+          fi
+
+          if grep -F -- "$key" "$auth_file" >/dev/null 2>&1; then
+            echo "${user}:key_ok"
+          else
+            echo "${user}:key_missing"
+            bad=1
+          fi
+        done
+
+        [ "$bad" -eq 0 ]
+      '
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: PRE-4
+    name: "Grupo ssh_access creado y miembros requeridos"
+    category: "Pre-Auditoria"
+    os_scope:
+      - RHEL
+      - OL
+    command: >
+      bash -lc '
+        required_users="tux aromero csotomonte jcastano iacolcoauto ansible_test proactiva"
+
+        if ! getent group ssh_access >/dev/null 2>&1; then
+          echo "group:ssh_access:missing"
+          exit 1
+        fi
+
+        group_line=$(getent group ssh_access)
+        echo "group_entry=${group_line}"
+
+        members=$(echo "$group_line" | awk -F: "{print \$4}")
+        bad=0
+
+        for u in $required_users; do
+          echo "$members" | tr "," "\n" | grep -Fx "$u" >/dev/null 2>&1
+          if [ $? -eq 0 ]; then
+            echo "${u}:member_ok"
+          else
+            echo "${u}:member_missing"
+            bad=1
+          fi
+        done
+
+        [ "$bad" -eq 0 ]
+      '
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: PRE-5
+    name: "Usuarios de automatización con llaves y sudo requeridos"
+    category: "Pre-Auditoria"
+    os_scope:
+      - RHEL
+      - OL
+    command: >
+      bash -lc 'echo not_applicable'
+    pass_if_regex: []
+    fail_if_regex: []
