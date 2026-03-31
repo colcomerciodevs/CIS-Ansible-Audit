@@ -27,7 +27,7 @@ audit_controls:
   ######################################################################
 
   - id: CIS-1.1.1
-    name: "Deshabilitar cramfs"
+    name: "Ensure cramfs kernel module is not available"
     os_scope:
       - RHEL
       - OL
@@ -44,7 +44,7 @@ audit_controls:
       - "^available$"
 
   - id: CIS-1.1.2
-    name: "Deshabilitar squashfs"
+    name: "Ensure squashfs kernel module is not available"
     os_scope:
       - RHEL
       - OL
@@ -61,7 +61,7 @@ audit_controls:
       - "^available$"
 
   - id: CIS-1.1.3
-    name: "Deshabilitar udf"
+    name: "Ensure udf kernel module is not available"
     os_scope:
       - RHEL
       - OL
@@ -78,7 +78,7 @@ audit_controls:
       - "^available$"
 
   - id: CIS-1.1.4
-    name: "No permitir vfat en /etc/fstab (si no se requiere)"
+    name: "Ensure mounting of FAT filesystems is limited"
     os_scope:
       - RHEL
       - OL
@@ -88,7 +88,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-1.1.5
-    name: "/tmp en partición separada (montado)"
+    name: "Ensure separate partition exists for /tmp"
     os_scope:
       - RHEL
       - OL
@@ -97,7 +97,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-1.1.6
-    name: "/tmp con nodev"
+    name: "Ensure nodev option set on /tmp partition"
     os_scope:
       - RHEL
       - OL
@@ -106,7 +106,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-1.1.7
-    name: "/tmp con nosuid"
+    name: "Ensure nosuid option set on /tmp partition"
     os_scope:
       - RHEL
       - OL
@@ -115,7 +115,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-1.1.8
-    name: "/tmp con noexec"
+    name: "Ensure noexec option set on /tmp partition"
     os_scope:
       - RHEL
       - OL
@@ -124,7 +124,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-1.1.9
-    name: "/dev/shm montado"
+    name: "Ensure separate partition exists for /dev/shm"
     os_scope:
       - RHEL
       - OL
@@ -133,7 +133,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-1.1.10
-    name: "/dev/shm con nodev"
+    name: "Ensure nodev option set on /dev/shm partition"
     os_scope:
       - RHEL
       - OL
@@ -142,7 +142,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-1.1.11
-    name: "/dev/shm con nosuid"
+    name: "Ensure nosuid option set on /dev/shm partition"
     os_scope:
       - RHEL
       - OL
@@ -151,7 +151,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-1.1.12
-    name: "/dev/shm con noexec"
+    name: "Ensure noexec option set on /dev/shm partition"
     os_scope:
       - RHEL
       - OL
@@ -160,7 +160,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-1.1.13
-    name: "/var en partición separada (montado)"
+    name: "Ensure separate partition exists for /var"
     os_scope:
       - RHEL
       - OL
@@ -169,7 +169,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-1.1.14
-    name: "/var con nodev"
+    name: "Ensure nodev option set on /var partition"
     os_scope:
       - RHEL
       - OL
@@ -178,7 +178,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-1.1.15
-    name: "/var con nosuid"
+    name: "Ensure nosuid option set on /var partition"
     os_scope:
       - RHEL
       - OL
@@ -187,7 +187,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-1.1.16
-    name: "/var con noexec (no aplicable en RHEL/OL)"
+    name: "Ensure noexec option set on /var partition"
     os_scope:
       - RHEL
       - OL
@@ -197,7 +197,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-1.1.17
-    name: "/var/tmp en partición separada (montado)"
+    name: "Ensure separate partition exists for /var/tmp"
     os_scope:
       - RHEL
       - OL
@@ -206,7 +206,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-1.1.18
-    name: "/var/tmp con nodev"
+    name: "Ensure nodev option set on /var/tmp partition"
     os_scope:
       - RHEL
       - OL
@@ -215,7 +215,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-1.1.19
-    name: "/var/tmp con nosuid"
+    name: "Ensure nosuid option set on /var/tmp partition"
     os_scope:
       - RHEL
       - OL
@@ -224,7 +224,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-1.1.20
-    name: "/var/tmp con noexec"
+    name: "Ensure noexec option set on /var/tmp partition"
     os_scope:
       - RHEL
       - OL
@@ -233,7 +233,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-1.1.21
-    name: "/var/log en partición separada (montado)"
+    name: "Ensure separate partition exists for /var/log"
     os_scope:
       - RHEL
       - OL
@@ -242,7 +242,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-1.1.22
-    name: "/var/log con nodev"
+    name: "Ensure nodev option set on /var/log partition"
     os_scope:
       - RHEL
       - OL
@@ -251,7 +251,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-1.1.23
-    name: "/var/log con nosuid"
+    name: "Ensure nosuid option set on /var/log partition"
     os_scope:
       - RHEL
       - OL
@@ -260,7 +260,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-1.1.24
-    name: "/var/log con noexec"
+    name: "Ensure noexec option set on /var/log partition"
     os_scope:
       - RHEL
       - OL
@@ -269,7 +269,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-1.1.25
-    name: "/var/log/audit en partición separada (montado)"
+    name: "Ensure separate partition exists for /var/log/audit"
     os_scope:
       - RHEL
       - OL
@@ -278,7 +278,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-1.1.26
-    name: "/var/log/audit con nodev"
+    name: "Ensure nodev option set on /var/log/audit partition"
     os_scope:
       - RHEL
       - OL
@@ -287,7 +287,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-1.1.27
-    name: "/var/log/audit con nosuid"
+    name: "Ensure nosuid option set on /var/log/audit partition"
     os_scope:
       - RHEL
       - OL
@@ -296,7 +296,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-1.1.28
-    name: "/var/log/audit con noexec"
+    name: "Ensure noexec option set on /var/log/audit partition"
     os_scope:
       - RHEL
       - OL
@@ -305,7 +305,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-1.1.29
-    name: "/home en partición separada (montado)"
+    name: "Ensure separate partition exists for /home"
     os_scope:
       - RHEL
       - OL
@@ -314,7 +314,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-1.1.30
-    name: "/home con nodev"
+    name: "Ensure nodev option set on /home partition"
     os_scope:
       - RHEL
       - OL
@@ -323,7 +323,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-1.1.31
-    name: "/home con nosuid"
+    name: "Ensure nosuid option set on /home partition"
     os_scope:
       - RHEL
       - OL
@@ -332,7 +332,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-1.1.32
-    name: "Control 1.1.32 (no aplicable según CIS)"
+    name: "Ensure noexec option set on removable media partitions"
     os_scope:
       - RHEL
       - OL
@@ -342,7 +342,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-1.1.33
-    name: "Control 1.1.33 (no aplicable según CIS)"
+    name: "Ensure nodev option set on removable media partitions"
     os_scope:
       - RHEL
       - OL
@@ -352,7 +352,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-1.1.34
-    name: "Control 1.1.34 (no aplicable según CIS)"
+    name: "Ensure nosuid option set on removable media partitions"
     os_scope:
       - RHEL
       - OL
@@ -362,7 +362,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-1.1.35
-    name: "Cuotas de usuario activas en /home (usrquota)"
+    name: "Ensure user quotas are enabled on /home partition"
     os_scope:
       - RHEL
       - OL
@@ -372,7 +372,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-1.1.36
-    name: "Cuotas de grupo activas en /home (grpquota)"
+    name: "Ensure group quotas are enabled on /home partition"
     os_scope:
       - RHEL
       - OL
@@ -382,7 +382,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-1.1.37
-    name: "Sin directorios world-writable sin sticky bit"
+    name: "Ensure sticky bit is set on all world-writable directories"
     os_scope:
       - RHEL
       - OL
@@ -391,7 +391,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-1.1.38
-    name: "autofs deshabilitado/enmascarado"
+    name: "Ensure autofs service is disabled"
     os_scope:
       - RHEL
       - OL
@@ -408,7 +408,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-1.1.39
-    name: "usb-storage no cargado"
+    name: "Ensure USB storage kernel module is not available"
     os_scope:
       - RHEL
       - OL
@@ -419,16 +419,13 @@ audit_controls:
     fail_if_regex:
       - "^loaded$"
 
+ 
   ######################################################################
-  # Sección 1.7 - Banners de advertencia
-  ######################################################################
-
-    ######################################################################
-  # Sección 1.7 - Banners de advertencia
+  # Sección 1.7 - Banners de advertencia                               #
   ######################################################################
 
   - id: CIS-1.7.1
-    name: "/etc/motd presente con contenido"
+    name: "Ensure message of the day is configured properly"
     os_scope:
       - RHEL
       - OL
@@ -449,7 +446,7 @@ audit_controls:
       - '^missing_or_empty$'
 
   - id: CIS-1.7.2
-    name: "/etc/issue presente con contenido"
+    name: "Ensure local login warning banner is configured properly"
     os_scope:
       - RHEL
       - OL
@@ -470,7 +467,7 @@ audit_controls:
       - '^missing_or_empty$'
 
   - id: CIS-1.7.3
-    name: "/etc/issue.net presente con contenido"
+    name: "Ensure remote login warning banner is configured properly"
     os_scope:
       - RHEL
       - OL
@@ -491,7 +488,7 @@ audit_controls:
       - '^missing_or_empty$'
 
   - id: CIS-1.7.4
-    name: "/etc/motd existe"
+    name: "Ensure permissions on /etc/motd are configured"
     os_scope:
       - RHEL
       - OL
@@ -508,7 +505,7 @@ audit_controls:
       - '^missing$'
 
   - id: CIS-1.7.5
-    name: "/etc/issue existe"
+    name: "Ensure permissions on /etc/issue are configured"
     os_scope:
       - RHEL
       - OL
@@ -525,7 +522,7 @@ audit_controls:
       - '^missing$'
 
   - id: CIS-1.7.6
-    name: "/etc/issue.net existe"
+    name: "Ensure permissions on /etc/issue.net are configured"
     os_scope:
       - RHEL
       - OL
@@ -546,7 +543,7 @@ audit_controls:
   ######################################################################
 
   - id: CIS-2.1.1
-    name: "chrony instalado"
+    name: "Ensure time synchronization is in use"
     os_scope:
       - RHEL
       - OL
@@ -555,27 +552,30 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-2.1.2
-    name: "ntp/ntpdate no instalados (se usa chrony)"
+    name: "Ensure systemd-timesyncd is configured"
+    os_scope:
+      - SLES
+    command: "systemctl is-enabled systemd-timesyncd.service"
+    pass_if_regex:
+      - '^enabled$'
+    fail_if_regex:
+      - '^disabled$'
+      - '^masked$'
+
+  - id: CIS-2.1.3
+    name: "Ensure chrony is configured"
     os_scope:
       - RHEL
       - OL
-    command: "rpm -q ntp ntpdate >/dev/null 2>&1 && echo present || echo absent"
+    command: "grep -E '^(server|pool)\\s+\\S+' /etc/chrony.conf"
     pass_if_regex:
       - '^absent$'
     fail_if_regex:
       - '^present$'
 
-  - id: CIS-2.1.3
-    name: "chrony configurado (server/pool presentes)"
-    os_scope:
-      - RHEL
-      - OL
-    command: "grep -E '^(server|pool)\\s+\\S+' /etc/chrony.conf"
-    pass_if_regex: []
-    fail_if_regex: []
-
+  
   - id: CIS-2.1.4
-    name: "xinetd no instalado"
+    name: "Ensure xinetd is not installed"
     os_scope:
       - RHEL
       - OL
@@ -586,7 +586,7 @@ audit_controls:
       - '^present$'
 
   - id: CIS-2.1.5
-    name: "Xorg (servidor gráfico) no instalado en servidores"
+    name: "Ensure X Window System is not installed"
     os_scope:
       - RHEL
       - OL
@@ -597,7 +597,7 @@ audit_controls:
       - '^present$'
 
   - id: CIS-2.1.6
-    name: "Avahi no instalado"
+    name: "Ensure Avahi Server is not installed"
     os_scope:
       - RHEL
       - OL
@@ -608,7 +608,7 @@ audit_controls:
       - '^present$'
 
   - id: CIS-2.1.7
-    name: "CUPS no instalado (servidor de impresión)"
+    name: "Ensure CUPS is not installed"
     os_scope:
       - RHEL
       - OL
@@ -619,7 +619,7 @@ audit_controls:
       - '^present$'
 
   - id: CIS-2.1.8
-    name: "DHCP server no instalado"
+    name: "Ensure DHCP Server is not installed"
     os_scope:
       - RHEL
       - OL
@@ -630,7 +630,7 @@ audit_controls:
       - '^present$'
 
   - id: CIS-2.1.9
-    name: "OpenLDAP servers (no aplicable/omitido según notas)"
+    name: "Ensure LDAP server is not installed"
     os_scope:
       - RHEL
       - OL
@@ -640,7 +640,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-2.1.10
-    name: "NFS server deshabilitado/enmascarado (si instalado)"
+    name: "Ensure NFS is not enabled"
     os_scope:
       - RHEL
       - OL
@@ -651,7 +651,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-2.1.11
-    name: "BIND (DNS) no instalado"
+    name: "Ensure DNS Server is not installed"
     os_scope:
       - RHEL
       - OL
@@ -662,7 +662,7 @@ audit_controls:
       - '^present$'
 
   - id: CIS-2.1.12
-    name: "FTP no instalado (paquete ftp)"
+    name: "Ensure FTP Server is not installed"
     os_scope:
       - RHEL
       - OL
@@ -673,7 +673,7 @@ audit_controls:
       - '^present$'
 
   - id: CIS-2.1.13
-    name: "vsftpd no instalado"
+    name: "Ensure FTP Server is not installed"
     os_scope:
       - RHEL
       - OL
@@ -684,7 +684,7 @@ audit_controls:
       - '^present$'
 
   - id: CIS-2.1.14
-    name: "tftp-server no instalado"
+    name: "Ensure TFTP Server is not installed"
     os_scope:
       - RHEL
       - OL
@@ -695,7 +695,7 @@ audit_controls:
       - '^present$'
 
   - id: CIS-2.1.15
-    name: "Servidores web no instalados (httpd/nginx)"
+    name: "Ensure a web server is not installed"
     os_scope:
       - RHEL
       - OL
@@ -706,7 +706,7 @@ audit_controls:
       - '^present$'
 
   - id: CIS-2.1.16
-    name: "IMAP/POP no instalados (dovecot/cyrus-imapd)"
+    name: "Ensure IMAP and POP3 server is not installed"
     os_scope:
       - RHEL
       - OL
@@ -717,7 +717,7 @@ audit_controls:
       - '^present$'
 
   - id: CIS-2.1.17
-    name: "Samba no instalado"
+    name: "Ensure Samba is not installed"
     os_scope:
       - RHEL
       - OL
@@ -728,7 +728,7 @@ audit_controls:
       - '^present$'
 
   - id: CIS-2.1.18
-    name: "Squid no instalado"
+    name: "Ensure HTTP Proxy Server is not installed"
     os_scope:
       - RHEL
       - OL
@@ -739,7 +739,7 @@ audit_controls:
       - '^present$'
 
   - id: CIS-2.1.19
-    name: "SNMP no instalado (net-snmp)"
+    name: "Ensure SNMP Server is not installed"
     os_scope:
       - RHEL
       - OL
@@ -750,7 +750,7 @@ audit_controls:
       - '^present$'
 
   - id: CIS-2.1.20
-    name: "SMTP no expuesto (solo loopback)"
+    name: "Ensure mail transfer agent is configured for local-only mode"
     os_scope:
       - RHEL
       - OL
@@ -761,7 +761,7 @@ audit_controls:
       - '^open$'
 
   - id: CIS-2.1.21
-    name: "telnet-server no instalado"
+    name: "Ensure telnet-server is not installed"
     os_scope:
       - RHEL
       - OL
@@ -772,7 +772,7 @@ audit_controls:
       - '^present$'
 
   - id: CIS-2.1.22
-    name: "rsync no instalado (servidor)"
+    name: "Ensure rsync service is not installed"
     os_scope:
       - RHEL
       - OL
@@ -783,7 +783,7 @@ audit_controls:
       - '^present$'
 
   - id: CIS-2.1.23
-    name: "NIS server (ypserv) no instalado"
+    name: "Ensure NIS Server is not installed"
     os_scope:
       - RHEL
       - OL
@@ -798,7 +798,7 @@ audit_controls:
   ######################################################################
 
   - id: CIS-2.2.1
-    name: "NIS client (ypbind) no instalado"
+    name: "Ensure NIS Client is not installed"
     os_scope:
       - RHEL
       - OL
@@ -809,7 +809,7 @@ audit_controls:
       - '^present$'
 
   - id: CIS-2.2.2
-    name: "rsh cliente no instalado"
+    name: "Ensure rsh client is not installed"
     os_scope:
       - RHEL
       - OL
@@ -820,7 +820,7 @@ audit_controls:
       - '^present$'
 
   - id: CIS-2.2.3
-    name: "talk cliente no instalado"
+    name: "Ensure talk client is not installed"
     os_scope:
       - RHEL
       - OL
@@ -831,7 +831,7 @@ audit_controls:
       - '^present$'
 
   - id: CIS-2.2.4
-    name: "telnet cliente no instalado"
+    name: "Ensure telnet client is not installed"
     os_scope:
       - RHEL
       - OL
@@ -842,7 +842,7 @@ audit_controls:
       - '^present$'
 
   - id: CIS-2.2.5
-    name: "OpenLDAP clients no instalados"
+    name: "Ensure LDAP client is not installed"
     os_scope:
       - RHEL
       - OL
@@ -853,7 +853,7 @@ audit_controls:
       - '^present$'
 
   - id: CIS-2.2.6
-    name: "tftp cliente no instalado"
+    name: "Ensure TFTP client is not installed"
     os_scope:
       - RHEL
       - OL
@@ -864,7 +864,7 @@ audit_controls:
       - '^present$'
 
   - id: CIS-2.2.7
-    name: "rpcbind no instalado (cliente)"
+    name: "Ensure RPC is not installed"
     os_scope:
       - RHEL
       - OL
@@ -879,7 +879,7 @@ audit_controls:
   ######################################################################
 
   - id: CIS-3.1.1
-    name: "Deshabilitar IPv6 (parámetros presentes en sysctl)"
+    name: "Ensure IPv6 status is identified"
     os_scope:
       - RHEL
       - OL
@@ -888,7 +888,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-3.1.2
-    name: "WiFi deshabilitado (nmcli radio wifi disabled)"
+    name: "Ensure wireless interfaces are disabled"
     os_scope:
       - RHEL
       - OL
@@ -914,7 +914,7 @@ audit_controls:
   ######################################################################
 
   - id: CIS-3.2.1
-    name: "send_redirects deshabilitado (all/default)"
+    name: "Ensure packet redirect sending is disabled"
     os_scope:
       - RHEL
       - OL
@@ -932,7 +932,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-3.2.2
-    name: "ip_forward deshabilitado"
+    name: "Ensure IP forwarding is disabled"
     os_scope:
       - RHEL
       - OL
@@ -953,7 +953,7 @@ audit_controls:
   ######################################################################
 
   - id: CIS-3.3.1
-    name: "accept_source_route deshabilitado (all/default)"
+    name: "Ensure source routed packets are not accepted"
     os_scope:
       - RHEL
       - OL
@@ -971,7 +971,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-3.3.2
-    name: "accept_redirects deshabilitado (all/default)"
+    name: "Ensure ICMP redirects are not accepted"
     os_scope:
       - RHEL
       - OL
@@ -989,7 +989,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-3.3.3
-    name: "secure_redirects deshabilitado (all/default)"
+    name: "Ensure secure ICMP redirects are not accepted"
     os_scope:
       - RHEL
       - OL
@@ -1007,7 +1007,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-3.3.4
-    name: "log_martians habilitado (all/default)"
+    name: "Ensure suspicious packets are logged"
     os_scope:
       - RHEL
       - OL
@@ -1025,7 +1025,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-3.3.5
-    name: "icmp_echo_ignore_broadcasts habilitado"
+    name: "Ensure broadcast ICMP requests are ignored"
     os_scope:
       - RHEL
       - OL
@@ -1042,7 +1042,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-3.3.6
-    name: "icmp_ignore_bogus_error_responses habilitado"
+    name: "Ensure bogus ICMP responses are ignored"
     os_scope:
       - RHEL
       - OL
@@ -1059,7 +1059,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-3.3.7
-    name: "rp_filter habilitado (all/default)"
+    name: "Ensure reverse path filtering is enabled"
     os_scope:
       - RHEL
       - OL
@@ -1077,7 +1077,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-3.3.8
-    name: "tcp_syncookies habilitado"
+    name: "Ensure TCP SYN cookies is enabled"
     os_scope:
       - RHEL
       - OL
@@ -1094,7 +1094,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-3.3.9
-    name: "IPv6 accept_ra deshabilitado (all/default)"
+    name: "Ensure IPv6 router advertisements are not accepted"
     os_scope:
       - RHEL
       - OL
@@ -1125,7 +1125,7 @@ audit_controls:
   ######################################################################
 
   - id: CIS-3.4.1
-    name: "Deshabilitar DCCP"
+    name: "Ensure DCCP is disabled"
     os_scope:
       - RHEL
       - OL
@@ -1150,7 +1150,7 @@ audit_controls:
       - "^available$"
 
   - id: CIS-3.4.2
-    name: "Deshabilitar SCTP"
+    name: "Ensure SCTP is disabled"
     os_scope:
       - RHEL
       - OL
@@ -1175,7 +1175,7 @@ audit_controls:
       - "^available$"
 
   - id: CIS-3.4.3
-    name: "RDS (no aplicable/omitido según notas)"
+    name: "Ensure RDS is disabled"
     os_scope:
       - RHEL
       - OL
@@ -1185,7 +1185,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-3.4.4
-    name: "TIPC (no aplicable/omitido según notas)"
+    name: "Ensure TIPC is disabled"
     os_scope:
       - RHEL
       - OL
@@ -1199,7 +1199,7 @@ audit_controls:
   ######################################################################
 
   - id: CIS-5.1.1
-    name: "crond habilitado (systemctl)"
+    name: "Ensure cron daemon is enabled and running"
     os_scope:
       - RHEL
       - OL
@@ -1223,7 +1223,7 @@ audit_controls:
       - '^crond=masked$'
 
   - id: CIS-5.1.2
-    name: "Permisos de /etc/crontab (600/640 root:root)"
+    name: "Ensure permissions on /etc/crontab are configured"
     os_scope:
       - RHEL
       - OL
@@ -1234,7 +1234,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-5.1.3
-    name: "Permisos de /etc/cron.hourly (700 root:root)"
+    name: "Ensure permissions on /etc/cron.hourly are configured"
     os_scope:
       - RHEL
       - OL
@@ -1244,7 +1244,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-5.1.4
-    name: "Permisos de /etc/cron.daily (700 root:root)"
+    name: "Ensure permissions on /etc/cron.daily are configured"
     os_scope:
       - RHEL
       - OL
@@ -1254,7 +1254,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-5.1.5
-    name: "Permisos de /etc/cron.weekly (700 root:root)"
+    name: "Ensure permissions on /etc/cron.weekly are configured"
     os_scope:
       - RHEL
       - OL
@@ -1264,7 +1264,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-5.1.6
-    name: "Permisos de /etc/cron.monthly (700 root:root)"
+    name: "Ensure permissions on /etc/cron.monthly are configured"
     os_scope:
       - RHEL
       - OL
@@ -1274,7 +1274,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-5.1.7
-    name: "Permisos de /etc/cron.d (700 root:root)"
+    name: "Ensure permissions on /etc/cron.d are configured"
     os_scope:
       - RHEL
       - OL
@@ -1284,7 +1284,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-5.1.8
-    name: "cron restringido (/etc/cron.allow con 600 root:root y sin cron.deny)"
+    name: "Ensure cron is restricted to authorized users"
     os_scope:
       - RHEL
       - OL
@@ -1303,7 +1303,7 @@ audit_controls:
       - '^cron\.allow_missing'
 
   - id: CIS-5.1.9
-    name: "at restringido (/etc/at.allow con 600 root:root y sin at.deny)"
+    name: "Ensure at is restricted to authorized users"
     os_scope:
       - RHEL
       - OL
@@ -1321,13 +1321,12 @@ audit_controls:
       - 'at\.deny=present'
       - '^at\.allow_missing'
 
-
   ######################################################################
   # Sección 5.2 - Configurar SUDO
   ######################################################################
 
   - id: CIS-5.2.1
-    name: "sudo instalado"
+    name: "Ensure sudo is installed"
     os_scope:
       - RHEL
       - OL
@@ -1336,7 +1335,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-5.2.2
-    name: "Defaults use_pty habilitado en sudoers"
+    name: "Ensure sudo commands use pty"
     os_scope:
       - RHEL
       - OL
@@ -1347,7 +1346,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-5.2.3
-    name: "logfile definido en sudoers"
+    name: "Ensure sudo log file exists"
     os_scope:
       - RHEL
       - OL
@@ -1358,7 +1357,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-5.2.4
-    name: "Prohibir NOPASSWD en sudoers (con exclusiones controladas)"
+    name: "Ensure users must provide password for privilege escalation"
     os_scope:
       - RHEL
       - OL
@@ -1396,7 +1395,7 @@ audit_controls:
       - 'NOPASSWD'
 
   - id: CIS-5.2.5
-    name: "Prohibir !authenticate en sudoers"
+    name: "Ensure re-authentication for privilege escalation is not disabled globally"
     os_scope:
       - RHEL
       - OL
@@ -1405,7 +1404,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-5.2.6
-    name: "timestamp_timeout definido en sudoers"
+    name: "Ensure sudo authentication timeout is configured correctly"
     os_scope:
       - RHEL
       - OL
@@ -1416,7 +1415,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-5.2.7
-    name: "Restricción de su con pam_wheel (use_uid/grupo)"
+    name: "Ensure access to the su command is restricted"
     os_scope:
       - RHEL
       - OL
@@ -1438,7 +1437,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-5.2.8
-    name: "authselect: validación de perfil y módulos PAM requeridos"
+    name: "Ensure custom authselect profile is used"
     os_scope:
       - RHEL
       - OL
@@ -1462,7 +1461,7 @@ audit_controls:
       - "NO CUMPLE"
 
   - id: CIS-5.2.9
-    name: "faillock presente en PAM (password-auth/system-auth)"
+    name: "Ensure authselect includes with-faillock"
     os_scope:
       - RHEL
       - OL
@@ -1475,7 +1474,7 @@ audit_controls:
   ######################################################################
 
   - id: CIS-5.3.1
-    name: "/etc/ssh/sshd_config permisos, owner y grupo (stat)"
+    name: "Ensure permissions on /etc/ssh/sshd_config are configured"
     os_scope:
       - RHEL
       - OL
@@ -1527,7 +1526,7 @@ audit_controls:
       - "NO existe"
 
   - id: CIS-5.3.2
-    name: "Claves privadas de host presentes (archivos existen)"
+    name: "Ensure permissions on SSH private host key files are configured"
     os_scope:
       - RHEL
       - OL
@@ -1567,7 +1566,7 @@ audit_controls:
       - "Incorrecto:"
 
   - id: CIS-5.3.3
-    name: "Claves públicas de host presentes (archivos existen)"
+    name: "Ensure permissions on SSH public host key files are configured"
     os_scope:
       - RHEL
       - OL
@@ -1600,7 +1599,7 @@ audit_controls:
       - "Incorrecto:"
 
   - id: CIS-5.3.4
-    name: "Allow/Deny Users/Groups configurados (si aplica)"
+    name: "Ensure SSH access is limited"
     os_scope:
       - RHEL
       - OL
@@ -1609,7 +1608,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-5.3.5
-    name: "LogLevel INFO o VERBOSE"
+    name: "Ensure SSH LogLevel is appropriate"
     os_scope:
       - RHEL
       - OL
@@ -1619,7 +1618,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-5.3.6
-    name: "X11Forwarding no"
+    name: "Ensure SSH X11 forwarding is disabled"
     os_scope:
       - RHEL
       - OL
@@ -1629,7 +1628,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-5.3.7
-    name: "MaxAuthTries <= 4"
+    name: "Ensure SSH MaxAuthTries is set to 4 or less"
     os_scope:
       - RHEL
       - OL
@@ -1639,7 +1638,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-5.3.8
-    name: "IgnoreRhosts yes"
+    name: "Ensure SSH IgnoreRhosts is enabled"
     os_scope:
       - RHEL
       - OL
@@ -1649,7 +1648,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-5.3.9
-    name: "HostbasedAuthentication no"
+    name: "Ensure SSH HostbasedAuthentication is disabled"
     os_scope:
       - RHEL
       - OL
@@ -1659,7 +1658,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-5.3.10
-    name: "PermitRootLogin no/prohibit-password"
+    name: "Ensure SSH root login is disabled"
     os_scope:
       - RHEL
       - OL
@@ -1669,7 +1668,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-5.3.11
-    name: "PermitEmptyPasswords no"
+    name: "Ensure SSH PermitEmptyPasswords is disabled"
     os_scope:
       - RHEL
       - OL
@@ -1679,7 +1678,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-5.3.12
-    name: "PermitUserEnvironment no"
+    name: "Ensure SSH PermitUserEnvironment is disabled"
     os_scope:
       - RHEL
       - OL
@@ -1689,7 +1688,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-5.3.13
-    name: "ClientAlive* definidos (presencia)"
+    name: "Ensure SSH Idle Timeout Interval is configured"
     os_scope:
       - RHEL
       - OL
@@ -1698,7 +1697,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-5.3.14
-    name: "LoginGraceTime definido (<=60s recomendado)"
+    name: "Ensure SSH LoginGraceTime is set to one minute or less"
     os_scope:
       - RHEL
       - OL
@@ -1707,7 +1706,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-5.3.15
-    name: "Banner configurado (no 'none')"
+    name: "Ensure SSH warning banner is configured"
     os_scope:
       - RHEL
       - OL
@@ -1723,7 +1722,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-5.3.16
-    name: "SSH: UsePAM habilitado"
+    name: "Ensure SSH PAM is enabled"
     os_scope:
       - RHEL
       - OL
@@ -1733,7 +1732,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-5.3.17
-    name: "SSH: AllowTcpForwarding deshabilitado"
+    name: "Ensure SSH AllowTcpForwarding is disabled"
     os_scope:
       - RHEL
       - OL
@@ -1743,7 +1742,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-5.3.18
-    name: "SSH: MaxStartups definido"
+    name: "Ensure SSH MaxStartups is configured"
     os_scope:
       - RHEL
       - OL
@@ -1752,7 +1751,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-5.3.19
-    name: "SSH: MaxSessions ≤ 10"
+    name: "Ensure SSH MaxSessions is limited"
     os_scope:
       - RHEL
       - OL
@@ -1766,7 +1765,7 @@ audit_controls:
   ######################################################################
 
   - id: CIS-5.4.1
-    name: "PAM: pwquality y políticas (minlen/minclass)"
+    name: "Ensure password creation requirements are configured"
     os_scope:
       - RHEL
       - OL
@@ -1815,7 +1814,7 @@ audit_controls:
       - "FAIL"
 
   - id: CIS-5.4.2
-    name: "PAM: faillock (deny y unlock_time definidos)"
+    name: "Ensure lockout for failed password attempts is configured"
     os_scope:
       - RHEL
       - OL
@@ -1826,7 +1825,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-5.4.3
-    name: "PAM: historial de contraseñas (remember ≥ 24)"
+    name: "Ensure password reuse is limited"
     os_scope:
       - RHEL
       - OL
@@ -1866,7 +1865,7 @@ audit_controls:
       - "FAIL"
 
   - id: CIS-5.4.4
-    name: "PAM: cifrado SHA512 en sistema"
+    name: "Ensure password hashing algorithm is SHA-512"
     os_scope:
       - RHEL
       - OL
@@ -1929,7 +1928,7 @@ audit_controls:
   ######################################################################
 
   - id: CIS-5.5.1
-    name: "PASS_MAX_DAYS <= 365"
+    name: "Ensure password expiration is 42 days or less"
     os_scope:
       - RHEL
       - OL
@@ -1947,7 +1946,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-5.5.2
-    name: "PASS_MIN_DAYS >= 1"
+    name: "Ensure minimum days between password changes is configured"
     os_scope:
       - RHEL
       - OL
@@ -1965,7 +1964,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-5.5.3
-    name: "PASS_WARN_AGE >= 7"
+    name: "Ensure password expiration warning days is 5 or more"
     os_scope:
       - RHEL
       - OL
@@ -1983,7 +1982,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-5.5.4
-    name: "INACTIVE <= 30 (>=0)"
+    name: "Ensure inactive password lock is 30 days or less"
     os_scope:
       - RHEL
       - OL
@@ -2001,7 +2000,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-5.5.5
-    name: "Sin cambios de contraseña fechados en el futuro"
+    name: "Ensure all users last password change date is in the past"
     os_scope:
       - RHEL
       - OL
@@ -2036,7 +2035,7 @@ audit_controls:
       - '^future:'
 
   - id: CIS-5.5.6
-    name: "Cuentas del sistema sin shell de login (UID < UID_MIN)"
+    name: "Ensure system accounts are secured"
     os_scope:
       - RHEL
       - OL
@@ -2084,7 +2083,7 @@ audit_controls:
       - '^bad:'
 
   - id: CIS-5.5.7
-    name: "root pertenece a GID 0"
+    name: "Ensure default group for the root account is GID 0"
     os_scope:
       - RHEL
       - OL
@@ -2093,7 +2092,7 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-5.5.8
-    name: "Umask por defecto 027/077 en perfiles de root"
+    name: "Ensure default user umask is 027 or more restrictive"
     os_scope:
       - RHEL
       - OL
@@ -2114,7 +2113,7 @@ audit_controls:
       - "FAIL"
 
   - id: CIS-5.5.9
-    name: "TMOUT configurado (presencia)"
+    name: "Ensure default user shell timeout is 900 seconds or less"
     os_scope:
       - RHEL
       - OL
@@ -2154,7 +2153,7 @@ audit_controls:
       - "FAIL"
 
   - id: CIS-5.5.10
-    name: "Restricción de 'su' al grupo wheel (PAM)"
+    name: "Ensure root login is restricted to system console"
     os_scope:
       - RHEL
       - OL
