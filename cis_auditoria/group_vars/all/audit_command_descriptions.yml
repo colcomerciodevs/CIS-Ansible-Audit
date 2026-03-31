@@ -547,12 +547,18 @@ audit_command_descriptions:
    
 
   CIS-5.2.8: >-
-    Verifica el perfil activo configurado en authselect y valida que los archivos
-    system-auth y password-auth asociados al perfil existan. Posteriormente,
-    comprueba que dichos archivos incluyan los módulos PAM requeridos
-    (pam_pwquality, pam_pwhistory, pam_faillock y pam_unix). El control cumple si
-    el perfil es válido y contiene todos los módulos definidos; falla si no se
-    encuentran los archivos o falta alguno de los módulos requeridos.
+    Valida el perfil activo de authselect obtenido mediante el comando
+    "authselect current" y verifica que corresponda a un perfil personalizado
+    (custom/*). Posteriormente, comprueba que los archivos system-auth y
+    password-auth asociados a dicho perfil existan en la ruta correspondiente.
+
+    Una vez validados los archivos, revisa que estos incluyan los módulos PAM
+    requeridos (pam_pwquality.so, pam_pwhistory.so, pam_faillock.so y pam_unix.so)
+    dentro de sus plantillas.
+
+    El control se considera cumplido cuando el perfil es de tipo custom, los
+    archivos existen y contienen todos los módulos definidos; en caso contrario,
+    se marca como no cumplido.
 
   CIS-5.2.9: >-
     Valida que el módulo pam_faillock esté presente en PAM (password-auth y

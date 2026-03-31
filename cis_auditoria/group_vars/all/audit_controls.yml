@@ -772,15 +772,33 @@ audit_controls:
       - '^present$'
 
   - id: CIS-2.1.22
-    name: "Ensure rsync service is not installed"
+    name: "Ensure rsync daemon is not installed or service/socket are disabled"
     os_scope:
       - RHEL
       - OL
-    command: "rpm -q rsync >/dev/null 2>&1 && echo present || echo absent"
+    command: >
+      bash -lc '
+      if ! rpm -q rsync-daemon >/dev/null 2>&1; then
+        echo "not_installed";
+        exit 0;
+      fi;
+
+      enabled=$(systemctl is-enabled rsyncd.socket rsyncd.service 2>/dev/null | grep -c enabled || true);
+      active=$(systemctl is-active rsyncd.socket rsyncd.service 2>/dev/null | grep -c "^active" || true);
+
+      if [[ "$enabled" -eq 0 && "$active" -eq 0 ]]; then
+        echo "installed_but_disabled";
+        exit 0;
+      else
+        echo "enabled_or_active";
+        exit 1;
+      fi
+      '
     pass_if_regex:
-      - '^absent$'
+      - '^not_installed$'
+      - '^installed_but_disabled$'
     fail_if_regex:
-      - '^present$'
+      - '^enabled_or_active$'
 
   - id: CIS-2.1.23
     name: "Ensure NIS Server is not installed"
@@ -1437,37 +1455,66 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-5.2.8
-    name: "Ensure custom authselect profile is used"
+    name: "Asegurar que es usado el perfil personalizado de authselect y contiene módulos PAM"
     os_scope:
       - RHEL
       - OL
     command: >
       bash -lc '
-      profile=$(head -1 /etc/authselect/authselect.conf 2>/dev/null)
-      for base in "/etc/authselect/$profile" "/etc/authselect/default/$profile" "/etc/authselect/custom/${profile#custom/}"; do
-        [ -f "$base/system-auth" ] && [ -f "$base/password-auth" ] && break
-      done
-      [ -f "$base/system-auth" ] && [ -f "$base/password-auth" ] || { echo "NO CUMPLE"; exit 1; }
+      profile=$(authselect current 2>/dev/null | awk -F": " "/Profile ID/ {print \$2}")
 
+      if [[ -z "$profile" ]]; then
+        echo "NO CUMPLE - no se pudo obtener el profile"
+        exit 1
+      fi
+
+      # Validar que sea custom
+      [[ "$profile" == custom/* ]] || {
+        echo "NO CUMPLE - no usa perfil custom ($profile)"
+        exit 1
+      }
+
+      base="/etc/authselect/$profile"
+
+      # Validar templates
+      [ -f "$base/system-auth" ] && [ -f "$base/password-auth" ] || {
+        echo "NO CUMPLE - no existen templates en $base"
+        exit 1
+      }
+
+      # Validar módulos requeridos en el perfil
+      faltantes=""
       for mod in pam_pwquality.so pam_pwhistory.so pam_faillock.so pam_unix.so; do
-        grep -Pq -- "\b${mod//./\\.}\b" "$base/system-auth" "$base/password-auth" || { echo "NO CUMPLE - falta $mod"; exit 1; }
+        grep -Pq -- "\b${mod//./\\.}\b" "$base/system-auth" "$base/password-auth" || {
+          faltantes="$faltantes $mod"
+        }
       done
+
+      if [[ -n "$faltantes" ]]; then
+        echo "NO CUMPLE - faltan:$faltantes"
+        exit 1
+      fi
 
       echo "CUMPLE"
       '
     pass_if_regex:
-      - "CUMPLE"
+      - '^CUMPLE$'
     fail_if_regex:
-      - "NO CUMPLE"
+      - '^NO CUMPLE'
 
   - id: CIS-5.2.9
     name: "Ensure authselect includes with-faillock"
     os_scope:
       - RHEL
       - OL
-    command: "grep pam_faillock.so /etc/pam.d/password-auth /etc/pam.d/system-auth"
-    pass_if_regex: []
-    fail_if_regex: []
+    command: >
+      bash -lc '
+      authselect current 2>/dev/null | grep -q "with-faillock" && echo "CUMPLE" || { echo "NO CUMPLE"; exit 1; }
+      '
+    pass_if_regex:
+      - '^CUMPLE$'
+    fail_if_regex:
+      - '^NO CUMPLE$'
 
   ######################################################################
   # Sección 5.3 - Configurar Servidor SSH
