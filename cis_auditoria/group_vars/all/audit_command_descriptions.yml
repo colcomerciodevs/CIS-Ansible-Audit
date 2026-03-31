@@ -108,7 +108,7 @@ audit_command_descriptions:
     Comprueba si /var tiene la opción nosuid.
 
   CIS-1.1.16: >-
-    Omitido.
+    Omitido no esta presente en el CIS BENCHMARK.
 
   CIS-1.1.17: >-
     Valida si /var/tmp está montado y obtiene su configuración actual.
@@ -156,21 +156,18 @@ audit_command_descriptions:
     Comprueba si /home tiene la opción nosuid.
 
   CIS-1.1.32: >-
-    Omitido.
+    Omitido no esta presente en el CIS BENCHMARK.
 
   CIS-1.1.33: >-
-    Omitido.
-
+    Omitido no esta presente en el CIS BENCHMARK.
   CIS-1.1.34: >-
-    Omitido.
+    Omitido no esta presente en el CIS BENCHMARK.
 
   CIS-1.1.35: >-
-    Valida que el filesystem montado en /home tenga habilitada la opción
-    usrquota (cuotas por usuario); si la encuentra → cumple, si no → no cumple.
+    Omitido no esta presente en el CIS BENCHMARK.
 
   CIS-1.1.36: >-
-    Valida que el filesystem montado en /home tenga habilitada la opción
-    grpquota (cuotas por grupo); si la encuentra → cumple, si no → no cumple.
+    Omitido no esta presente en el CIS BENCHMARK.
 
   CIS-1.1.37: >-
     Valida si existen directorios locales con permisos inseguros: recorre todos
@@ -378,10 +375,13 @@ audit_command_descriptions:
     (cumple según política), si no → no cumple.
 
   CIS-3.1.2: >-
-    Valida si la interfaz WiFi está deshabilitada mediante nmcli; si el comando
-    retorna disabled → cumple, si está habilitada → no cumple.
+    Verifica si existen interfaces de red inalámbricas en el sistema mediante
+    la inspección de /sys/class/net. Si no se detectan interfaces wireless, el
+    control se considera cumplido. En caso de existir, valida el estado del WiFi
+    utilizando nmcli radio wifi: si está en estado disabled cumple, y si está
+    habilitado (enabled) no cumple.
 
-# ============================================================================
+  # ============================================================================
 # SECTION 3.2 - Network Parameters (IPv4)
 # ============================================================================
 
@@ -438,8 +438,12 @@ audit_command_descriptions:
     cumple, si no → no cumple.
 
   CIS-3.3.9: >-
-    Valida que accept_ra de IPv6 esté deshabilitado (all y default en 0);
-    si cumple en ejecución o está persistido → cumple, si no → no cumple.
+    El control valida la configuración del parámetro accept_ra para IPv6 en las
+    interfaces all y default. Si IPv6 se encuentra deshabilitado en el sistema,
+    el control se considera no aplicable. En caso contrario, se verifica que el
+    valor de accept_ra esté configurado en 0 tanto en ejecución como de forma
+    persistente. El control falla si alguno de estos parámetros se encuentra
+    habilitado.
 
 # ============================================================================
 # SECTION 3.4 - Uncommon Network Protocols
@@ -543,8 +547,12 @@ audit_command_descriptions:
    
 
   CIS-5.2.8: >-
-    Valida si existen perfiles personalizados (custom) en authselect; si existen
-    requiere validación según política.
+    Verifica el perfil activo configurado en authselect y valida que los archivos
+    system-auth y password-auth asociados al perfil existan. Posteriormente,
+    comprueba que dichos archivos incluyan los módulos PAM requeridos
+    (pam_pwquality, pam_pwhistory, pam_faillock y pam_unix). El control cumple si
+    el perfil es válido y contiene todos los módulos definidos; falla si no se
+    encuentran los archivos o falta alguno de los módulos requeridos.
 
   CIS-5.2.9: >-
     Valida que el módulo pam_faillock esté presente en PAM (password-auth y
@@ -555,16 +563,26 @@ audit_command_descriptions:
 # ============================================================================
 
   CIS-5.3.1: >-
-    Muestra los metadatos del archivo /etc/ssh/sshd_config (permisos,
-    propietario, grupo y fechas) para validar configuración segura.
+    El control valida la configuración de seguridad del archivo
+    /etc/ssh/sshd_config mediante la verificación de su existencia, permisos,
+    propietario y grupo. Se asegura que el archivo tenga permisos restrictivos
+    (no más permisivos que 600) y pertenezca al usuario y grupo root. El control
+    falla si alguna de estas condiciones no se cumple.
 
   CIS-5.3.2: >-
-    Muestra los metadatos de las llaves privadas del host SSH en /etc/ssh
-    (ssh_host_*_key) para verificar que tengan permisos seguros.
+    El control valida la seguridad de las claves privadas de host SSH ubicadas
+    en /etc/ssh, verificando que correspondan a archivos válidos de tipo OpenSSH
+    private key. Se asegura que cada clave tenga permisos restrictivos,
+    pertenezca al usuario root y al grupo root o a un grupo autorizado de SSH.
+    El control falla si alguna clave no cumple con estos criterios de seguridad.
 
   CIS-5.3.3: >-
-    Muestra los metadatos de las llaves públicas del host SSH en /etc/ssh
-    (ssh_host_*_key.pub) para validar sus atributos.
+    Identifica las claves públicas de host SSH en /etc/ssh y valida que
+    correspondan a archivos de tipo clave pública OpenSSH. Para cada archivo
+    encontrado, verifica que los permisos no permitan accesos indebidos, y que
+    el propietario y grupo sean root. El control cumple si todas las claves
+    públicas cumplen con estas condiciones; falla si alguna presenta permisos,
+    owner o grupo incorrectos.
 
   CIS-5.3.4: >-
     Valida si existen directivas AllowUsers, AllowGroups, DenyUsers o DenyGroups
@@ -622,8 +640,7 @@ audit_command_descriptions:
     si no → no cumple.
 
   CIS-5.3.17: >-
-    Valida que AllowTcpForwarding esté deshabilitado; si retorna no → cumple,
-    si no → no cumple.
+    Omitido no esta presente en el CIS BENCHMARK.
 
   CIS-5.3.18: >-
     Muestra el valor de MaxStartups para validar control de conexiones;
@@ -639,8 +656,16 @@ audit_command_descriptions:
 # ============================================================================
 
   CIS-5.4.1: >-
-    Valida que el módulo pam_pwquality esté configurado y muestra parámetros
-    como minlen, minclass y complejidad; cumplimiento depende de valores.
+    Valida la configuración de políticas de complejidad de contraseñas mediante
+    los archivos /etc/security/pwquality.conf y pwquality.conf.d. Verifica que
+    el parámetro difok sea mayor o igual a 2, que minlen sea mayor o igual a 14,
+    y que los parámetros dcredit, ucredit, lcredit y ocredit estén definidos con
+    valores negativos (no 0 ni positivos), asegurando la inclusión obligatoria de
+    diferentes tipos de caracteres. El control cumple si todos los parámetros
+    cumplen estas condiciones; falla si alguno no se encuentra definido o no
+    cumple los valores esperados.
+    NOTA = difok = 2 , minlen = 14 , minclass = 4 , 
+    dcredit, ucredit, lcredit, and ocredit are not set to 0 or greater
 
   CIS-5.4.2: >-
     Valida que faillock tenga parámetros deny (1-5) y unlock_time definidos;
@@ -648,12 +673,22 @@ audit_command_descriptions:
     NOTA = estos son los valores que debe de tener - deny = 5 | unlock_time = 900
 
   CIS-5.4.3: >-
-    Valida que el historial de contraseñas (remember) sea de al menos 5;
-    si cumple → cumple, si no → no cumple.
+    Valida la configuración del historial de contraseñas mediante el archivo
+    /etc/security/pwhistory.conf, verificando que el parámetro remember esté
+    configurado con un valor mayor o igual a 24. Adicionalmente, comprueba que
+    el parámetro remember no esté definido dentro del módulo pam_pwhistory.so en
+    los archivos system-auth y password-auth, asegurando que la configuración se
+    gestione de forma centralizada. El control cumple si ambas condiciones se
+    satisfacen; falla si el valor es menor al esperado o si se define en PAM.
 
   CIS-5.4.4: >-
-    Valida que el cifrado de contraseñas use SHA512 en libuser, login.defs
-    y PAM; si está configurado → cumple, si no → no cumple.
+    Valida el perfil activo configurado en authselect y verifica en los archivos
+    password-auth y system-auth asociados que el módulo pam_unix.so esté
+    configurado con algoritmos de hash seguros para contraseñas (sha512 o
+    yescrypt). El control cumple si ambos archivos contienen esta configuración;
+    falla si no se puede identificar el perfil activo, si la ruta del perfil no
+    existe o si alguno de los archivos no incluye pam_unix.so con dichos
+    algoritmos.
 
 # ============================================================================
 # SECTION 5.5 - Password Policy and Accounts
@@ -703,15 +738,19 @@ audit_command_descriptions:
     cumple, si no → no cumple.
 
   CIS-5.5.8: >-
-    Valida que la umask esté configurada como 027 o 077 en perfiles de shell;
-    si existe → cumple, si no → no cumple.
+    Verifica en los archivos de configuración de shell del usuario root
+    (/root/.bash_profile y /root/.bashrc) que no existan valores de umask
+    menos restrictivos que 0027. El control cumple si no se detectan umask
+    inseguros; falla si se encuentran configuraciones que permitan permisos
+    más abiertos de lo recomendado.
 
   CIS-5.5.9: >-
-    Valida que TMOUT esté configurado para cerrar sesiones inactivas;
-    si existe → cumple, si no → no cumple.
-    NOTA = debe estar en 900
+    Verifica en los archivos globales de perfil de shell (/etc/bashrc,
+    /etc/profile y /etc/profile.d/*.sh) que el parámetro TMOUT esté configurado
+    con un valor mayor a 0 y menor o igual a 900, y que además se encuentre
+    definido como readonly y exportado. El control cumple si se satisfacen todas
+    estas condiciones; falla si TMOUT no está configurado, tiene un valor fuera
+    del rango permitido o no está declarado como readonly y export.
 
   CIS-5.5.10: >-
-    Valida que el uso de su esté restringido mediante pam_wheel en PAM;
-    si está configurado → cumple, si no → no cumple.
-    NOTA= deben estar excluidos los usuarios administradores S.O (tux,aromero,csotomonte,jcastano)
+    Omitido no esta presente en el CIS BENCHMARK.

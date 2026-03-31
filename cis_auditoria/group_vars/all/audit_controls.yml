@@ -82,11 +82,10 @@ audit_controls:
     os_scope:
       - RHEL
       - OL
-    command: "grep -Ei '\\svfat\\s' /etc/fstab >/dev/null 2>&1 && echo present || echo absent"
+    command: "bash -lc 'echo not_applicable'"
     pass_if_regex:
-      - '^absent$'
-    fail_if_regex:
-      - '^present$'
+      - '^not_applicable$'
+    fail_if_regex: []
 
   - id: CIS-1.1.5
     name: "/tmp en partición separada (montado)"
@@ -367,8 +366,9 @@ audit_controls:
     os_scope:
       - RHEL
       - OL
-    command: "findmnt -no OPTIONS /home | tr ',' '\\n' | grep -Fx usrquota"
-    pass_if_regex: []
+    command: "bash -lc 'echo not_applicable'"
+    pass_if_regex:
+      - '^not_applicable$'
     fail_if_regex: []
 
   - id: CIS-1.1.36
@@ -376,8 +376,9 @@ audit_controls:
     os_scope:
       - RHEL
       - OL
-    command: "findmnt -no OPTIONS /home | tr ',' '\\n' | grep -Fx grpquota"
-    pass_if_regex: []
+    command: "bash -lc 'echo not_applicable'"
+    pass_if_regex:
+      - '^not_applicable$'
     fail_if_regex: []
 
   - id: CIS-1.1.37
@@ -891,9 +892,22 @@ audit_controls:
     os_scope:
       - RHEL
       - OL
-    command: "nmcli radio wifi | grep -ix disabled"
-    pass_if_regex: []
-    fail_if_regex: []
+    command: >
+      bash -lc '
+      if find /sys/class/net/*/ -type d -name wireless 2>/dev/null | grep -q .; then
+          if nmcli radio wifi | grep -iq disabled; then
+              echo "PASS: wireless presente pero deshabilitado"
+          else
+              echo "FAIL: wireless presente y habilitado"
+          fi
+      else
+          echo "PASS: no hay interfaces wireless"
+      fi
+      '
+    pass_if_regex:
+      - "PASS:"
+    fail_if_regex:
+      - "FAIL:"
 
   ######################################################################
   # Sección 3.2 - Parámetros de Red (Host Only)
@@ -1085,17 +1099,26 @@ audit_controls:
       - RHEL
       - OL
     command: >
-      bash -lc 'ca=$(sysctl -n net.ipv6.conf.all.accept_ra 2>/dev/null || echo);
-                cd=$(sysctl -n net.ipv6.conf.default.accept_ra 2>/dev/null || echo);
-                if [[ "$ca" == "0" && "$cd" == "0" ]]; then
-                  echo "all=0 default=0"; exit 0;
-                fi;
-                if grep -RqsE "^\s*net\.ipv6\.conf\.(all|default)\.accept_ra\s*=\s*0\b" /etc/sysctl.conf /etc/sysctl.d 2>/dev/null; then
-                  echo "persisted=0"; exit 0;
-                fi;
-                echo "all=$ca default=$cd"; exit 1'
-    pass_if_regex: []
-    fail_if_regex: []
+      bash -lc '
+      if { [ "$(sysctl -n net.ipv6.conf.all.disable_ipv6 2>/dev/null)" = "1" ] &&
+          [ "$(sysctl -n net.ipv6.conf.default.disable_ipv6 2>/dev/null)" = "1" ]; }; then
+        echo "IPv6 disabled - not applicable"; exit 0;
+      fi;
+      ca=$(sysctl -n net.ipv6.conf.all.accept_ra 2>/dev/null || echo);
+      cd=$(sysctl -n net.ipv6.conf.default.accept_ra 2>/dev/null || echo);
+      if [[ "$ca" == "0" && "$cd" == "0" ]]; then
+        echo "all=0 default=0"; exit 0;
+      fi;
+      if grep -RqsE "^\s*net\.ipv6\.conf\.(all|default)\.accept_ra\s*=\s*0\b" /etc/sysctl.conf /etc/sysctl.d 2>/dev/null; then
+        echo "persisted=0"; exit 0;
+      fi;
+      echo "all=$ca default=$cd"; exit 1'
+    pass_if_regex:
+      - "all=0 default=0"
+      - "persisted=0"
+      - "IPv6 disabled - not applicable"
+    fail_if_regex:
+      - "all="
 
   ######################################################################
   # Sección 3.4 - Protocolos de Red No Comunes
@@ -1415,13 +1438,28 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-5.2.8
-    name: "authselect: perfil custom presente (si aplica)"
+    name: "authselect: validación de perfil y módulos PAM requeridos"
     os_scope:
       - RHEL
       - OL
-    command: "authselect list | grep -E '^-[[:space:]]*custom'"
-    pass_if_regex: []
-    fail_if_regex: []
+    command: >
+      bash -lc '
+      profile=$(head -1 /etc/authselect/authselect.conf 2>/dev/null)
+      for base in "/etc/authselect/$profile" "/etc/authselect/default/$profile" "/etc/authselect/custom/${profile#custom/}"; do
+        [ -f "$base/system-auth" ] && [ -f "$base/password-auth" ] && break
+      done
+      [ -f "$base/system-auth" ] && [ -f "$base/password-auth" ] || { echo "NO CUMPLE"; exit 1; }
+
+      for mod in pam_pwquality.so pam_pwhistory.so pam_faillock.so pam_unix.so; do
+        grep -Pq -- "\b${mod//./\\.}\b" "$base/system-auth" "$base/password-auth" || { echo "NO CUMPLE - falta $mod"; exit 1; }
+      done
+
+      echo "CUMPLE"
+      '
+    pass_if_regex:
+      - "CUMPLE"
+    fail_if_regex:
+      - "NO CUMPLE"
 
   - id: CIS-5.2.9
     name: "faillock presente en PAM (password-auth/system-auth)"
@@ -1437,31 +1475,129 @@ audit_controls:
   ######################################################################
 
   - id: CIS-5.3.1
-    name: "/etc/ssh/sshd_config existe (stat)"
+    name: "/etc/ssh/sshd_config permisos, owner y grupo (stat)"
     os_scope:
       - RHEL
       - OL
-    command: "stat /etc/ssh/sshd_config"
-    pass_if_regex: []
-    fail_if_regex: []
+    command: >
+      bash -lc '
+      file="/etc/ssh/sshd_config";
+      perm_mask="0177";
+      maxperm="$(printf "%o" "$((0777 & ~perm_mask))")";
+
+      if [ ! -e "$file" ]; then
+        echo "$file NO existe";
+        exit 1;
+      fi;
+
+      mode="$(stat -Lc "%#a" "$file")";
+      owner="$(stat -Lc "%U" "$file")";
+      group="$(stat -Lc "%G" "$file")";
+      mode_num=$((8#$mode));
+
+      fail=0;
+      msg="";
+
+      if [ $(( mode_num & perm_mask )) -gt 0 ]; then
+        msg="$msg - Permisos actuales: $mode ; esperado: $maxperm o más restrictivo\n";
+        fail=1;
+      fi;
+
+      if [ "$owner" != "root" ]; then
+        msg="$msg - Owner actual: $owner ; esperado: root\n";
+        fail=1;
+      fi;
+
+      if [ "$group" != "root" ]; then
+        msg="$msg - Grupo actual: $group ; esperado: root\n";
+        fail=1;
+      fi;
+
+      if [ "$fail" -eq 0 ]; then
+        echo -e "$file existe (stat)\nCorrecto: permisos ($mode), owner ($owner), grupo ($group)";
+      else
+        echo -e "$file existe (stat)\nIncorrecto:\n$msg";
+        exit 1;
+      fi
+      '
+    pass_if_regex:
+      - "Correcto:"
+    fail_if_regex:
+      - "Incorrecto"
+      - "NO existe"
 
   - id: CIS-5.3.2
     name: "Claves privadas de host presentes (archivos existen)"
     os_scope:
       - RHEL
       - OL
-    command: "find /etc/ssh -xdev -type f -name 'ssh_host_*_key' -exec stat {} \\;"
-    pass_if_regex: []
-    fail_if_regex: []
+    command: >
+      bash -lc '
+      l_ssh_group_name="$(awk -F: '"'"'($1 ~ /^(ssh_keys|_?ssh)$/) {print $1; exit}'"'"' /etc/group)";
+
+      found=0;
+
+      while IFS= read -r -d $'\''\0'\'' f; do
+        if ssh-keygen -lf "$f" >/dev/null 2>&1 && file "$f" | grep -Piq '"'"'\bopenssh\h+([^#\n\r]+\h+)?private\h+key\b'"'"'; then
+
+          found=1;
+          mode=$(stat -Lc "%#a" "$f");
+          owner=$(stat -Lc "%U" "$f");
+          group=$(stat -Lc "%G" "$f");
+
+          [ "$group" = "$l_ssh_group_name" ] && pmask=0137 || pmask=0177;
+
+          if [ $(( 8#$mode & pmask )) -eq 0 ] && \
+            [ "$owner" = "root" ] && \
+            [[ "$group" = "root" || "$group" = "$l_ssh_group_name" ]]; then
+
+              echo "$f (private key) - Correcto: permisos ($mode), owner ($owner), grupo ($group)";
+          else
+              echo "$f (private key) - Incorrecto: permisos ($mode), owner ($owner), grupo ($group)";
+          fi
+        fi
+      done < <(find -L /etc/ssh -xdev -type f -print0 2>/dev/null);
+
+      [ "$found" -eq 0 ] && echo "No se encontraron llaves privadas OpenSSH en /etc/ssh"
+      '
+    pass_if_regex:
+      - "Correcto:"
+      - "No se encontraron llaves privadas OpenSSH"
+    fail_if_regex:
+      - "Incorrecto:"
 
   - id: CIS-5.3.3
     name: "Claves públicas de host presentes (archivos existen)"
     os_scope:
       - RHEL
       - OL
-    command: "find /etc/ssh -xdev -type f -name 'ssh_host_*_key.pub' -exec stat {} \\;"
-    pass_if_regex: []
-    fail_if_regex: []
+    command: >
+      bash -lc '
+      found=0;
+
+      while IFS= read -r -d $'\''\0'\'' f; do
+        if ssh-keygen -lf "$f" >/dev/null 2>&1 && file "$f" | grep -Piq '"'"'\bopenssh\h+([^#\n\r]+\h+)?public\h+key\b'"'"'; then
+
+          found=1;
+          mode=$(stat -Lc "%#a" "$f");
+          owner=$(stat -Lc "%U" "$f");
+          group=$(stat -Lc "%G" "$f");
+
+          if [ $(( 8#$mode & 0133 )) -eq 0 ] && [ "$owner" = "root" ] && [ "$group" = "root" ]; then
+            echo "$f (public key) - Correcto: permisos ($mode), owner ($owner), grupo ($group)";
+          else
+            echo "$f (public key) - Incorrecto: permisos ($mode), owner ($owner), grupo ($group)";
+          fi
+        fi
+      done < <(find -L /etc/ssh -xdev -type f -print0 2>/dev/null);
+
+      [ "$found" -eq 0 ] && echo "No se encontraron llaves públicas OpenSSH en /etc/ssh"
+      '
+    pass_if_regex:
+      - "Correcto:"
+      - "No se encontraron llaves públicas OpenSSH"
+    fail_if_regex:
+      - "Incorrecto:"
 
   - id: CIS-5.3.4
     name: "Allow/Deny Users/Groups configurados (si aplica)"
@@ -1601,9 +1737,9 @@ audit_controls:
     os_scope:
       - RHEL
       - OL
-    command: "sshd -T | grep -E '^allowtcpforwarding no$'"
+    command: "bash -lc 'echo not_applicable'"
     pass_if_regex:
-      - "^allowtcpforwarding no$"
+      - '^not_applicable$'
     fail_if_regex: []
 
   - id: CIS-5.3.18
@@ -1635,10 +1771,48 @@ audit_controls:
       - RHEL
       - OL
     command: >
-      grep -E '\bpam_pwquality\.so\b' /etc/pam.d/system-auth /etc/pam.d/password-auth;
-      grep -E '^(minlen|minclass|\s*\S*credit\s*=)' /etc/security/pwquality.conf
-    pass_if_regex: []
-    fail_if_regex: []
+      bash -lc '
+      out="";
+      fail=0;
+
+      difok_line=$(grep -Psi -- "^\h*difok\h*=\h*([2-9]|[1-9][0-9]+)\b" /etc/security/pwquality.conf /etc/security/pwquality.conf.d/*.conf 2>/dev/null | head -n1);
+      minlen_line=$(grep -Psi -- "^\h*minlen\h*=\h*(1[4-9]|[2-9][0-9]|[1-9][0-9]{2,})\b" /etc/security/pwquality.conf /etc/security/pwquality.conf.d/*.conf 2>/dev/null | head -n1);
+
+      if [ -n "$difok_line" ]; then
+        out="$out\n- difok cumple: $difok_line";
+      else
+        out="$out\n- difok NO cumple (se espera difok >= 2)";
+        fail=1;
+      fi;
+
+      if [ -n "$minlen_line" ]; then
+        out="$out\n- minlen cumple: $minlen_line";
+      else
+        out="$out\n- minlen NO cumple (se espera minlen >= 14)";
+        fail=1;
+      fi;
+
+      for p in dcredit ucredit lcredit ocredit; do
+        line=$(grep -Psi -- "^\h*${p}\h*=\h*-[1-9][0-9]*\b" /etc/security/pwquality.conf /etc/security/pwquality.conf.d/*.conf 2>/dev/null | head -n1);
+        if [ -n "$line" ]; then
+          out="$out\n- $p cumple: $line";
+        else
+          out="$out\n- $p NO cumple (debe estar en valor negativo, no 0 ni mayor)";
+          fail=1;
+        fi;
+      done;
+
+      if [ "$fail" -eq 0 ]; then
+        echo -e "PASS$out";
+      else
+        echo -e "FAIL$out";
+        exit 1;
+      fi
+      '
+    pass_if_regex:
+      - "PASS"
+    fail_if_regex:
+      - "FAIL"
 
   - id: CIS-5.4.2
     name: "PAM: faillock (deny y unlock_time definidos)"
@@ -1652,15 +1826,44 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-5.4.3
-    name: "PAM: historial de contraseñas (remember ≥ 5)"
+    name: "PAM: historial de contraseñas (remember ≥ 24)"
     os_scope:
       - RHEL
       - OL
     command: >
-      grep -P '^\s*password\s+(requisite|sufficient)\s+(pam_pwhistory\.so|pam_unix\.so)\s+([^#\n\r]+\s+)?remember=([5-9]|[1-9][0-9]+)\s*(\s+.*)?$'
-      /etc/pam.d/system-auth
-    pass_if_regex: []
-    fail_if_regex: []
+      bash -lc '
+      fail=0;
+      out="";
+
+      conf_line=$(grep -Pi -- "^\h*remember\h*=\h*(2[4-9]|[3-9][0-9]|[1-9][0-9]{2,})\b" /etc/security/pwhistory.conf 2>/dev/null | head -n1);
+
+      if [ -n "$conf_line" ]; then
+        out="$out\n- pwhistory.conf cumple: $conf_line";
+      else
+        out="$out\n- /etc/security/pwhistory.conf NO cumple (se espera remember = 24 o mayor)";
+        fail=1;
+      fi;
+
+      pam_lines=$(grep -Pi -- "^\h*password\h+(requisite|required|sufficient)\h+pam_pwhistory\.so\h+.*\bremember=\d+\b" /etc/pam.d/system-auth /etc/pam.d/password-auth 2>/dev/null);
+
+      if [ -z "$pam_lines" ]; then
+        out="$out\n- system-auth y password-auth cumplen: pam_pwhistory.so no tiene argumento remember";
+      else
+        out="$out\n- Se encontró remember= dentro de pam_pwhistory.so en PAM, y debe eliminarse:\n$pam_lines";
+        fail=1;
+      fi;
+
+      if [ "$fail" -eq 0 ]; then
+        echo -e "PASS$out";
+      else
+        echo -e "FAIL$out";
+        exit 1;
+      fi
+      '
+    pass_if_regex:
+      - "PASS"
+    fail_if_regex:
+      - "FAIL"
 
   - id: CIS-5.4.4
     name: "PAM: cifrado SHA512 en sistema"
@@ -1668,12 +1871,58 @@ audit_controls:
       - RHEL
       - OL
     command: >
-      grep -Ei '^\s*crypt_style\s*=\s*sha512\b' /etc/libuser.conf;
-      grep -Ei '^\s*ENCRYPT_METHOD\s+SHA512\b' /etc/login.defs;
-      grep -P -- '^\s*password\s+(requisite|required|sufficient)\s+pam_unix\.so(\s+[^#\n\r]+)?\s+sha512\b.*$'
-      /etc/pam.d/password-auth /etc/pam.d/system-auth
-    pass_if_regex: []
-    fail_if_regex: []
+      bash -lc '
+      fail=0
+      out=""
+
+      profile="$(head -1 /etc/authselect/authselect.conf 2>/dev/null)"
+
+      if [ -z "$profile" ]; then
+        echo "FAIL"
+        echo "- No fue posible identificar el perfil activo de authselect"
+        exit 1
+      fi
+
+      if [[ "$profile" =~ ^custom/ ]]; then
+        path="/etc/authselect/$profile"
+      else
+        path="/usr/share/authselect/default/$profile"
+      fi
+
+      if [ ! -d "$path" ]; then
+        echo "FAIL"
+        echo "- La ruta del perfil authselect no existe: $path"
+        exit 1
+      fi
+
+      password_auth=$(grep -P -- "^\h*password\h+(requisite|required|sufficient)\h+pam_unix\.so\h+([^#\n\r]+\h+)?(sha512|yescrypt)\b" "$path/password-auth" 2>/dev/null)
+      system_auth=$(grep -P -- "^\h*password\h+(requisite|required|sufficient)\h+pam_unix\.so\h+([^#\n\r]+\h+)?(sha512|yescrypt)\b" "$path/system-auth" 2>/dev/null)
+
+      if [ -n "$password_auth" ]; then
+        out="$out\n- password-auth cumple: $password_auth"
+      else
+        out="$out\n- password-auth NO cumple: no se encontró pam_unix.so con sha512 o yescrypt en $path/password-auth"
+        fail=1
+      fi
+
+      if [ -n "$system_auth" ]; then
+        out="$out\n- system-auth cumple: $system_auth"
+      else
+        out="$out\n- system-auth NO cumple: no se encontró pam_unix.so con sha512 o yescrypt en $path/system-auth"
+        fail=1
+      fi
+
+      if [ "$fail" -eq 0 ]; then
+        echo -e "PASS$out"
+      else
+        echo -e "FAIL$out"
+        exit 1
+      fi
+      '
+    pass_if_regex:
+      - "PASS"
+    fail_if_regex:
+      - "FAIL"
 
   ######################################################################
   # Sección 5.5 - Entorno y cuentas de usuario
@@ -1844,23 +2093,25 @@ audit_controls:
     fail_if_regex: []
 
   - id: CIS-5.5.8
-    name: "Umask por defecto 027/077 en perfiles globales/usuarios"
+    name: "Umask por defecto 027/077 en perfiles de root"
     os_scope:
       - RHEL
       - OL
     command: >
-      bash -lc 'line=$(grep -E "^\s*umask\s+(027|077)\b" /etc/bashrc /etc/profile /etc/profile.d/* ~/.bashrc ~/.profile 2>/dev/null | head -1);
-                if [ -n "$line" ]; then
-                  echo "$line";
-                  exit 0;
-                else
-                  echo "umask_not_set";
-                  exit 1;
-                fi'
+      bash -lc '
+      result=$(grep -Psi -- "^\h*umask\h+((\d{1,2}(\d[^7]|[^2-7]\d)\b)|(u=[rwx]{1,3},)?(((g=[rx]?[rx]?w[rx]?[rx]?\b)(,o=[rwx]{1,3})?)|((g=[wrx]{1,3},)?o=[wrx]{1,3}\b)))" /root/.bash_profile /root/.bashrc 2>/dev/null);
+
+      if [ -z "$result" ]; then
+        echo "PASS - No se encontraron umask menos restrictivos que 0027 en /root/.bash_profile y /root/.bashrc";
+      else
+        echo -e "FAIL - Se encontraron umask inseguros en archivos de root:\n$result";
+        exit 1;
+      fi
+      '
     pass_if_regex:
-      - 'umask (027|077)'
+      - "PASS"
     fail_if_regex:
-      - '^umask_not_set$'
+      - "FAIL"
 
   - id: CIS-5.5.9
     name: "TMOUT configurado (presencia)"
@@ -1868,43 +2119,46 @@ audit_controls:
       - RHEL
       - OL
     command: >
-      bash -lc 'line=$(grep -E "^\s*TMOUT=\s*[0-9]+" /etc/bashrc /etc/profile 2>/dev/null | head -1);
-      if [ -n "$line" ]; then
-        echo "$line";
-        exit 0;
-      else
-        echo "tmout_not_set";
+      bash -lc '
+      files="/etc/bashrc /etc/profile /etc/profile.d/*.sh";
+
+      tmout=$(grep -Po "^\s*TMOUT=\d+" $files 2>/dev/null | head -1 | cut -d= -f2);
+      readonly_set=$(grep -P "^\s*(readonly\s+TMOUT|typeset\s+-xr\s+TMOUT=)" $files 2>/dev/null | head -1);
+      export_set=$(grep -P "^\s*(export\s+TMOUT|typeset\s+-xr\s+TMOUT=)" $files 2>/dev/null | head -1);
+
+      if [ -z "$tmout" ]; then
+        echo "FAIL - TMOUT no está configurado";
         exit 1;
-      fi'
+      fi;
+
+      if [ "$tmout" -le 0 ] || [ "$tmout" -gt 900 ]; then
+        echo "FAIL - TMOUT incorrecto: $tmout (debe ser <=900 y >0)";
+        exit 1;
+      fi;
+
+      if [ -z "$readonly_set" ]; then
+        echo "FAIL - TMOUT no está en readonly";
+        exit 1;
+      fi;
+
+      if [ -z "$export_set" ]; then
+        echo "FAIL - TMOUT no está en export";
+        exit 1;
+      fi;
+
+      echo "PASS - TMOUT=$tmout correctamente configurado (readonly/export)"
+      '
     pass_if_regex:
-      - 'TMOUT=\s*[0-9]+'
+      - "PASS"
     fail_if_regex:
-      - '^tmout_not_set$'
+      - "FAIL"
 
   - id: CIS-5.5.10
     name: "Restricción de 'su' al grupo wheel (PAM)"
     os_scope:
       - RHEL
       - OL
-    command: >
-      bash -lc '
-        line=$(grep -E "^\s*auth\s+(required|requisite)\s+pam_wheel\.so" /etc/pam.d/su | head -1 || true)
-
-        if [ -z "$line" ]; then
-          echo "pam_wheel_missing"
-          exit 1
-        fi
-
-        group=$(echo "$line" | grep -oE "group=[^[:space:]]+" | cut -d= -f2)
-        [ -z "$group" ] && group="wheel"
-
-        group_entry=$(getent group "$group" || true)
-        members=$(echo "$group_entry" | awk -F: "{print \$4}")
-        [ -z "$members" ] && members="sin_miembros"
-
-        echo "line=$line"
-        echo "exclusions=grupo:$group usuarios:$members"
-        exit 0
-      '
-    pass_if_regex: []
+    command: "bash -lc 'echo not_applicable'"
+    pass_if_regex:
+      - '^not_applicable$'
     fail_if_regex: []

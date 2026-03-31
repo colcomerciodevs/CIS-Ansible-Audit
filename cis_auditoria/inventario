@@ -19,4 +19,8 @@ MASTER02 ansible_host=172.25.98.228
 
 
 [PRUEBA]
-ansibletest ansible_host=10.181.6.38
+#ansibletest ansible_host=10.181.6.38
+#TESTHARDENING-S15SP5BOGDIS01 ansible_host=10.181.11.62 ansible_user=tux
+TESTHARDENING-RH9BOGDIS01 ansible_host=10.181.11.60 ansible_user=tux
+TESTHARDENING-ORA9BOGDIS01 ansible_host=10.181.11.61 ansible_user=tux
+
