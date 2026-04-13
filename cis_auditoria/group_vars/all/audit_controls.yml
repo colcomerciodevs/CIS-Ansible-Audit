@@ -567,11 +567,11 @@ audit_controls:
     os_scope:
       - RHEL
       - OL
-    command: "grep -E '^(server|pool)\\s+\\S+' /etc/chrony.conf"
+    command: "grep -E '^(server|pool)\\s+\\S+' /etc/chrony.conf || echo absent"
     pass_if_regex:
-      - '^absent$'
+      - '^(server|pool)\s+\S+.*$'
     fail_if_regex:
-      - '^present$'
+      - '^absent$'
 
   
   - id: CIS-2.1.4
