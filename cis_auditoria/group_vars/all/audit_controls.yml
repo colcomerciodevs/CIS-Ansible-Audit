@@ -1459,7 +1459,7 @@ audit_controls:
     os_scope:
       - RHEL
       - OL
-    command: >
+    command: |
       bash -lc '
       profile=$(authselect current 2>/dev/null | awk -F": " "/Profile ID/ {print \$2}")
 
@@ -1669,10 +1669,11 @@ audit_controls:
     os_scope:
       - RHEL
       - OL
-    command: "sshd -T | grep -E '^x11forwarding no$'"
+    command: "sshd -T | grep -i '^x11forwarding'"
     pass_if_regex:
-      - '^x11forwarding no$'
-    fail_if_regex: []
+      - '^x11forwarding[[:space:]]+no$'
+    fail_if_regex:
+      - '^x11forwarding[[:space:]]+yes$'
 
   - id: CIS-5.3.7
     name: "Ensure SSH MaxAuthTries is set to 4 or less"
@@ -1759,14 +1760,15 @@ audit_controls:
       - OL
     command: >
       bash -lc '
-        host="$(hostname)";
-        ip="$(getent hosts "$host" | awk "NR==1{print \$1}")";
-        sshd -T -C user=root -C host="$host" -C addr="$ip" 2>/dev/null \
-          | awk '\''$1=="banner" && $2!="none"{print $2}'\'' || true
+        B=$(grep -hE "^[[:space:]]*Banner[[:space:]]+/" /etc/ssh/sshd_config /etc/ssh/sshd_config.d/*.conf 2>/dev/null | awk "{print \$2}" | tail -1);
+        if [[ -n "$B" && -f "$B" ]]; then
+          echo "$B";
+        fi
       '
     pass_if_regex:
       - "^/"
     fail_if_regex: []
+
 
   - id: CIS-5.3.16
     name: "Ensure SSH PAM is enabled"

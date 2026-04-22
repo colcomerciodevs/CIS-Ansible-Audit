@@ -1,6 +1,9 @@
 
 ## Inventario #####
 
+[AWS]
+EC2-WEST2-BASTION-CORBETA ansible_host=35.86.158.63 
+
 
 [OCI]
 WS01 ansible_host=172.25.97.44 
