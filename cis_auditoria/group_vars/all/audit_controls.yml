@@ -1669,11 +1669,11 @@ audit_controls:
     os_scope:
       - RHEL
       - OL
-    command: "sshd -T | grep -i '^x11forwarding'"
+    command: "sshd -T | grep -i x11forwarding"
     pass_if_regex:
-      - '^x11forwarding[[:space:]]+no$'
+      - '(?i)x11forwarding\s+no'
     fail_if_regex:
-      - '^x11forwarding[[:space:]]+yes$'
+      - '(?i)x11forwarding\s+yes'
 
   - id: CIS-5.3.7
     name: "Ensure SSH MaxAuthTries is set to 4 or less"
@@ -1758,16 +1758,11 @@ audit_controls:
     os_scope:
       - RHEL
       - OL
-    command: >
-      bash -lc '
-        B=$(grep -hE "^[[:space:]]*Banner[[:space:]]+/" /etc/ssh/sshd_config /etc/ssh/sshd_config.d/*.conf 2>/dev/null | awk "{print \$2}" | tail -1);
-        if [[ -n "$B" && -f "$B" ]]; then
-          echo "$B";
-        fi
-      '
+    command: "grep -hEi '^[[:space:]]*Banner[[:space:]]+(/[^[:space:]]+|\"/[^\"]+\")' /etc/ssh/sshd_config /etc/ssh/sshd_config.d/*.conf 2>/dev/null | tail -1"
     pass_if_regex:
-      - "^/"
-    fail_if_regex: []
+      - '^[[:space:]]*Banner[[:space:]]+(/[^[:space:]]+|\"/[^\"]+\")$'
+    fail_if_regex:
+      - '^[[:space:]]*Banner[[:space:]]+none$'
 
 
   - id: CIS-5.3.16
