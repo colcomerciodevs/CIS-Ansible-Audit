@@ -1760,9 +1760,9 @@ audit_controls:
       - OL
     command: "grep -hEi '^[[:space:]]*Banner[[:space:]]+(/[^[:space:]]+|\"/[^\"]+\")' /etc/ssh/sshd_config /etc/ssh/sshd_config.d/*.conf 2>/dev/null | tail -1"
     pass_if_regex:
-      - '^[[:space:]]*Banner[[:space:]]+(/[^[:space:]]+|\"/[^\"]+\")$'
+      - '^[Bb]anner\s+/.+$'
     fail_if_regex:
-      - '^[[:space:]]*Banner[[:space:]]+none$'
+      - '^[Bb]anner\s+none$'
 
 
   - id: CIS-5.3.16
