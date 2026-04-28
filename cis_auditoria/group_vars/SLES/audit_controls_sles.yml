@@ -8,7 +8,7 @@
 # pero adapta comandos y validaciones a SLES.
 # =============================================================================
 
-audit_controls_sles:
+audit_controls:
 
   ######################################################################
   # Sección 1.1 - Configuración del Sistema de Archivos

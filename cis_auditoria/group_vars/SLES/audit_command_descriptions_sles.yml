@@ -6,7 +6,38 @@
 # audit_controls_sles.yml, desde CIS-1.1.1 hasta CIS-5.5.10.
 # ============================================================================
 
-audit_command_descriptions_sles:
+audit_command_descriptions:
+
+
+# ============================================================================
+# SECTION PRE - Validaciones generales adicionales
+# ============================================================================
+
+  PRE-1: >-
+    Valida que los usuarios administradores requeridos del sistema operativo
+    (aromero, csotomonte y jcastano) existan en el servidor. La evidencia
+    reporta el estado de cada cuenta y la información relacionada con el
+    cambio de contraseña.
+
+  PRE-2: >-
+    Valida que los usuarios de automatización iacolcoauto, ansible_test y
+    proactiva existan y tengan una regla de sudo con NOPASSWD: ALL definida
+    en /etc/sudoers o /etc/sudoers.d.
+
+  PRE-3: >-
+    Valida que los usuarios iacolcoauto y ansible_test tengan configuradas
+    las llaves SSH requeridas en su archivo authorized_keys, verificando la
+    presencia exacta de cada clave pública esperada.
+
+  PRE-4: >-
+    Valida que el grupo ssh_access exista y que los usuarios tux, aromero,
+    csotomonte, jcastano, iacolcoauto, ansible_test y proactiva pertenezcan
+    a ese grupo.
+
+  PRE-5: >-
+    Control reservado para validaciones complementarias de automatización.
+    Actualmente se marca como no aplicable.
+
 
 # ============================================================================
 # SECTION 1.1 - Filesystem Configuration

@@ -8,8 +8,7 @@ pre_audit_controls:
     name: "Usuarios administradores de S.O creados y con cambio de contraseña forzado"
     category: "Pre-Auditoria"
     os_scope:
-      - RHEL
-      - OL
+      - SLES
     command: >
       bash -lc '
         users="aromero csotomonte jcastano"
@@ -41,8 +40,7 @@ pre_audit_controls:
     name: "Usuarios de automatización creados con NOPASSWD ALL"
     category: "Pre-Auditoria"
     os_scope:
-      - RHEL
-      - OL
+      - SLES
     command: >
       bash -lc '
         users="iacolcoauto ansible_test proactiva"
@@ -71,8 +69,7 @@ pre_audit_controls:
     name: "Llaves SSH configuradas para usuarios de automatización"
     category: "Pre-Auditoria"
     os_scope:
-      - RHEL
-      - OL
+      - SLES
     command: >
       bash -lc '
         bad=0
@@ -110,8 +107,7 @@ pre_audit_controls:
     name: "Grupo ssh_access creado y miembros requeridos"
     category: "Pre-Auditoria"
     os_scope:
-      - RHEL
-      - OL
+      - SLES
     command: >
       bash -lc '
         required_users="tux aromero csotomonte jcastano iacolcoauto ansible_test"
@@ -146,8 +142,7 @@ pre_audit_controls:
     name: "Usuarios de automatización con llaves y sudo requeridos"
     category: "Pre-Auditoria"
     os_scope:
-      - RHEL
-      - OL
+      - SLES
     command: >
       bash -lc 'echo not_applicable'
     pass_if_regex: []
