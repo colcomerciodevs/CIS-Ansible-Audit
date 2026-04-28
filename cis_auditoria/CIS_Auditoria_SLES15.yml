@@ -1,6 +1,6 @@
 ---
 - name: Auditoría CIS Benchmark (SLES 15)
-  hosts: PRUEBA
+  hosts: PRUEBA2
   gather_facts: true
   become: true
 
