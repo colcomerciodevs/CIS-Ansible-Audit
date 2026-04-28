@@ -1,18 +1,22 @@
 ---
-- name: Auditoría CIS Benchmark (SLES)
-  hosts: PRUEBA2
+- name: Auditoría CIS Benchmark (SLES 15)
+  hosts: PRUEBA
   gather_facts: true
   become: true
 
   vars_files:
-      - group_vars/SLES/pre_audit_controls.yml
-      - group_vars/SLES/audit_controls_sles.yml
-      - group_vars/SLES/exclusions.yml
-      - group_vars/SLES/audit_command_descriptions_sles.yml
-
+    - group_vars/SLES/pre_audit_controls_sles.yml
+    - group_vars/SLES/audit_controls_sles.yml
+    - group_vars/SLES/exclusions_sles.yml
+    - group_vars/SLES/audit_command_descriptions_sles.yml
 
   vars:
-    current_os_family: "SLES"
+    current_os_family: >-
+      {{
+        'SLES'
+        if ansible_facts.distribution in ['SLES', 'SUSE Linux Enterprise Server']
+        else 'OTHER'
+      }}
 
   tasks:
 
@@ -25,13 +29,9 @@
         control_results: []
         normalized_controls: []
 
-    - name: AUDIT | Unir controles PRE + SLES
+    - name: AUDIT | Unir controles PRE + CIS
       ansible.builtin.set_fact:
-        all_audit_controls: >-
-          {{
-            (pre_audit_controls | default([]))
-            + (audit_controls_sles | default([]))
-          }}
+        all_audit_controls: "{{ (pre_audit_controls | default([])) + (audit_controls | default([])) }}"
 
     - name: AUDIT | Obtener IP del host para reportes
       ansible.builtin.set_fact:
@@ -113,7 +113,7 @@
     - name: AUDIT | Mostrar controles sin descripción registrada
       ansible.builtin.debug:
         msg:
-          - "Los siguientes controles no tienen descripción en audit_command_descriptions.yml:"
+          - "Los siguientes controles no tienen descripción en audit_command_descriptions_sles.yml:"
           - "{{ missing_command_descriptions }}"
       when: missing_command_descriptions | length > 0
 
@@ -122,7 +122,7 @@
     #####################################################################
 
     - name: AUDIT | Ejecutar controles CIS SLES
-      ansible.builtin.shell: "{{ item.command }}"  # noqa command-instead-of-shell
+      ansible.builtin.shell: "{{ item.command }}"
       args:
         executable: /bin/bash
       loop: "{{ applicable_controls }}"
@@ -231,10 +231,7 @@
               | regex_replace('(?s).*exclusions=([^|]*).*', '\1')
               | trim
             )
-            if (
-              item.0.id in ['CIS-5.1.8', 'CIS-5.1.9', 'CIS-5.2.4', 'CIS-5.2.7', 'CIS-5.5.6', 'CIS-5.5.10']
-              and 'exclusions=' in stdout_text
-            )
+            if ('exclusions=' in stdout_text)
             else ''
           }}
       loop: "{{ applicable_controls | zip(exec_all_results.results | default([])) | list }}"
@@ -242,17 +239,32 @@
         label: "{{ item.0.id }}: {{ item.0.name }}"
 
     #####################################################################
-    # REPORT | Salida
+    # AUDIT | Resumen final
     #####################################################################
 
-    - name: REPORT | Crear carpeta local
+    - name: AUDIT | Mostrar resumen de auditoría
+      ansible.builtin.debug:
+        msg:
+          - "Host: {{ inventory_hostname }}"
+          - "IP: {{ audit_host_ip }}"
+          - "Total controles: {{ control_results | length }}"
+          - "Cumplen: {{ control_results | selectattr('status', 'equalto', 'Cumple') | list | length }}"
+          - "No cumplen: {{ control_results | selectattr('status', 'equalto', 'No cumple') | list | length }}"
+          - "No aplicables: {{ control_results | selectattr('status', 'equalto', 'No aplicable') | list | length }}"
+          - "Sin descripción: {{ missing_command_descriptions | length }}"
+
+    #####################################################################
+    # REPORT | Crear salida JSON local
+    #####################################################################
+
+    - name: REPORT | Crear carpeta local para reportes
       ansible.builtin.file:
         path: "./_audit_reports"
         state: directory
         mode: "0755"
       delegate_to: localhost
 
-    - name: REPORT | JSON
+    - name: REPORT | Escribir JSON con resultados
       ansible.builtin.copy:
         content: >-
           {{
@@ -265,12 +277,21 @@
             } | to_nice_json
           }}
         dest: "./_audit_reports/{{ inventory_hostname }}.json"
+        mode: "0644"
       delegate_to: localhost
 
-    - name: REPORT | Excel
+    #####################################################################
+    # REPORT | Generar Excel
+    #####################################################################
+
+    - name: REPORT | Generar Excel por host
       ansible.builtin.command: >
         {{ ansible_playbook_python }} ./scripts/write_excel_report.py
         --input ./_audit_reports/{{ inventory_hostname }}.json
-        --output ./_audit_reports/Audit_{{ inventory_hostname }}_{{ audit_host_ip }}.xlsx
+        --output ./_audit_reports/Audit_SLES15_{{ inventory_hostname }}_{{ audit_host_ip }}.xlsx
       delegate_to: localhost
       changed_when: false
+
+    - name: REPORT | Mostrar ubicación del reporte
+      ansible.builtin.debug:
+        msg: "Reporte generado: ./_audit_reports/Audit_SLES15_{{ inventory_hostname }}_{{ audit_host_ip }}.xlsx"
