@@ -122,7 +122,7 @@
     #####################################################################
 
     - name: AUDIT | Ejecutar controles CIS SLES
-      ansible.builtin.shell: "{{ item.command }}"
+      ansible.builtin.shell: "{{ item.command }}"  # noqa command-instead-of-shell
       args:
         executable: /bin/bash
       loop: "{{ applicable_controls }}"
