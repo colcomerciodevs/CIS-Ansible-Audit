@@ -331,6 +331,10 @@ audit_controls:
     pass_if_regex: []
     fail_if_regex: []
 
+  ######################################################################
+  # Removable media
+  ######################################################################
+
   - id: CIS-1.1.32
     name: "Ensure noexec option set on removable media partitions"
     os_scope:
@@ -361,6 +365,10 @@ audit_controls:
       - '^not_applicable$'
     fail_if_regex: []
 
+  ######################################################################
+  # /home quotas
+  ######################################################################
+
   - id: CIS-1.1.35
     name: "Ensure user quotas are enabled on /home partition"
     os_scope:
@@ -381,6 +389,10 @@ audit_controls:
       - '^not_applicable$'
     fail_if_regex: []
 
+  ######################################################################
+  # Sticky bit
+  ######################################################################
+
   - id: CIS-1.1.37
     name: "Ensure sticky bit is set on all world-writable directories"
     os_scope:
@@ -389,6 +401,10 @@ audit_controls:
     command: "sh -c \"if df --local -P | awk 'NR!=1 {print $6}' | xargs -I '{}' find '{}' -xdev -type d -perm -0002 ! -perm -1000 2>/dev/null | grep -q .; then exit 1; fi\""
     pass_if_regex: []
     fail_if_regex: []
+
+  ######################################################################
+  # Automount
+  ######################################################################
 
   - id: CIS-1.1.38
     name: "Ensure autofs service is disabled"
@@ -407,6 +423,10 @@ audit_controls:
       - "^not-installed$"
     fail_if_regex: []
 
+  ######################################################################
+  # USB Storage
+  ######################################################################
+
   - id: CIS-1.1.39
     name: "Ensure USB storage kernel module is not available"
     os_scope:
@@ -421,7 +441,7 @@ audit_controls:
 
  
   ######################################################################
-  # Sección 1.7 - Banners de advertencia                               #
+  # Sección 1.7 - Command Line Warning Banners
   ######################################################################
 
   - id: CIS-1.7.1
@@ -538,8 +558,8 @@ audit_controls:
     fail_if_regex:
       - '^missing$'
 
-  ######################################################################
-  # Sección 2.1 - Servicios de propósito especial
+   ######################################################################
+  # Sección 2.1 - Server Services (NO instalados)
   ######################################################################
 
   - id: CIS-2.1.1
@@ -812,7 +832,7 @@ audit_controls:
       - '^present$'
 
   ######################################################################
-  # Sección 2.2 - Clientes de Servicios
+  # Sección 2.2 - Client Services
   ######################################################################
 
   - id: CIS-2.2.1
@@ -928,7 +948,7 @@ audit_controls:
       - "FAIL:"
 
   ######################################################################
-  # Sección 3.2 - Parámetros de Red (Host Only)
+  # Sección 3.2 - Network Parameters (IPv4)
   ######################################################################
 
   - id: CIS-3.2.1
@@ -967,7 +987,7 @@ audit_controls:
     fail_if_regex: []
 
   ######################################################################
-  # Sección 3.3 - Parámetros de Red (Host & Router)
+  # Sección 3.3 - Network Parameters (Hardening)
   ######################################################################
 
   - id: CIS-3.3.1
@@ -1139,7 +1159,7 @@ audit_controls:
       - "all="
 
   ######################################################################
-  # Sección 3.4 - Protocolos de Red No Comunes
+  # Sección 3.4 - Kernel Modules (Network)
   ######################################################################
 
   - id: CIS-3.4.1
@@ -1212,8 +1232,8 @@ audit_controls:
       - '^not_applicable$'
     fail_if_regex: []
 
-    ######################################################################
-  # Sección 5.1 - Jobs programados (cron/at)
+  ######################################################################
+  # Sección 5.1 - Cron y at
   ######################################################################
 
   - id: CIS-5.1.1
@@ -1340,7 +1360,7 @@ audit_controls:
       - '^at\.allow_missing'
 
   ######################################################################
-  # Sección 5.2 - Configurar SUDO
+  # Sección 5.2 - Sudo / Authselect 
   ######################################################################
 
   - id: CIS-5.2.1
@@ -1517,7 +1537,7 @@ audit_controls:
       - '^NO CUMPLE$'
 
   ######################################################################
-  # Sección 5.3 - Configurar Servidor SSH
+  # Sección 5.3 - SSH
   ######################################################################
 
   - id: CIS-5.3.1
@@ -1967,8 +1987,8 @@ audit_controls:
     fail_if_regex:
       - "FAIL"
 
-  ######################################################################
-  # Sección 5.5 - Entorno y cuentas de usuario
+ ######################################################################
+  # Sección 5.5 - User Accounts & Environment
   ######################################################################
 
   - id: CIS-5.5.1

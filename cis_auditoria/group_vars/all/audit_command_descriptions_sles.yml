@@ -1,0 +1,669 @@
+# ============================================================================
+# Explicación de comandos - CIS Benchmark
+# SUSE Linux Enterprise Server 15
+# ============================================================================
+# Generado únicamente para los controles definidos en el YAML adjunto
+# audit_controls_sles.yml, desde CIS-1.1.1 hasta CIS-5.5.10.
+# ============================================================================
+
+audit_command_descriptions_sles:
+
+# ============================================================================
+# SECTION 1.1 - Filesystem Configuration
+# ============================================================================
+
+  CIS-1.1.1: >-
+    Valida que el módulo de kernel cramfs no esté disponible para uso. El comando
+    revisa reglas de bloqueo en modprobe --showconfig, verifica que el módulo no
+    esté cargado con lsmod y comprueba con modinfo si el módulo existe en el
+    sistema. Cumple si aparece como blocked o absent; no cumple si aparece como
+    loaded o available.
+
+  CIS-1.1.2: >-
+    Valida que el módulo de kernel squashfs no esté disponible para uso. El
+    comando revisa reglas de bloqueo en modprobe --showconfig, verifica que el
+    módulo no esté cargado con lsmod y comprueba con modinfo si el módulo existe
+    en el sistema. Cumple si aparece como blocked o absent; no cumple si aparece
+    como loaded o available.
+
+  CIS-1.1.3: >-
+    Valida que el módulo de kernel udf no esté disponible para uso. El comando
+    revisa reglas de bloqueo en modprobe --showconfig, verifica que el módulo no
+    esté cargado con lsmod y comprueba con modinfo si el módulo existe en el
+    sistema. Cumple si aparece como blocked o absent; no cumple si aparece como
+    loaded o available.
+
+  CIS-1.1.4: >-
+    Control marcado como not_applicable para SLES en este catálogo de auditoría.
+
+  CIS-1.1.5: >-
+    Valida con findmnt que /tmp" exista como punto de montaje independiente en la
+    tabla de montajes del kernel.
+
+  CIS-1.1.6: >-
+    Extrae las opciones de montaje de /tmp y valida que incluya la opción nodev.
+
+  CIS-1.1.7: >-
+    Extrae las opciones de montaje de /tmp y valida que incluya la opción nosuid.
+
+  CIS-1.1.8: >-
+    Extrae las opciones de montaje de /tmp y valida que incluya la opción noexec.
+
+  CIS-1.1.9: >-
+    Valida con findmnt que /dev/shm" exista como punto de montaje independiente en
+    la tabla de montajes del kernel.
+
+  CIS-1.1.10: >-
+    Extrae las opciones de montaje de /dev/shm y valida que incluya la opción
+    nodev.
+
+  CIS-1.1.11: >-
+    Extrae las opciones de montaje de /dev/shm y valida que incluya la opción
+    nosuid.
+
+  CIS-1.1.12: >-
+    Extrae las opciones de montaje de /dev/shm y valida que incluya la opción
+    noexec.
+
+  CIS-1.1.13: >-
+    Valida con findmnt que /var" exista como punto de montaje independiente en la
+    tabla de montajes del kernel.
+
+  CIS-1.1.14: >-
+    Extrae las opciones de montaje de /var y valida que incluya la opción nodev.
+
+  CIS-1.1.15: >-
+    Extrae las opciones de montaje de /var y valida que incluya la opción nosuid.
+
+  CIS-1.1.16: >-
+    Valida el control Ensure noexec option set on /var partition mediante el
+    comando definido en audit_controls_sles.yml, retornando PASS, FAIL o
+    not_applicable según corresponda.
+
+  CIS-1.1.17: >-
+    Valida con findmnt que /var/tmp" exista como punto de montaje independiente en
+    la tabla de montajes del kernel.
+
+  CIS-1.1.18: >-
+    Extrae las opciones de montaje de /var/tmp y valida que incluya la opción
+    nodev.
+
+  CIS-1.1.19: >-
+    Extrae las opciones de montaje de /var/tmp y valida que incluya la opción
+    nosuid.
+
+  CIS-1.1.20: >-
+    Extrae las opciones de montaje de /var/tmp y valida que incluya la opción
+    noexec.
+
+  CIS-1.1.21: >-
+    Valida con findmnt que /var/log" exista como punto de montaje independiente en
+    la tabla de montajes del kernel.
+
+  CIS-1.1.22: >-
+    Extrae las opciones de montaje de /var/log y valida que incluya la opción
+    nodev.
+
+  CIS-1.1.23: >-
+    Extrae las opciones de montaje de /var/log y valida que incluya la opción
+    nosuid.
+
+  CIS-1.1.24: >-
+    Extrae las opciones de montaje de /var/log y valida que incluya la opción
+    noexec.
+
+  CIS-1.1.25: >-
+    Valida con findmnt que /var/log/audit" exista como punto de montaje
+    independiente en la tabla de montajes del kernel.
+
+  CIS-1.1.26: >-
+    Extrae las opciones de montaje de /var/log/audit y valida que incluya la
+    opción nodev.
+
+  CIS-1.1.27: >-
+    Extrae las opciones de montaje de /var/log/audit y valida que incluya la
+    opción nosuid.
+
+  CIS-1.1.28: >-
+    Extrae las opciones de montaje de /var/log/audit y valida que incluya la
+    opción noexec.
+
+  CIS-1.1.29: >-
+    Valida con findmnt que /home" exista como punto de montaje independiente en la
+    tabla de montajes del kernel.
+
+  CIS-1.1.30: >-
+    Extrae las opciones de montaje de /home y valida que incluya la opción nodev.
+
+  CIS-1.1.31: >-
+    Extrae las opciones de montaje de /home y valida que incluya la opción nosuid.
+
+  CIS-1.1.32: >-
+    Control marcado como not_applicable en la automatización para que el reporte
+    lo clasifique como No aplicable.
+
+  CIS-1.1.33: >-
+    Control marcado como not_applicable en la automatización para que el reporte
+    lo clasifique como No aplicable.
+
+  CIS-1.1.34: >-
+    Control marcado como not_applicable en la automatización para que el reporte
+    lo clasifique como No aplicable.
+
+  CIS-1.1.35: >-
+    Extrae las opciones de montaje de /home y valida que incluya usrquota.
+
+  CIS-1.1.36: >-
+    Extrae las opciones de montaje de /home y valida que incluya grpquota.
+
+  CIS-1.1.37: >-
+    Busca directorios world-writable sin sticky bit en el filesystem local. Si
+    encuentra alguno, el control no cumple.
+
+  CIS-1.1.38: >-
+    Valida que autofs no esté habilitado ni activo mediante systemctl, para
+    confirmar que el automounting esté deshabilitado.
+
+  CIS-1.1.39: >-
+    Valida que usb_storage no esté cargado y que exista bloqueo por modprobe
+    mediante blacklist o /bin/false.
+
+# ============================================================================
+# SECTION 1.7 - Command Line Warning Banners
+# ============================================================================
+
+  CIS-1.7.1: >-
+    Valida que /etc/motd exista y tenga contenido.
+
+  CIS-1.7.2: >-
+    Valida que /etc/issue contenga el texto corporativo definido para el banner
+    local.
+
+  CIS-1.7.3: >-
+    Valida que /etc/issue.net contenga el texto corporativo definido para el
+    banner remoto.
+
+  CIS-1.7.4: >-
+    Valida permisos, usuario y grupo de /etc/motd, aceptando permisos restrictivos
+    644, 640 o 600 con propietario root y grupo root.
+
+  CIS-1.7.5: >-
+    Valida permisos, usuario y grupo de /etc/issue, aceptando permisos
+    restrictivos 644, 640 o 600 con propietario root y grupo root.
+
+  CIS-1.7.6: >-
+    Valida permisos, usuario y grupo de /etc/issue.net, aceptando permisos
+    restrictivos 644, 640 o 600 con propietario root y grupo root.
+
+# ============================================================================
+# SECTION 2.1 - Server Services
+# ============================================================================
+
+  CIS-2.1.1: >-
+    Valida que exista sincronización de tiempo en uso comprobando si chronyd o
+    systemd-timesyncd está activo.
+
+  CIS-2.1.2: >-
+    Valida que systemd-timesyncd tenga servidores NTP configurados en
+    /etc/systemd/timesyncd.conf.
+
+  CIS-2.1.3: >-
+    Valida que chrony tenga servidores o pools configurados en /etc/chrony.conf.
+
+  CIS-2.1.4: >-
+    Valida mediante rpm que el paquete asociado al control no esté instalado o
+    esté instalado según corresponda para: Ensure xinetd is not installed.
+
+  CIS-2.1.5: >-
+    Valida mediante rpm que el paquete asociado al control no esté instalado o
+    esté instalado según corresponda para: Ensure X Window System is not
+    installed.
+
+  CIS-2.1.6: >-
+    Valida mediante rpm que el paquete asociado al control no esté instalado o
+    esté instalado según corresponda para: Ensure Avahi Server is not installed.
+
+  CIS-2.1.7: >-
+    Valida mediante rpm que el paquete asociado al control no esté instalado o
+    esté instalado según corresponda para: Ensure CUPS is not installed.
+
+  CIS-2.1.8: >-
+    Valida mediante rpm que el paquete asociado al control no esté instalado o
+    esté instalado según corresponda para: Ensure DHCP Server is not installed.
+
+  CIS-2.1.9: >-
+    Valida mediante rpm que el paquete asociado al control no esté instalado o
+    esté instalado según corresponda para: Ensure LDAP server is not installed.
+
+  CIS-2.1.10: >-
+    Valida mediante rpm que el paquete asociado al control no esté instalado o
+    esté instalado según corresponda para: Ensure NFS is not installed.
+
+  CIS-2.1.11: >-
+    Valida mediante rpm que el paquete asociado al control no esté instalado o
+    esté instalado según corresponda para: Ensure DNS Server is not installed.
+
+  CIS-2.1.12: >-
+    Valida mediante rpm que el paquete asociado al control no esté instalado o
+    esté instalado según corresponda para: Ensure FTP Server is not installed.
+
+  CIS-2.1.13: >-
+    Valida mediante rpm que el paquete asociado al control no esté instalado o
+    esté instalado según corresponda para: Ensure VSFTP Server is not installed.
+
+  CIS-2.1.14: >-
+    Valida mediante rpm que el paquete asociado al control no esté instalado o
+    esté instalado según corresponda para: Ensure TFTP Server is not installed.
+
+  CIS-2.1.15: >-
+    Valida mediante rpm que el paquete asociado al control no esté instalado o
+    esté instalado según corresponda para: Ensure HTTP server is not installed.
+
+  CIS-2.1.16: >-
+    Valida mediante rpm que el paquete asociado al control no esté instalado o
+    esté instalado según corresponda para: Ensure IMAP and POP3 server are not
+    installed.
+
+  CIS-2.1.17: >-
+    Valida mediante rpm que el paquete asociado al control no esté instalado o
+    esté instalado según corresponda para: Ensure Samba is not installed.
+
+  CIS-2.1.18: >-
+    Valida mediante rpm que el paquete asociado al control no esté instalado o
+    esté instalado según corresponda para: Ensure HTTP Proxy Server is not
+    installed.
+
+  CIS-2.1.19: >-
+    Valida mediante rpm que el paquete asociado al control no esté instalado o
+    esté instalado según corresponda para: Ensure SNMP Server is not installed.
+
+  CIS-2.1.20: >-
+    Valida con ss que el servicio de correo en el puerto 25 no escuche en
+    interfaces remotas; si escucha, debe estar limitado a loopback.
+
+  CIS-2.1.21: >-
+    Valida mediante rpm que el paquete asociado al control no esté instalado o
+    esté instalado según corresponda para: Ensure telnet-server is not installed.
+
+  CIS-2.1.22: >-
+    Valida mediante rpm que el paquete asociado al control no esté instalado o
+    esté instalado según corresponda para: Ensure rsync service is not installed.
+
+  CIS-2.1.23: >-
+    Valida mediante rpm que el paquete asociado al control no esté instalado o
+    esté instalado según corresponda para: Ensure NIS Server is not installed.
+
+# ============================================================================
+# SECTION 2.2 - Client Services
+# ============================================================================
+
+  CIS-2.2.1: >-
+    Valida mediante rpm que el paquete asociado al control no esté instalado o
+    esté instalado según corresponda para: Ensure NIS Client is not installed.
+
+  CIS-2.2.2: >-
+    Valida mediante rpm que el paquete asociado al control no esté instalado o
+    esté instalado según corresponda para: Ensure rsh client is not installed.
+
+  CIS-2.2.3: >-
+    Valida mediante rpm que el paquete asociado al control no esté instalado o
+    esté instalado según corresponda para: Ensure talk client is not installed.
+
+  CIS-2.2.4: >-
+    Valida mediante rpm que el paquete asociado al control no esté instalado o
+    esté instalado según corresponda para: Ensure telnet client is not installed.
+
+  CIS-2.2.5: >-
+    Valida mediante rpm que el paquete asociado al control no esté instalado o
+    esté instalado según corresponda para: Ensure LDAP client is not installed.
+
+  CIS-2.2.6: >-
+    Valida mediante rpm que el paquete asociado al control no esté instalado o
+    esté instalado según corresponda para: Ensure TFTP client is not installed.
+
+  CIS-2.2.7: >-
+    Valida mediante rpm que el paquete asociado al control no esté instalado o
+    esté instalado según corresponda para: Ensure RPC bind is not installed.
+
+# ============================================================================
+# SECTION 3.1 - Network Devices
+# ============================================================================
+
+  CIS-3.1.1: >-
+    Consulta con sysctl el estado de IPv6 mediante net.ipv6.conf.all.disable_ipv6
+    para documentar si IPv6 está habilitado o deshabilitado.
+
+  CIS-3.1.2: >-
+    Valida que no existan interfaces inalámbricas detectables en ip link, buscando
+    nombres típicos como wl o wlan.
+
+  CIS-3.1.3: >-
+    Valida que bluetooth no esté habilitado ni activo mediante systemctl.
+
+# ============================================================================
+# SECTION 3.2 - Network Parameters IPv4
+# ============================================================================
+
+  CIS-3.2.1: >-
+    Valida parámetros de red mediante sysctl para el control: Ensure packet
+    redirect sending is disabled. El comando compara los valores runtime esperados
+    y retorna PASS o FAIL.
+
+  CIS-3.2.2: >-
+    Valida parámetros de red mediante sysctl para el control: Ensure IP forwarding
+    is disabled. El comando compara los valores runtime esperados y retorna PASS o
+    FAIL.
+
+# ============================================================================
+# SECTION 3.3 - Network Parameters Hardening
+# ============================================================================
+
+  CIS-3.3.1: >-
+    Valida parámetros de red mediante sysctl para el control: Ensure source routed
+    packets are not accepted. El comando compara los valores runtime esperados y
+    retorna PASS o FAIL.
+
+  CIS-3.3.2: >-
+    Valida parámetros de red mediante sysctl para el control: Ensure ICMP
+    redirects are not accepted. El comando compara los valores runtime esperados y
+    retorna PASS o FAIL.
+
+  CIS-3.3.3: >-
+    Valida parámetros de red mediante sysctl para el control: Ensure secure ICMP
+    redirects are not accepted. El comando compara los valores runtime esperados y
+    retorna PASS o FAIL.
+
+  CIS-3.3.4: >-
+    Valida parámetros de red mediante sysctl para el control: Ensure suspicious
+    packets are logged. El comando compara los valores runtime esperados y retorna
+    PASS o FAIL.
+
+  CIS-3.3.5: >-
+    Valida parámetros de red mediante sysctl para el control: Ensure broadcast
+    ICMP requests are ignored. El comando compara los valores runtime esperados y
+    retorna PASS o FAIL.
+
+  CIS-3.3.6: >-
+    Valida parámetros de red mediante sysctl para el control: Ensure bogus ICMP
+    responses are ignored. El comando compara los valores runtime esperados y
+    retorna PASS o FAIL.
+
+  CIS-3.3.7: >-
+    Valida parámetros de red mediante sysctl para el control: Ensure Reverse Path
+    Filtering is enabled. El comando compara los valores runtime esperados y
+    retorna PASS o FAIL.
+
+  CIS-3.3.8: >-
+    Valida parámetros de red mediante sysctl para el control: Ensure TCP SYN
+    Cookies is enabled. El comando compara los valores runtime esperados y retorna
+    PASS o FAIL.
+
+  CIS-3.3.9: >-
+    Valida parámetros de red mediante sysctl para el control: Ensure IPv6 router
+    advertisements are not accepted. El comando compara los valores runtime
+    esperados y retorna PASS o FAIL.
+
+# ============================================================================
+# SECTION 3.4 - Network Kernel Modules
+# ============================================================================
+
+  CIS-3.4.1: >-
+    Valida que el módulo de red DCCP no esté cargado y tenga bloqueo configurado
+    en modprobe.
+
+  CIS-3.4.2: >-
+    Valida que el módulo de red SCTP no esté cargado y tenga bloqueo configurado
+    en modprobe.
+
+  CIS-3.4.3: >-
+    Valida que el módulo de red RDS no esté cargado y tenga bloqueo configurado en
+    modprobe.
+
+  CIS-3.4.4: >-
+    Valida que el módulo de red TIPC no esté cargado y tenga bloqueo configurado
+    en modprobe.
+
+# ============================================================================
+# SECTION 5.1 - Cron and at
+# ============================================================================
+
+  CIS-5.1.1: >-
+    Valida que el servicio cron esté habilitado y activo mediante systemctl.
+
+  CIS-5.1.2: >-
+    Valida permisos, propietario y grupo de /etc/crontab mediante stat.
+
+  CIS-5.1.3: >-
+    Valida permisos, propietario y grupo de /etc/cron.hourly mediante stat.
+
+  CIS-5.1.4: >-
+    Valida permisos, propietario y grupo de /etc/cron.daily mediante stat.
+
+  CIS-5.1.5: >-
+    Valida permisos, propietario y grupo de /etc/cron.weekly mediante stat.
+
+  CIS-5.1.6: >-
+    Valida permisos, propietario y grupo de /etc/cron.monthly mediante stat.
+
+  CIS-5.1.7: >-
+    Valida permisos, propietario y grupo de /etc/cron.d mediante stat.
+
+  CIS-5.1.8: >-
+    Valida que cron esté restringido a usuarios autorizados: /etc/cron.deny no
+    debe existir, /etc/cron.allow debe existir y tener permisos restrictivos.
+
+  CIS-5.1.9: >-
+    Valida que at esté restringido a usuarios autorizados: /etc/at.deny no debe
+    existir, /etc/at.allow debe existir y tener permisos restrictivos.
+
+# ============================================================================
+# SECTION 5.2 - Sudo / authselect no aplica en SLES
+# ============================================================================
+
+  CIS-5.2.1: >-
+    Valida mediante rpm que el paquete asociado al control no esté instalado o
+    esté instalado según corresponda para: Ensure sudo is installed.
+
+  CIS-5.2.2: >-
+    Busca Defaults use_pty en /etc/sudoers y /etc/sudoers.d para asegurar que los
+    comandos sudo usen pseudo-terminal.
+
+  CIS-5.2.3: >-
+    Busca Defaults logfile en /etc/sudoers y /etc/sudoers.d para confirmar que
+    sudo tenga archivo de log configurado.
+
+  CIS-5.2.4: >-
+    Verifica que no existan reglas NOPASSWD activas en /etc/sudoers o
+    /etc/sudoers.d.
+
+  CIS-5.2.5: >-
+    Verifica que la reautenticación de sudo no esté deshabilitada globalmente
+    mediante Defaults !authenticate.
+
+  CIS-5.2.6: >-
+    Valida que timestamp_timeout esté definido en sudoers con un valor permitido
+    según la política.
+
+  CIS-5.2.7: >-
+    Valida en /etc/pam.d/su que el acceso a su esté restringido mediante
+    pam_wheel.so con use_uid.
+
+  CIS-5.2.8: >-
+    Control marcado como not_applicable en la automatización para que el reporte
+    lo clasifique como No aplicable.
+
+  CIS-5.2.9: >-
+    Control marcado como not_applicable en la automatización para que el reporte
+    lo clasifique como No aplicable.
+
+# ============================================================================
+# SECTION 5.3 - SSH Server
+# ============================================================================
+
+  CIS-5.3.1: >-
+    Valida configuración del servidor SSH para: Ensure permissions on
+    /etc/ssh/sshd_config are configured. El comando revisa /etc/ssh/sshd_config y
+    archivos incluidos cuando aplica, retornando PASS o FAIL.
+
+  CIS-5.3.2: >-
+    Valida configuración del servidor SSH para: Ensure SSH private host key files
+    permissions are configured. El comando revisa /etc/ssh/sshd_config y archivos
+    incluidos cuando aplica, retornando PASS o FAIL.
+
+  CIS-5.3.3: >-
+    Valida configuración del servidor SSH para: Ensure SSH public host key files
+    permissions are configured. El comando revisa /etc/ssh/sshd_config y archivos
+    incluidos cuando aplica, retornando PASS o FAIL.
+
+  CIS-5.3.4: >-
+    Valida configuración del servidor SSH para: Ensure SSH access is limited. El
+    comando revisa /etc/ssh/sshd_config y archivos incluidos cuando aplica,
+    retornando PASS o FAIL.
+
+  CIS-5.3.5: >-
+    Valida configuración del servidor SSH para: Ensure SSH LogLevel is
+    appropriate. El comando revisa /etc/ssh/sshd_config y archivos incluidos
+    cuando aplica, retornando PASS o FAIL.
+
+  CIS-5.3.6: >-
+    Valida configuración del servidor SSH para: Ensure SSH X11 forwarding is
+    disabled. El comando revisa /etc/ssh/sshd_config y archivos incluidos cuando
+    aplica, retornando PASS o FAIL.
+
+  CIS-5.3.7: >-
+    Valida configuración del servidor SSH para: Ensure SSH MaxAuthTries is set to
+    4 or less. El comando revisa /etc/ssh/sshd_config y archivos incluidos cuando
+    aplica, retornando PASS o FAIL.
+
+  CIS-5.3.8: >-
+    Valida configuración del servidor SSH para: Ensure SSH IgnoreRhosts is
+    enabled. El comando revisa /etc/ssh/sshd_config y archivos incluidos cuando
+    aplica, retornando PASS o FAIL.
+
+  CIS-5.3.9: >-
+    Valida configuración del servidor SSH para: Ensure SSH HostbasedAuthentication
+    is disabled. El comando revisa /etc/ssh/sshd_config y archivos incluidos
+    cuando aplica, retornando PASS o FAIL.
+
+  CIS-5.3.10: >-
+    Valida configuración del servidor SSH para: Ensure SSH root login is disabled.
+    El comando revisa /etc/ssh/sshd_config y archivos incluidos cuando aplica,
+    retornando PASS o FAIL.
+
+  CIS-5.3.11: >-
+    Valida configuración del servidor SSH para: Ensure SSH PermitEmptyPasswords is
+    disabled. El comando revisa /etc/ssh/sshd_config y archivos incluidos cuando
+    aplica, retornando PASS o FAIL.
+
+  CIS-5.3.12: >-
+    Valida configuración del servidor SSH para: Ensure SSH PermitUserEnvironment
+    is disabled. El comando revisa /etc/ssh/sshd_config y archivos incluidos
+    cuando aplica, retornando PASS o FAIL.
+
+  CIS-5.3.13: >-
+    Valida configuración del servidor SSH para: Ensure SSH Idle Timeout Interval
+    is configured. El comando revisa /etc/ssh/sshd_config y archivos incluidos
+    cuando aplica, retornando PASS o FAIL.
+
+  CIS-5.3.14: >-
+    Valida configuración del servidor SSH para: Ensure SSH LoginGraceTime is set
+    to 60 seconds or less. El comando revisa /etc/ssh/sshd_config y archivos
+    incluidos cuando aplica, retornando PASS o FAIL.
+
+  CIS-5.3.15: >-
+    Valida configuración del servidor SSH para: Ensure SSH warning banner is
+    configured. El comando revisa /etc/ssh/sshd_config y archivos incluidos cuando
+    aplica, retornando PASS o FAIL.
+
+  CIS-5.3.16: >-
+    Valida configuración del servidor SSH para: Ensure SSH PAM is enabled. El
+    comando revisa /etc/ssh/sshd_config y archivos incluidos cuando aplica,
+    retornando PASS o FAIL.
+
+  CIS-5.3.17: >-
+    Valida configuración del servidor SSH para: Ensure SSH AllowTcpForwarding is
+    disabled. El comando revisa /etc/ssh/sshd_config y archivos incluidos cuando
+    aplica, retornando PASS o FAIL.
+
+  CIS-5.3.18: >-
+    Valida configuración del servidor SSH para: Ensure SSH MaxStartups is
+    configured. El comando revisa /etc/ssh/sshd_config y archivos incluidos cuando
+    aplica, retornando PASS o FAIL.
+
+  CIS-5.3.19: >-
+    Valida configuración del servidor SSH para: Ensure SSH MaxSessions is limited.
+    El comando revisa /etc/ssh/sshd_config y archivos incluidos cuando aplica,
+    retornando PASS o FAIL.
+
+# ============================================================================
+# SECTION 5.4 - PAM SLES
+# ============================================================================
+
+  CIS-5.4.0: >-
+    Valida mediante rpm que el paquete asociado al control esté instalado 
+
+  CIS-5.4.1: >-
+    Valida los requisitos de creación de contraseña revisando
+    /etc/security/pwquality.conf y /etc/security/pwquality.conf.d/*.conf,
+    confirmando minlen y minclass según la política.
+
+  CIS-5.4.2: >-
+    Valida en /etc/security/faillock.conf que deny esté configurado entre 1 y 5
+    intentos.
+
+  CIS-5.4.3: >-
+    Consulta pam-config --query --pwhistory --pwhistory-remember y valida que el
+    historial recuerde 24 o más contraseñas anteriores.
+
+  CIS-5.4.3.1: >-
+    Valida que pam_pwhistory.so incluya use_authtok en la pila password dentro de
+    /etc/pam.d/*.
+
+  CIS-5.4.4: >-
+    Consulta pam-config --query --unix y valida que pam_unix use un algoritmo
+    fuerte de hashing como sha512 o yescrypt.
+
+  CIS-5.4.4.1: >-
+    Consulta pam-config --query --unix --unix-nullok y valida que nullok no esté
+    habilitado en pam_unix.
+
+# ============================================================================
+# SECTION 5.5 - User Accounts and Environment
+# ============================================================================
+
+  CIS-5.5.1: >-
+    Valida en /etc/login.defs que PASS_MAX_DAYS esté configurado en 42 días o
+    menos.
+
+  CIS-5.5.2: >-
+    Valida en /etc/login.defs que PASS_MIN_DAYS esté configurado en 3 días o más.
+
+  CIS-5.5.3: >-
+    Valida en /etc/login.defs que PASS_WARN_AGE esté configurado en 5 días o más.
+
+  CIS-5.5.4: >-
+    Valida con useradd -D que INACTIVE esté configurado en 30 días o menos.
+
+  CIS-5.5.5: >-
+    Recorre usuarios locales con contraseña activa, excluyendo usuarios definidos
+    en excluded_users_regex, y valida que la fecha del último cambio de contraseña
+    no esté en el futuro.
+
+  CIS-5.5.6: >-
+    Valida que las cuentas de sistema por debajo de UID_MIN, excluyendo usuarios
+    definidos en excluded_users_regex, tengan shell no interactiva.
+
+  CIS-5.5.7: >-
+    Valida que el grupo primario de root sea GID 0.
+
+  CIS-5.5.8: >-
+    Valida que el umask por defecto sea 027 o 077 en /etc/profile, /etc/bashrc o
+    archivos bajo /etc/profile.d.
+
+  CIS-5.5.9: >-
+    Valida que TMOUT esté configurado en 900 segundos o menos, y que además esté
+    definido como readonly y exportado globalmente.
+
+  CIS-5.5.10: >-
+    Control marcado como not_applicable en la automatización para que el reporte
+    lo clasifique como No aplicable.

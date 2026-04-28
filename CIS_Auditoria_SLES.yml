@@ -1,24 +1,17 @@
 ---
-- name: Auditoría CIS Benchmark (Oracle Linux / RHEL 8-9)
+- name: Auditoría CIS Benchmark (SLES)
   hosts: PRUEBA
   gather_facts: true
   become: true
 
   vars_files:
     - group_vars/all/pre_audit_controls.yml
-    - group_vars/all/audit_controls.yml
+    - group_vars/all/audit_controls_sles.yml   # 👈 SOLO SLES
     - group_vars/all/exclusions.yml
-    - group_vars/all/audit_command_descriptions.yml
+    - group_vars/all/audit_command_descriptions_sles.yml
 
   vars:
-    # Convierte la distribución detectada en una etiqueta simple
-    # para compararla contra os_scope de cada control.
-    current_os_family: >-
-      {{
-        'OL' if ansible_facts.distribution == 'OracleLinux'
-        else 'RHEL' if ansible_facts.distribution in ['RedHat', 'RedHat Enterprise Linux']
-        else 'OTHER'
-      }}
+    current_os_family: "SLES"
 
   tasks:
 
@@ -31,9 +24,13 @@
         control_results: []
         normalized_controls: []
 
-    - name: AUDIT | Unir controles PRE + CIS
+    - name: AUDIT | Unir controles PRE + SLES
       ansible.builtin.set_fact:
-        all_audit_controls: "{{ (pre_audit_controls | default([])) + (audit_controls | default([])) }}"
+        all_audit_controls: >-
+          {{
+            (pre_audit_controls | default([]))
+            + (audit_controls_sles | default([]))
+          }}
 
     - name: AUDIT | Obtener IP del host para reportes
       ansible.builtin.set_fact:
@@ -123,8 +120,8 @@
     # AUDIT | Ejecutar controles
     #####################################################################
 
-    - name: AUDIT | Ejecutar controles CIS
-      ansible.builtin.shell: "{{ item.command }}"  # noqa command-instead-of-shell
+    - name: AUDIT | Ejecutar controles CIS SLES
+      ansible.builtin.shell: "{{ item.command }}"
       args:
         executable: /bin/bash
       loop: "{{ applicable_controls }}"
@@ -244,32 +241,17 @@
         label: "{{ item.0.id }}: {{ item.0.name }}"
 
     #####################################################################
-    # AUDIT | Resumen final
+    # REPORT | Salida
     #####################################################################
 
-    - name: AUDIT | Mostrar resumen de auditoría
-      ansible.builtin.debug:
-        msg:
-          - "Host: {{ inventory_hostname }}"
-          - "IP: {{ audit_host_ip }}"
-          - "Total controles: {{ control_results | length }}"
-          - "Cumplen: {{ control_results | selectattr('status', 'equalto', 'Cumple') | list | length }}"
-          - "No cumplen: {{ control_results | selectattr('status', 'equalto', 'No cumple') | list | length }}"
-          - "No aplicables: {{ control_results | selectattr('status', 'equalto', 'No aplicable') | list | length }}"
-          - "Sin descripción: {{ missing_command_descriptions | length }}"
-
-    #####################################################################
-    # REPORT | Crear salida JSON local
-    #####################################################################
-
-    - name: REPORT | Crear carpeta local para reportes
+    - name: REPORT | Crear carpeta local
       ansible.builtin.file:
         path: "./_audit_reports"
         state: directory
         mode: "0755"
       delegate_to: localhost
 
-    - name: REPORT | Escribir JSON con resultados
+    - name: REPORT | JSON
       ansible.builtin.copy:
         content: >-
           {{
@@ -282,21 +264,12 @@
             } | to_nice_json
           }}
         dest: "./_audit_reports/{{ inventory_hostname }}.json"
-        mode: "0644"
       delegate_to: localhost
 
-    #####################################################################
-    # REPORT | Generar Excel
-    #####################################################################
-
-    - name: REPORT | Generar Excel por host
+    - name: REPORT | Excel
       ansible.builtin.command: >
         {{ ansible_playbook_python }} ./scripts/write_excel_report.py
         --input ./_audit_reports/{{ inventory_hostname }}.json
         --output ./_audit_reports/Audit_{{ inventory_hostname }}_{{ audit_host_ip }}.xlsx
       delegate_to: localhost
       changed_when: false
-
-    - name: REPORT | Mostrar ubicación del reporte
-      ansible.builtin.debug:
-        msg: "Reporte generado: ./_audit_reports/Audit_{{ inventory_hostname }}_{{ audit_host_ip }}.xlsx"

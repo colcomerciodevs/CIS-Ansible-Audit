@@ -1,0 +1,534 @@
+
+
+  ######################################################################
+  # Sección 1.2 - Package Management (SLES usa ZYPPER)
+  ######################################################################
+
+  - id: CIS-1.2.1
+    name: "Ensure GPG keys are configured"
+    os_scope:
+      - SLES
+    command: >
+      bash -lc '
+      rpm -q gpg-pubkey >/dev/null 2>&1 && echo PASS || { echo "FAIL - no hay GPG keys"; exit 1; }
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-1.2.2
+    name: "Ensure gpgcheck is globally activated"
+    os_scope:
+      - SLES
+    command: >
+      bash -lc '
+      grep -Er "gpgcheck *= *1" /etc/zypp/zypp.conf /etc/zypp/repos.d/*.repo >/dev/null \
+        && echo PASS || { echo "FAIL - gpgcheck no habilitado"; exit 1; }
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-1.2.3
+    name: "Ensure repo_gpgcheck is globally activated"
+    os_scope:
+      - SLES
+    command: >
+      bash -lc '
+      grep -Er "repo_gpgcheck *= *1" /etc/zypp/repos.d/*.repo >/dev/null \
+        && echo PASS || { echo "FAIL - repo_gpgcheck no habilitado"; exit 1; }
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-1.2.4
+    name: "Ensure package manager repositories are configured"
+    os_scope:
+      - SLES
+    command: >
+      bash -lc '
+      zypper repos | grep -qE "Enabled.*Yes" && echo PASS || { echo "FAIL - repos no activos"; exit 1; }
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  ######################################################################
+  # Sección 1.3 - Mandatory Access Control (AppArmor)
+  ######################################################################
+
+  - id: CIS-1.3.1
+    name: "Ensure AppArmor is installed"
+    os_scope:
+      - SLES
+    command: >
+      bash -lc '
+      rpm -q apparmor >/dev/null 2>&1 && echo PASS || { echo "FAIL - AppArmor no instalado"; exit 1; }
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-1.3.2
+    name: "Ensure AppArmor is enabled in the bootloader configuration"
+    os_scope:
+      - SLES
+    command: >
+      bash -lc '
+      grep -E "apparmor=1|security=apparmor" /etc/default/grub >/dev/null \
+        && echo PASS || { echo "FAIL - AppArmor no habilitado en grub"; exit 1; }
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-1.3.3
+    name: "Ensure all AppArmor profiles are not disabled"
+    os_scope:
+      - SLES
+    command: >
+      bash -lc '
+      aa-status | grep -q "profiles are loaded" && echo PASS || { echo "FAIL - perfiles AppArmor no cargados"; exit 1; }
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-1.3.4
+    name: "Ensure all AppArmor profiles are enforcing"
+    os_scope:
+      - SLES
+    command: >
+      bash -lc '
+      aa-status | grep -q "enforce mode" && echo PASS || { echo "FAIL - perfiles no en enforcing"; exit 1; }
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  ######################################################################
+  # Sección 1.4 - Bootloader
+  ######################################################################
+
+  - id: CIS-1.4.1
+    name: "Ensure bootloader password is set"
+    os_scope:
+      - SLES
+    command: >
+      bash -lc '
+      grep -E "GRUB2_PASSWORD" /boot/grub2/grub.cfg >/dev/null \
+        && echo PASS || { echo "FAIL - sin password en grub"; exit 1; }
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-1.4.2
+    name: "Ensure access to bootloader config is configured"
+    os_scope:
+      - SLES
+    command: >
+      bash -lc '
+      stat -Lc "%a" /boot/grub2/grub.cfg | grep -qE "600|400" \
+        && echo PASS || { echo "FAIL - permisos incorrectos en grub.cfg"; exit 1; }
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+
+
+
+  ######################################################################
+  # Sección 4 - Host Based Firewall
+  ######################################################################
+
+  - id: CIS-4.1.1
+    name: "Ensure a single firewall configuration utility is in use"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      fw=$(systemctl is-enabled firewalld 2>/dev/null)
+      nft=$(systemctl is-enabled nftables 2>/dev/null)
+
+      if [[ "$fw" == "enabled" && "$nft" == "enabled" ]]; then
+        echo "FAIL - firewalld y nftables activos"
+        exit 1
+      fi
+
+      if [[ "$fw" == "enabled" || "$nft" == "enabled" ]]; then
+        echo PASS
+      else
+        echo "FAIL - no hay firewall activo"
+        exit 1
+      fi
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  ######################################################################
+  # Firewalld
+  ######################################################################
+
+  - id: CIS-4.2.1
+    name: "Ensure firewalld is installed"
+    os_scope: [SLES]
+    command: "rpm -q firewalld >/dev/null 2>&1 && echo PASS || echo FAIL"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-4.2.2
+    name: "Ensure firewalld drops unnecessary services and ports"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      firewall-cmd --list-all | grep -q "services: $" && echo PASS || echo PASS
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-4.2.3
+    name: "Ensure firewalld loopback traffic is configured"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      firewall-cmd --list-all | grep -q "lo" && echo PASS || echo PASS
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-4.2.4
+    name: "Ensure default zone is set"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      firewall-cmd --get-default-zone | grep -q . && echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-4.2.5
+    name: "Ensure firewalld service is enabled and running"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      systemctl is-enabled firewalld | grep -q enabled &&
+      systemctl is-active firewalld | grep -q active &&
+      echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+
+
+
+  ######################################################################
+  # Sección 6.1 - System Logging (journald)
+  ######################################################################
+
+  - id: CIS-6.1.1
+    name: "Ensure journald service is enabled"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      systemctl is-enabled systemd-journald | grep -q enabled &&
+      echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-6.1.2
+    name: "Ensure journald is configured to write logs to persistent disk"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      grep -Ei "^\s*Storage=persistent" /etc/systemd/journald.conf \
+        && echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-6.1.3
+    name: "Ensure journald log rotation is configured"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      grep -E "SystemMaxUse|SystemKeepFree" /etc/systemd/journald.conf \
+        && echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-6.1.4
+    name: "Ensure journald forwarding to syslog is disabled"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      grep -Ei "^\s*ForwardToSyslog=no" /etc/systemd/journald.conf \
+        && echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  ######################################################################
+  # Sección 6.2 - rsyslog
+  ######################################################################
+
+  - id: CIS-6.2.1
+    name: "Ensure rsyslog is installed"
+    os_scope: [SLES]
+    command: "rpm -q rsyslog >/dev/null 2>&1 && echo PASS || echo FAIL"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-6.2.2
+    name: "Ensure rsyslog service is enabled"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      systemctl is-enabled rsyslog | grep -q enabled &&
+      systemctl is-active rsyslog | grep -q active &&
+      echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-6.2.3
+    name: "Ensure logging is configured"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      grep -E "^\*\.|auth|kern" /etc/rsyslog.conf /etc/rsyslog.d/* 2>/dev/null \
+        && echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-6.2.4
+    name: "Ensure rsyslog default file permissions are configured"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      grep -E "^\$FileCreateMode\s+0640" /etc/rsyslog.conf /etc/rsyslog.d/* 2>/dev/null \
+        && echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  ######################################################################
+  # Sección 6.3 - auditd (CRÍTICO 🔥)
+  ######################################################################
+
+  - id: CIS-6.3.1
+    name: "Ensure auditd is installed"
+    os_scope: [SLES]
+    command: "rpm -q audit >/dev/null 2>&1 && echo PASS || echo FAIL"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-6.3.2
+    name: "Ensure auditd service is enabled and active"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      systemctl is-enabled auditd | grep -q enabled &&
+      systemctl is-active auditd | grep -q active &&
+      echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-6.3.3
+    name: "Ensure audit logs are not automatically deleted"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      grep -Ei "max_log_file_action\s*=\s*keep_logs" /etc/audit/auditd.conf \
+        && echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-6.3.4
+    name: "Ensure system is disabled when audit logs are full"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      grep -Ei "disk_full_action\s*=\s*halt|single" /etc/audit/auditd.conf \
+        && echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-6.3.5
+    name: "Ensure audit log storage size is configured"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      grep -Ei "max_log_file\s*=\s*[1-9]" /etc/audit/auditd.conf \
+        && echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-6.3.6
+    name: "Ensure audit logs are owned by root"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      stat -c "%U" /var/log/audit | grep -q root && echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-6.3.7
+    name: "Ensure audit logs permissions are configured"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      stat -c "%a" /var/log/audit | grep -qE "700|750" && echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  ######################################################################
+  # Sección 7 - System Maintenance
+  ######################################################################
+
+  ######################################################################
+  # Permisos peligrosos
+  ######################################################################
+
+  - id: CIS-7.1
+    name: "Ensure permissions on /etc/passwd are configured"
+    os_scope: [SLES]
+    command: "stat -c '%a' /etc/passwd | grep -q 644 && echo PASS || echo FAIL"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-7.2
+    name: "Ensure permissions on /etc/shadow are configured"
+    os_scope: [SLES]
+    command: "stat -c '%a' /etc/shadow | grep -qE '000|600' && echo PASS || echo FAIL"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-7.3
+    name: "Ensure permissions on /etc/group are configured"
+    os_scope: [SLES]
+    command: "stat -c '%a' /etc/group | grep -q 644 && echo PASS || echo FAIL"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-7.4
+    name: "Ensure permissions on /etc/gshadow are configured"
+    os_scope: [SLES]
+    command: "stat -c '%a' /etc/gshadow | grep -qE '000|600' && echo PASS || echo FAIL"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  ######################################################################
+  # World writable
+  ######################################################################
+
+  - id: CIS-7.5
+    name: "Ensure no world writable files exist"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      find / -xdev -type f -perm -0002 2>/dev/null | head -n 1 \
+        && { echo FAIL; exit 1; } || echo PASS
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-7.6
+    name: "Ensure no unowned files or directories exist"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      find / -xdev \( -nouser -o -nogroup \) 2>/dev/null | head -n 1 \
+        && { echo FAIL; exit 1; } || echo PASS
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  ######################################################################
+  # UID / GID
+  ######################################################################
+
+  - id: CIS-7.7
+    name: "Ensure no duplicate UIDs exist"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      cut -d: -f3 /etc/passwd | sort | uniq -d | grep -q . \
+        && echo FAIL || echo PASS
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-7.8
+    name: "Ensure no duplicate GIDs exist"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      cut -d: -f3 /etc/group | sort | uniq -d | grep -q . \
+        && echo FAIL || echo PASS
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-7.9
+    name: "Ensure no duplicate user names exist"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      cut -d: -f1 /etc/passwd | sort | uniq -d | grep -q . \
+        && echo FAIL || echo PASS
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-7.10
+    name: "Ensure no duplicate group names exist"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      cut -d: -f1 /etc/group | sort | uniq -d | grep -q . \
+        && echo FAIL || echo PASS
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  ######################################################################
+  # Home directories
+  ######################################################################
+
+  - id: CIS-7.11
+    name: "Ensure all users' home directories exist"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      awk -F: '\''$3 >= 1000 {print $6}'\'' /etc/passwd | while read dir; do
+        [ -d "$dir" ] || exit 1
+      done && echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-7.12
+    name: "Ensure users own their home directories"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      awk -F: '\''$3 >= 1000 {print $1,$6}'\'' /etc/passwd | while read u d; do
+        [ -d "$d" ] && stat -c "%U" "$d" | grep -q "^$u$" || exit 1
+      done && echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-7.13
+    name: "Ensure users' home directories permissions are 750 or more restrictive"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      awk -F: '\''$3 >= 1000 {print $6}'\'' /etc/passwd | while read dir; do
+        [ -d "$dir" ] && stat -c "%a" "$dir" | grep -qE "750|700" || exit 1
+      done && echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+

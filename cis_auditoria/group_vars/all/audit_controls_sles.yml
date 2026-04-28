@@ -1,0 +1,1457 @@
+---
+# =============================================================================
+# CIS Benchmark Audit Controls
+# SUSE Linux Enterprise Server 15
+# =============================================================================
+#
+# Mantiene la numeración usada en RHEL/OL,
+# pero adapta comandos y validaciones a SLES.
+# =============================================================================
+
+audit_controls_sles:
+
+  ######################################################################
+  # Sección 1.1 - Configuración del Sistema de Archivos
+  ######################################################################
+
+  - id: CIS-1.1.1
+    name: "Ensure cramfs kernel module is not available"
+    os_scope:
+      - SLES
+    command: >
+      bash -lc '
+        if modprobe --showconfig 2>/dev/null | grep -Pq "^\h*install\h+cramfs\h+(/usr)?/bin/(true|false)\b"; then
+          echo blocked;
+          exit 0;
+        fi;
+        if modprobe --showconfig 2>/dev/null | grep -Pq "^\h*blacklist\h+cramfs\b"; then
+          if ! lsmod | awk "{print \$1}" | grep -qx cramfs; then
+            echo blocked;
+            exit 0;
+          fi;
+        fi;
+        if lsmod | awk "{print \$1}" | grep -qx cramfs; then
+          echo loaded;
+          exit 1;
+        fi;
+        if modinfo -n cramfs >/dev/null 2>&1; then
+          echo available;
+          exit 1;
+        else
+          echo absent;
+          exit 0;
+        fi'
+    pass_if_regex:
+      - "^blocked$"
+      - "^absent$"
+    fail_if_regex:
+      - "^loaded$"
+      - "^available$"
+
+  - id: CIS-1.1.2
+    name: "Ensure squashfs kernel module is not available"
+    os_scope:
+      - SLES
+    command: >
+      bash -lc '
+        if modprobe --showconfig 2>/dev/null | grep -Pq "^\h*install\h+squashfs\h+(/usr)?/bin/(true|false)\b"; then
+          echo blocked;
+          exit 0;
+        fi;
+        if modprobe --showconfig 2>/dev/null | grep -Pq "^\h*blacklist\h+squashfs\b"; then
+          if ! lsmod | awk "{print \$1}" | grep -qx squashfs; then
+            echo blocked;
+            exit 0;
+          fi;
+        fi;
+        if lsmod | awk "{print \$1}" | grep -qx squashfs; then
+          echo loaded;
+          exit 1;
+        fi;
+        if modinfo -n squashfs >/dev/null 2>&1; then
+          echo available;
+          exit 1;
+        else
+          echo absent;
+          exit 0;
+        fi'
+    pass_if_regex:
+      - "^blocked$"
+      - "^absent$"
+    fail_if_regex:
+      - "^loaded$"
+      - "^available$"
+
+  - id: CIS-1.1.3
+    name: "Ensure udf kernel module is not available"
+    os_scope:
+      - SLES
+    command: >
+      bash -lc '
+        if modprobe --showconfig 2>/dev/null | grep -Pq "^\h*install\h+udf\h+(/usr)?/bin/(true|false)\b"; then
+          echo blocked;
+          exit 0;
+        fi;
+        if modprobe --showconfig 2>/dev/null | grep -Pq "^\h*blacklist\h+udf\b"; then
+          if ! lsmod | awk "{print \$1}" | grep -qx udf; then
+            echo blocked;
+            exit 0;
+          fi;
+        fi;
+        if lsmod | awk "{print \$1}" | grep -qx udf; then
+          echo loaded;
+          exit 1;
+        fi;
+        if modinfo -n udf >/dev/null 2>&1; then
+          echo available;
+          exit 1;
+        else
+          echo absent;
+          exit 0;
+        fi'
+    pass_if_regex:
+      - "^blocked$"
+      - "^absent$"
+    fail_if_regex:
+      - "^loaded$"
+      - "^available$"
+
+  - id: CIS-1.1.4
+    name: "Ensure mounting of FAT filesystems is limited"
+    os_scope:
+      - SLES
+    command: "bash -lc 'echo not_applicable'"
+    pass_if_regex:
+      - '^not_applicable$'
+    fail_if_regex: []
+
+  - id: CIS-1.1.5
+    name: "Ensure separate partition exists for /tmp"
+    os_scope:
+      - SLES
+    command: "findmnt --kernel /tmp"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.6
+    name: "Ensure nodev option set on /tmp partition"
+    os_scope:
+      - SLES
+    command: "findmnt -no OPTIONS /tmp | tr ',' '\\n' | grep -Fx nodev"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.7
+    name: "Ensure nosuid option set on /tmp partition"
+    os_scope:
+      - SLES
+    command: "findmnt -no OPTIONS /tmp | tr ',' '\\n' | grep -Fx nosuid"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.8
+    name: "Ensure noexec option set on /tmp partition"
+    os_scope:
+      - SLES
+    command: "findmnt -no OPTIONS /tmp | tr ',' '\\n' | grep -Fx noexec"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.9
+    name: "Ensure separate partition exists for /dev/shm"
+    os_scope:
+      - SLES
+    command: "findmnt --kernel /dev/shm"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.10
+    name: "Ensure nodev option set on /dev/shm partition"
+    os_scope:
+      - SLES
+    command: "findmnt -no OPTIONS /dev/shm | tr ',' '\\n' | grep -Fx nodev"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.11
+    name: "Ensure nosuid option set on /dev/shm partition"
+    os_scope:
+      - SLES
+    command: "findmnt -no OPTIONS /dev/shm | tr ',' '\\n' | grep -Fx nosuid"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.12
+    name: "Ensure noexec option set on /dev/shm partition"
+    os_scope:
+      - SLES
+    command: "findmnt -no OPTIONS /dev/shm | tr ',' '\\n' | grep -Fx noexec"
+    pass_if_regex: []
+    fail_if_regex: []
+
+
+  - id: CIS-1.1.13
+    name: "Ensure separate partition exists for /var"
+    os_scope:
+      - SLES
+    command: "findmnt --kernel /var"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.14
+    name: "Ensure nodev option set on /var partition"
+    os_scope:
+      - SLES
+    command: "findmnt -no OPTIONS /var | tr ',' '\\n' | grep -Fx nodev"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.15
+    name: "Ensure nosuid option set on /var partition"
+    os_scope:
+      - SLES
+    command: "findmnt -no OPTIONS /var | tr ',' '\\n' | grep -Fx nosuid"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.16
+    name: "Ensure noexec option set on /var partition"
+    os_scope:
+      - SLES
+    command: "bash -lc 'echo not_applicable'"
+    pass_if_regex:
+      - '^not_applicable$'
+    fail_if_regex: []
+
+  - id: CIS-1.1.17
+    name: "Ensure separate partition exists for /var/tmp"
+    os_scope:
+      - SLES
+    command: "findmnt --kernel /var/tmp"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.18
+    name: "Ensure nodev option set on /var/tmp partition"
+    os_scope:
+      - SLES
+    command: "findmnt -no OPTIONS /var/tmp | tr ',' '\\n' | grep -Fx nodev"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.19
+    name: "Ensure nosuid option set on /var/tmp partition"
+    os_scope:
+      - SLES
+    command: "findmnt -no OPTIONS /var/tmp | tr ',' '\\n' | grep -Fx nosuid"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.20
+    name: "Ensure noexec option set on /var/tmp partition"
+    os_scope:
+      - SLES
+    command: "findmnt -no OPTIONS /var/tmp | tr ',' '\\n' | grep -Fx noexec"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.21
+    name: "Ensure separate partition exists for /var/log"
+    os_scope:
+      - SLES
+    command: "findmnt --kernel /var/log"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.22
+    name: "Ensure nodev option set on /var/log partition"
+    os_scope:
+      - SLES
+    command: "findmnt -no OPTIONS /var/log | tr ',' '\\n' | grep -Fx nodev"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.23
+    name: "Ensure nosuid option set on /var/log partition"
+    os_scope:
+      - SLES
+    command: "findmnt -no OPTIONS /var/log | tr ',' '\\n' | grep -Fx nosuid"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.24
+    name: "Ensure noexec option set on /var/log partition"
+    os_scope:
+      - SLES
+    command: "findmnt -no OPTIONS /var/log | tr ',' '\\n' | grep -Fx noexec"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.25
+    name: "Ensure separate partition exists for /var/log/audit"
+    os_scope:
+      - SLES
+    command: "findmnt --kernel /var/log/audit"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.26
+    name: "Ensure nodev option set on /var/log/audit partition"
+    os_scope:
+      - SLES
+    command: "findmnt -no OPTIONS /var/log/audit | tr ',' '\\n' | grep -Fx nodev"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.27
+    name: "Ensure nosuid option set on /var/log/audit partition"
+    os_scope:
+      - SLES
+    command: "findmnt -no OPTIONS /var/log/audit | tr ',' '\\n' | grep -Fx nosuid"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.28
+    name: "Ensure noexec option set on /var/log/audit partition"
+    os_scope:
+      - SLES
+    command: "findmnt -no OPTIONS /var/log/audit | tr ',' '\\n' | grep -Fx noexec"
+    pass_if_regex: []
+    fail_if_regex: []
+
+
+  - id: CIS-1.1.29
+    name: "Ensure separate partition exists for /home"
+    os_scope:
+      - SLES
+    command: "findmnt --kernel /home"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.30
+    name: "Ensure nodev option set on /home partition"
+    os_scope:
+      - SLES
+    command: "findmnt -no OPTIONS /home | tr ',' '\\n' | grep -Fx nodev"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-1.1.31
+    name: "Ensure nosuid option set on /home partition"
+    os_scope:
+      - SLES
+    command: "findmnt -no OPTIONS /home | tr ',' '\\n' | grep -Fx nosuid"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  ######################################################################
+  # Removable media
+  ######################################################################
+
+  - id: CIS-1.1.32
+    name: "Ensure noexec option is set on removable media partitions (Manual)"
+    os_scope: [SLES]
+    command: >
+      bash -lc 'echo "not_applicable"'
+    pass_if_regex:
+      - '^not_applicable$'
+    fail_if_regex: []
+
+  - id: CIS-1.1.33
+    name: "Ensure nodev option is set on removable media partitions (Manual)"
+    os_scope: [SLES]
+    command: >
+      bash -lc 'echo "not_applicable"'
+    pass_if_regex:
+      - '^not_applicable$'
+    fail_if_regex: []
+
+  - id: CIS-1.1.34
+    name: "Ensure nosuid option is set on removable media partitions (Manual)"
+    os_scope: [SLES]
+    command: >
+      bash -lc 'echo "not_applicable"'
+    pass_if_regex:
+      - '^not_applicable$'
+    fail_if_regex: []
+
+  ######################################################################
+  # /home quotas
+  ######################################################################
+
+  - id: CIS-1.1.35
+    name: "Ensure usrquota option is set on /home partition"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      findmnt -no OPTIONS /home | tr "," "\n" | grep -Fx usrquota \
+        && echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-1.1.36
+    name: "Ensure grpquota option is set on /home partition"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      findmnt -no OPTIONS /home | tr "," "\n" | grep -Fx grpquota \
+        && echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  ######################################################################
+  # Sticky bit
+  ######################################################################
+
+  - id: CIS-1.1.37
+    name: "Ensure sticky bit is set on all world-writable directories"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      find / -xdev -type d -perm -0002 ! -perm -1000 2>/dev/null | head -n 1 \
+        && { echo FAIL; exit 1; } || echo PASS
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  ######################################################################
+  # Automount
+  ######################################################################
+
+  - id: CIS-1.1.38
+    name: "Disable Automounting"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      systemctl is-enabled autofs 2>/dev/null | grep -q enabled && { echo FAIL; exit 1; }
+      systemctl is-active autofs 2>/dev/null | grep -q active && { echo FAIL; exit 1; }
+      echo PASS
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  ######################################################################
+  # USB Storage
+  ######################################################################
+
+  - id: CIS-1.1.39
+    name: "Disable USB Storage"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      lsmod | grep -q usb_storage && { echo FAIL; exit 1; }
+      modprobe --showconfig | grep -Eq "usb-storage.*(blacklist|/bin/false)" \
+        && echo PASS || { echo FAIL; exit 1; }
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  ######################################################################
+  # Sección 1.7 - Command Line Warning Banners
+  ######################################################################
+
+  - id: CIS-1.7.1
+    name: "Ensure message of the day is configured properly"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      [ -s /etc/motd ] && echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-1.7.2
+    name: "Ensure local login warning banner is configured properly"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      grep -qi "COLOMBIANA DE COMERCIO\|CORBETA\|ALKOSTO\|LA COMPAÑIA" /etc/issue \
+        && echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-1.7.3
+    name: "Ensure remote login warning banner is configured properly"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      grep -qi "COLOMBIANA DE COMERCIO\|CORBETA\|ALKOSTO\|LA COMPAÑIA" /etc/issue.net \
+        && echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-1.7.4
+    name: "Ensure permissions on /etc/motd are configured"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      stat -Lc "%a %U %G" /etc/motd | grep -Eq "^(644|640|600) root root$" \
+        && echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-1.7.5
+    name: "Ensure permissions on /etc/issue are configured"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      stat -Lc "%a %U %G" /etc/issue | grep -Eq "^(644|640|600) root root$" \
+        && echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-1.7.6
+    name: "Ensure permissions on /etc/issue.net are configured"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      stat -Lc "%a %U %G" /etc/issue.net | grep -Eq "^(644|640|600) root root$" \
+        && echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  ######################################################################
+  # Sección 2.1 - Server Services (NO instalados)
+  ######################################################################
+
+  - id: CIS-2.1.1
+    name: "Ensure time synchronization is in use"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      systemctl is-active chronyd systemd-timesyncd 2>/dev/null | grep -q active \
+        && echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-2.1.2
+    name: "Ensure systemd-timesyncd is configured"
+    os_scope: [SLES]
+    command: "grep -E '^NTP=' /etc/systemd/timesyncd.conf && echo PASS || echo FAIL"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-2.1.3
+    name: "Ensure chrony is configured"
+    os_scope: [SLES]
+    command: "grep -E '^server|^pool' /etc/chrony.conf && echo PASS || echo FAIL"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-2.1.4
+    name: "Ensure xinetd is not installed"
+    os_scope: [SLES]
+    command: "rpm -q xinetd && echo FAIL || echo PASS"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-2.1.5
+    name: "Ensure X Window System is not installed"
+    os_scope: [SLES]
+    command: "rpm -qa | grep -E '^xorg-x11-server' && echo FAIL || echo PASS"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-2.1.6
+    name: "Ensure Avahi Server is not installed"
+    os_scope: [SLES]
+    command: "rpm -q avahi && echo FAIL || echo PASS"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-2.1.7
+    name: "Ensure CUPS is not installed"
+    os_scope: [SLES]
+    command: "rpm -q cups && echo FAIL || echo PASS"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-2.1.8
+    name: "Ensure DHCP Server is not installed"
+    os_scope: [SLES]
+    command: "rpm -q dhcp-server && echo FAIL || echo PASS"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-2.1.9
+    name: "Ensure LDAP server is not installed"
+    os_scope: [SLES]
+    command: "rpm -q openldap2 && echo FAIL || echo PASS"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-2.1.10
+    name: "Ensure NFS is not installed"
+    os_scope: [SLES]
+    command: "rpm -q nfs-kernel-server && echo FAIL || echo PASS"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-2.1.11
+    name: "Ensure DNS Server is not installed"
+    os_scope: [SLES]
+    command: "rpm -q bind && echo FAIL || echo PASS"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-2.1.12
+    name: "Ensure FTP Server is not installed"
+    os_scope: [SLES]
+    command: "rpm -q ftp-server && echo FAIL || echo PASS"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-2.1.13
+    name: "Ensure VSFTP Server is not installed"
+    os_scope: [SLES]
+    command: "rpm -q vsftpd && echo FAIL || echo PASS"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-2.1.14
+    name: "Ensure TFTP Server is not installed"
+    os_scope: [SLES]
+    command: "rpm -q tftp-server && echo FAIL || echo PASS"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-2.1.15
+    name: "Ensure HTTP server is not installed"
+    os_scope: [SLES]
+    command: "rpm -q apache2 && echo FAIL || echo PASS"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-2.1.16
+    name: "Ensure IMAP and POP3 server are not installed"
+    os_scope: [SLES]
+    command: "rpm -q dovecot && echo FAIL || echo PASS"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-2.1.17
+    name: "Ensure Samba is not installed"
+    os_scope: [SLES]
+    command: "rpm -q samba && echo FAIL || echo PASS"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-2.1.18
+    name: "Ensure HTTP Proxy Server is not installed"
+    os_scope: [SLES]
+    command: "rpm -q squid && echo FAIL || echo PASS"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-2.1.19
+    name: "Ensure SNMP Server is not installed"
+    os_scope: [SLES]
+    command: "rpm -q net-snmp && echo FAIL || echo PASS"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-2.1.20
+    name: "Ensure mail transfer agent is configured for local-only mode"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      ss -lntp | grep -E ":25 " | grep -vq "127.0.0.1" \
+        && echo FAIL || echo PASS
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-2.1.21
+    name: "Ensure telnet-server is not installed"
+    os_scope: [SLES]
+    command: "rpm -q telnet-server && echo FAIL || echo PASS"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-2.1.22
+    name: "Ensure rsync service is not installed"
+    os_scope: [SLES]
+    command: "rpm -q rsync && echo FAIL || echo PASS"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-2.1.23
+    name: "Ensure NIS Server is not installed"
+    os_scope: [SLES]
+    command: "rpm -q ypserv && echo FAIL || echo PASS"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  ######################################################################
+  # Sección 2.2 - Client Services
+  ######################################################################
+
+  - id: CIS-2.2.1
+    name: "Ensure NIS Client is not installed"
+    command: "rpm -q ypbind && echo FAIL || echo PASS"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-2.2.2
+    name: "Ensure rsh client is not installed"
+    command: "rpm -q rsh && echo FAIL || echo PASS"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-2.2.3
+    name: "Ensure talk client is not installed"
+    command: "rpm -q talk && echo FAIL || echo PASS"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-2.2.4
+    name: "Ensure telnet client is not installed"
+    command: "rpm -q telnet && echo FAIL || echo PASS"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-2.2.5
+    name: "Ensure LDAP client is not installed"
+    command: "rpm -q openldap2-client && echo FAIL || echo PASS"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-2.2.6
+    name: "Ensure TFTP client is not installed"
+    command: "rpm -q tftp && echo FAIL || echo PASS"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-2.2.7
+    name: "Ensure RPC bind is not installed"
+    command: "rpm -q rpcbind && echo FAIL || echo PASS"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  ######################################################################
+  # Sección 3.1 - Network Devices
+  ######################################################################
+
+  - id: CIS-3.1.1
+    name: "Ensure IPv6 status is identified"
+    os_scope: [SLES]
+    command: "sysctl net.ipv6.conf.all.disable_ipv6"
+    pass_if_regex: []
+    fail_if_regex: []
+
+  - id: CIS-3.1.2
+    name: "Ensure wireless interfaces are not available"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      ip link | grep -E "wl|wlan" && { echo "FAIL - interfaz wifi detectada"; exit 1; } || echo PASS
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-3.1.3
+    name: "Ensure bluetooth services are not in use"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      systemctl is-enabled bluetooth 2>/dev/null | grep -q enabled && { echo FAIL; exit 1; }
+      systemctl is-active bluetooth 2>/dev/null | grep -q active && { echo FAIL; exit 1; }
+      echo PASS
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  ######################################################################
+  # Sección 3.2 - Network Parameters (IPv4)
+  ######################################################################
+
+  - id: CIS-3.2.1
+    name: "Ensure packet redirect sending is disabled"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      sysctl net.ipv4.conf.all.send_redirects | grep -q "= 0" &&
+      sysctl net.ipv4.conf.default.send_redirects | grep -q "= 0" &&
+      echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-3.2.2
+    name: "Ensure IP forwarding is disabled"
+    os_scope: [SLES]
+    command: "sysctl net.ipv4.ip_forward | grep -q '= 0' && echo PASS || echo FAIL"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  ######################################################################
+  # Sección 3.3 - Network Parameters (Hardening)
+  ######################################################################
+
+  - id: CIS-3.3.1
+    name: "Ensure source routed packets are not accepted"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      sysctl net.ipv4.conf.all.accept_source_route | grep -q "= 0" &&
+      sysctl net.ipv4.conf.default.accept_source_route | grep -q "= 0" &&
+      echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-3.3.2
+    name: "Ensure ICMP redirects are not accepted"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      sysctl net.ipv4.conf.all.accept_redirects | grep -q "= 0" &&
+      sysctl net.ipv4.conf.default.accept_redirects | grep -q "= 0" &&
+      echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-3.3.3
+    name: "Ensure secure ICMP redirects are not accepted"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      sysctl net.ipv4.conf.all.secure_redirects | grep -q "= 0" &&
+      sysctl net.ipv4.conf.default.secure_redirects | grep -q "= 0" &&
+      echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-3.3.4
+    name: "Ensure suspicious packets are logged"
+    os_scope: [SLES]
+    command: "sysctl net.ipv4.conf.all.log_martians | grep -q '= 1' && echo PASS || echo FAIL"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-3.3.5
+    name: "Ensure broadcast ICMP requests are ignored"
+    os_scope: [SLES]
+    command: "sysctl net.ipv4.icmp_echo_ignore_broadcasts | grep -q '= 1' && echo PASS || echo FAIL"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-3.3.6
+    name: "Ensure bogus ICMP responses are ignored"
+    os_scope: [SLES]
+    command: "sysctl net.ipv4.icmp_ignore_bogus_error_responses | grep -q '= 1' && echo PASS || echo FAIL"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-3.3.7
+    name: "Ensure Reverse Path Filtering is enabled"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      sysctl net.ipv4.conf.all.rp_filter | grep -q "= 1" &&
+      sysctl net.ipv4.conf.default.rp_filter | grep -q "= 1" &&
+      echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-3.3.8
+    name: "Ensure TCP SYN Cookies is enabled"
+    os_scope: [SLES]
+    command: "sysctl net.ipv4.tcp_syncookies | grep -q '= 1' && echo PASS || echo FAIL"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-3.3.9
+    name: "Ensure IPv6 router advertisements are not accepted"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      sysctl net.ipv6.conf.all.accept_ra | grep -q "= 0" &&
+      sysctl net.ipv6.conf.default.accept_ra | grep -q "= 0" &&
+      echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  ######################################################################
+  # Sección 3.4 - Kernel Modules (Network)
+  ######################################################################
+
+  - id: CIS-3.4.1
+    name: "Ensure DCCP is disabled"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      lsmod | grep -q dccp && { echo FAIL; exit 1; }
+      modprobe --showconfig | grep -Eq "dccp.*(blacklist|/bin/false)" \
+        && echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-3.4.2
+    name: "Ensure SCTP is disabled"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      lsmod | grep -q sctp && { echo FAIL; exit 1; }
+      modprobe --showconfig | grep -Eq "sctp.*(blacklist|/bin/false)" \
+        && echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-3.4.3
+    name: "Ensure RDS is disabled"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      lsmod | grep -q rds && { echo FAIL; exit 1; }
+      modprobe --showconfig | grep -Eq "rds.*(blacklist|/bin/false)" \
+        && echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-3.4.4
+    name: "Ensure TIPC is disabled"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      lsmod | grep -q tipc && { echo FAIL; exit 1; }
+      modprobe --showconfig | grep -Eq "tipc.*(blacklist|/bin/false)" \
+        && echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  ######################################################################
+  # Sección 5.1 - Cron y at
+  ######################################################################
+
+  - id: CIS-5.1.1
+    name: "Ensure cron daemon is enabled and running"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      systemctl is-enabled cron 2>/dev/null | grep -q enabled &&
+      systemctl is-active cron 2>/dev/null | grep -q active &&
+      echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-5.1.2
+    name: "Ensure permissions on /etc/crontab are configured"
+    os_scope: [SLES]
+    command: "stat -Lc '%a %U %G' /etc/crontab | grep -Eq '^(600|644) root root$' && echo PASS || echo FAIL"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-5.1.3
+    name: "Ensure permissions on /etc/cron.hourly are configured"
+    os_scope: [SLES]
+    command: "stat -Lc '%a %U %G' /etc/cron.hourly | grep -Eq '^(700|755) root root$' && echo PASS || echo FAIL"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-5.1.4
+    name: "Ensure permissions on /etc/cron.daily are configured"
+    os_scope: [SLES]
+    command: "stat -Lc '%a %U %G' /etc/cron.daily | grep -Eq '^(700|755) root root$' && echo PASS || echo FAIL"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-5.1.5
+    name: "Ensure permissions on /etc/cron.weekly are configured"
+    os_scope: [SLES]
+    command: "stat -Lc '%a %U %G' /etc/cron.weekly | grep -Eq '^(700|755) root root$' && echo PASS || echo FAIL"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-5.1.6
+    name: "Ensure permissions on /etc/cron.monthly are configured"
+    os_scope: [SLES]
+    command: "stat -Lc '%a %U %G' /etc/cron.monthly | grep -Eq '^(700|755) root root$' && echo PASS || echo FAIL"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-5.1.7
+    name: "Ensure permissions on /etc/cron.d are configured"
+    os_scope: [SLES]
+    command: "stat -Lc '%a %U %G' /etc/cron.d | grep -Eq '^(700|755) root root$' && echo PASS || echo FAIL"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-5.1.8
+    name: "Ensure cron is restricted to authorized users"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      [ ! -e /etc/cron.deny ] &&
+      [ -f /etc/cron.allow ] &&
+      stat -Lc "%a %U %G" /etc/cron.allow | grep -Eq "^(600|640) root root$" &&
+      echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-5.1.9
+    name: "Ensure at is restricted to authorized users"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      [ ! -e /etc/at.deny ] &&
+      [ -f /etc/at.allow ] &&
+      stat -Lc "%a %U %G" /etc/at.allow | grep -Eq "^(600|640) root root$" &&
+      echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  ######################################################################
+  # Sección 5.2 - Sudo / Authselect 
+  ######################################################################
+
+  - id: CIS-5.2.1
+    name: "Ensure sudo is installed"
+    os_scope: [SLES]
+    command: "rpm -q sudo >/dev/null 2>&1 && echo PASS || echo FAIL"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-5.2.2
+    name: "Ensure sudo commands use pty"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      grep -REi "^[[:space:]]*Defaults[[:space:]]+([^#]+,)?use_pty" /etc/sudoers /etc/sudoers.d/* 2>/dev/null &&
+      echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-5.2.3
+    name: "Ensure sudo log file exists"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      grep -REi "^[[:space:]]*Defaults[[:space:]]+logfile=" /etc/sudoers /etc/sudoers.d/* 2>/dev/null &&
+      echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-5.2.4
+    name: "Ensure users must provide password for privilege escalation"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      grep -REi "^[^#].*NOPASSWD" /etc/sudoers /etc/sudoers.d/* 2>/dev/null &&
+      echo FAIL || echo PASS
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-5.2.5
+    name: "Ensure re-authentication for privilege escalation is not disabled globally"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      grep -REi "^[[:space:]]*Defaults[[:space:]]+!authenticate" /etc/sudoers /etc/sudoers.d/* 2>/dev/null &&
+      echo FAIL || echo PASS
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-5.2.6
+    name: "Ensure sudo authentication timeout is configured correctly"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      grep -REi "^[[:space:]]*Defaults[[:space:]]+timestamp_timeout=([0-9]|1[0-5])\b" /etc/sudoers /etc/sudoers.d/* 2>/dev/null &&
+      echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-5.2.7
+    name: "Ensure access to the su command is restricted"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      grep -Eq "^[[:space:]]*auth[[:space:]]+required[[:space:]]+pam_wheel\.so[[:space:]].*use_uid" /etc/pam.d/su &&
+      echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-5.2.8
+    name: "Ensure custom authselect profile is used"
+    os_scope: [SLES]
+    command: "bash -lc 'echo not_applicable'"
+    pass_if_regex:
+      - '^not_applicable$'
+    fail_if_regex: []
+
+  - id: CIS-5.2.9
+    name: "Ensure authselect includes with-faillock"
+    os_scope: [SLES]
+    command: "bash -lc 'echo not_applicable'"
+    pass_if_regex:
+      - '^not_applicable$'
+    fail_if_regex: []
+
+  ######################################################################
+  # Sección 5.3 - SSH
+  ######################################################################
+
+  - id: CIS-5.3.1
+    name: "Ensure permissions on /etc/ssh/sshd_config are configured"
+    os_scope: [SLES]
+    command: "stat -Lc '%a' /etc/ssh/sshd_config | grep -qE '600|400' && echo PASS || echo FAIL"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-5.3.2
+    name: "Ensure SSH private host key files permissions are configured"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      find /etc/ssh -name "ssh_host_*_key" -exec stat -Lc "%a" {} \; | grep -vqE "600|400" \
+        && echo FAIL || echo PASS
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-5.3.3
+    name: "Ensure SSH public host key files permissions are configured"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      find /etc/ssh -name "ssh_host_*_key.pub" -exec stat -Lc "%a" {} \; | grep -vqE "644|600" \
+        && echo FAIL || echo PASS
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-5.3.4
+    name: "Ensure SSH access is limited"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      grep -Ei "AllowUsers|AllowGroups|DenyUsers|DenyGroups" /etc/ssh/sshd_config /etc/ssh/sshd_config.d/* 2>/dev/null \
+        && echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-5.3.5
+    name: "Ensure SSH LogLevel is appropriate"
+    command: "grep -Ei '^LogLevel (VERBOSE|INFO)' /etc/ssh/sshd_config* && echo PASS || echo FAIL"
+
+  - id: CIS-5.3.6
+    name: "Ensure SSH X11 forwarding is disabled"
+    command: "grep -Ei '^X11Forwarding no' /etc/ssh/sshd_config* && echo PASS || echo FAIL"
+
+  - id: CIS-5.3.7
+    name: "Ensure SSH MaxAuthTries is set to 4 or less"
+    command: "grep -Ei '^MaxAuthTries [1-4]' /etc/ssh/sshd_config* && echo PASS || echo FAIL"
+
+  - id: CIS-5.3.8
+    name: "Ensure SSH IgnoreRhosts is enabled"
+    command: "grep -Ei '^IgnoreRhosts yes' /etc/ssh/sshd_config* && echo PASS || echo FAIL"
+
+  - id: CIS-5.3.9
+    name: "Ensure SSH HostbasedAuthentication is disabled"
+    command: "grep -Ei '^HostbasedAuthentication no' /etc/ssh/sshd_config* && echo PASS || echo FAIL"
+
+  - id: CIS-5.3.10
+    name: "Ensure SSH root login is disabled"
+    command: "grep -Ei '^PermitRootLogin no' /etc/ssh/sshd_config* && echo PASS || echo FAIL"
+
+  - id: CIS-5.3.11
+    name: "Ensure SSH PermitEmptyPasswords is disabled"
+    command: "grep -Ei '^PermitEmptyPasswords no' /etc/ssh/sshd_config* && echo PASS || echo FAIL"
+
+  - id: CIS-5.3.12
+    name: "Ensure SSH PermitUserEnvironment is disabled"
+    command: "grep -Ei '^PermitUserEnvironment no' /etc/ssh/sshd_config* && echo PASS || echo FAIL"
+
+  - id: CIS-5.3.13
+    name: "Ensure SSH Idle Timeout Interval is configured"
+    command: "grep -Ei 'ClientAliveInterval' /etc/ssh/sshd_config* && echo PASS || echo FAIL"
+
+  - id: CIS-5.3.14
+    name: "Ensure SSH LoginGraceTime is set to 60 seconds or less"
+    command: "grep -Ei '^LoginGraceTime (60|[1-5][0-9])' /etc/ssh/sshd_config* && echo PASS || echo FAIL"
+
+  - id: CIS-5.3.15
+    name: "Ensure SSH warning banner is configured"
+    command: "grep -Ei '^Banner' /etc/ssh/sshd_config* && echo PASS || echo FAIL"
+
+  - id: CIS-5.3.16
+    name: "Ensure SSH PAM is enabled"
+    command: "grep -Ei '^UsePAM yes' /etc/ssh/sshd_config* && echo PASS || echo FAIL"
+
+  - id: CIS-5.3.17
+    name: "Ensure SSH AllowTcpForwarding is disabled"
+    command: "grep -Ei '^AllowTcpForwarding no' /etc/ssh/sshd_config* && echo PASS || echo FAIL"
+
+  - id: CIS-5.3.18
+    name: "Ensure SSH MaxStartups is configured"
+    command: "grep -Ei '^MaxStartups' /etc/ssh/sshd_config* && echo PASS || echo FAIL"
+
+  - id: CIS-5.3.19
+    name: "Ensure SSH MaxSessions is limited"
+    command: "grep -Ei '^MaxSessions' /etc/ssh/sshd_config* && echo PASS || echo FAIL"
+
+  ######################################################################
+  # Sección 5.4 - PAM SLES
+  ######################################################################
+
+  - id: CIS-5.4.0
+    name: "Ensure latest version of pam is installed"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      rpm -q pam && echo PASS || { echo FAIL; exit 1; }
+      '
+    pass_if_regex:
+      - "PASS"
+    fail_if_regex:
+      - "FAIL"
+
+  - id: CIS-5.4.1
+    name: "Ensure password creation requirements are configured"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      fail=0
+      out=""
+
+      minlen_line=$(grep -Psi -- "^\h*minlen\h*=\h*(8|9|[1-9][0-9]+)\b" /etc/security/pwquality.conf /etc/security/pwquality.conf.d/*.conf 2>/dev/null | head -n1)
+      minclass_line=$(grep -Psi -- "^\h*minclass\h*=\h*4\b" /etc/security/pwquality.conf /etc/security/pwquality.conf.d/*.conf 2>/dev/null | head -n1)
+
+      [ -n "$minlen_line" ] && out="$out\n- minlen cumple: $minlen_line" || { out="$out\n- minlen NO cumple"; fail=1; }
+      [ -n "$minclass_line" ] && out="$out\n- minclass cumple: $minclass_line" || { out="$out\n- minclass NO cumple"; fail=1; }
+
+      [ "$fail" -eq 0 ] && echo -e "PASS$out" || { echo -e "FAIL$out"; exit 1; }
+      '
+    pass_if_regex:
+      - "PASS"
+    fail_if_regex:
+      - "FAIL"
+
+  - id: CIS-5.4.2
+    name: "Ensure password lockout is configured for 5 attempts"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      line=$(grep -Pi -- "^\h*deny\h*=\h*[1-5]\b" /etc/security/faillock.conf 2>/dev/null | head -n1)
+
+      if [ -n "$line" ]; then
+        echo "PASS - $line"
+      else
+        echo "FAIL - /etc/security/faillock.conf no tiene deny entre 1 y 5"
+        exit 1
+      fi
+      '
+    pass_if_regex:
+      - "PASS"
+    fail_if_regex:
+      - "FAIL"
+
+  - id: CIS-5.4.3
+    name: "Ensure password reuse is limited to 24"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      pam-config --query --pwhistory --pwhistory-remember \
+        | grep -E "remember\s*=\s*(2[4-9]|[3-9][0-9])" \
+        && echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-5.4.3.1
+    name: "Ensure pam_pwhistory includes use_authtok"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      grep -P -- "^\h*password\h+([^#\n\r]+)\h+pam_pwhistory\.so\h+([^#\n\r]+\h+)?use_authtok\b" /etc/pam.d/* \
+        && echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-5.4.4
+    name: "Ensure password hashing algorithm is SHA-512 or yescrypt"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      pam-config --query --unix \
+        | grep -E "sha512|yescrypt" \
+        && echo PASS || echo FAIL
+      '
+    pass_if_regex:
+      - "PASS"
+    fail_if_regex:
+      - "FAIL"
+
+  - id: CIS-5.4.4.1
+    name: "Ensure pam_unix does not include nullok"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      pam-config --query --unix --unix-nullok 2>/dev/null \
+        | grep -qi "nullok" && { echo FAIL; exit 1; } || echo PASS
+      '
+    pass_if_regex:
+      - "PASS"
+    fail_if_regex:
+      - "FAIL"
+
+  ######################################################################
+  # Sección 5.5 - User Accounts & Environment
+  ######################################################################
+
+  - id: CIS-5.5.1
+    name: "Ensure password expiration is 42 days or less"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      grep -Pi "^\h*PASS_MAX_DAYS\h+([1-9]|[1-3][0-9]|4[0-2])\b" /etc/login.defs \
+        && echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-5.5.2
+    name: "Ensure minimum days between password changes is 3"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      grep -Pi "^\h*PASS_MIN_DAYS\h+([3-9]|[1-9][0-9])\b" /etc/login.defs \
+        && echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-5.5.3
+    name: "Ensure password expiration warning days is 5 or more"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      grep -Pi "^\h*PASS_WARN_AGE\h+([5-9]|[1-9][0-9])\b" /etc/login.defs \
+        && echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-5.5.4
+    name: "Ensure inactive password lock is 30 days or less"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      useradd -D | grep -E "INACTIVE=([1-9]|[1-2][0-9]|30)\b" \
+        && echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-5.5.5
+    name: "Ensure all users last password change date is in the past"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      bad=0
+      mapfile -t USERS < <(
+        awk -F: '\''($2 !~ /^[!*]/){print $1}'\'' /etc/shadow 2>/dev/null |
+        grep -Ev "^({{ excluded_users_regex | default('NO_MATCH_EXCLUDED_USERS') }})$" || true
+      )
+
+      for u in "${USERS[@]}"; do
+        d=$(chage --list "$u" 2>/dev/null | awk -F": " "/^Last password change/{print \$2}")
+        [ -z "$d" ] || [ "$d" = "never" ] && continue
+        ts=$(date -d "$d" +%s 2>/dev/null) || ts=0
+        now=$(date +%s)
+
+        if [ "$ts" -gt "$now" ]; then
+          echo "future:$u:$d"
+          bad=1
+        fi
+      done
+
+      [ "$bad" -eq 0 ] && echo PASS || exit 1
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex:
+      - "^future:"
+
+  - id: CIS-5.5.6
+    name: "Ensure system accounts are secured"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      min=$(awk "/^[[:space:]]*UID_MIN[[:space:]]+/{print \$2}" /etc/login.defs)
+      [ -z "$min" ] && min=1000
+
+      awk -F: -v min="$min" '\''($3 < min && $1 != "root"){print $1 ":" $7}'\'' /etc/passwd |
+      grep -Ev "^({{ excluded_users_regex | default('NO_MATCH_EXCLUDED_USERS') }}):" |
+      grep -Ev ":(/sbin/nologin|/usr/sbin/nologin|/bin/false)$" &&
+      echo FAIL || echo PASS
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-5.5.7
+    name: "Ensure root default group is GID 0"
+    os_scope: [SLES]
+    command: "id -g root | grep -q '^0$' && echo PASS || echo FAIL"
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-5.5.8
+    name: "Ensure default user umask is 027 or more restrictive"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      grep -RE "^\s*umask\s+(027|077)" /etc/profile /etc/bashrc /etc/profile.d/* 2>/dev/null \
+        && echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-5.5.9
+    name: "Ensure default user shell timeout is 900 seconds or less"
+    os_scope: [SLES]
+    command: >
+      bash -lc '
+      grep -RE "^\s*TMOUT=(900|[1-8][0-9]{2}|[1-9][0-9])" /etc/profile /etc/bashrc /etc/profile.d/* 2>/dev/null &&
+      grep -RE "readonly TMOUT" /etc/profile /etc/bashrc /etc/profile.d/* 2>/dev/null &&
+      grep -RE "export TMOUT" /etc/profile /etc/bashrc /etc/profile.d/* 2>/dev/null &&
+      echo PASS || echo FAIL
+      '
+    pass_if_regex: ["PASS"]
+    fail_if_regex: ["FAIL"]
+
+  - id: CIS-5.5.10
+    name: "Ensure root login is restricted to system console"
+    os_scope: [SLES]
+    command: >
+      bash -lc 'echo not_applicable'
+    pass_if_regex:
+      - '^not_applicable$'
+    fail_if_regex: []
