@@ -1,0 +1,39 @@
+# ============================================================================
+# Exclusiones para validaciones CIS
+# ============================================================================
+#
+# Se usa principalmente para excluir cuentas técnicas o cuentas permitidas
+# en controles de sudo, shadow, shells, etc.
+#
+# Este valor se usa como regex dentro de varios controles.
+# Ajusta la lista según tu ambiente.
+# ============================================================================
+
+# group_vars/all/exclusions.yml
+
+## exclusion de PAM
+excluded_users:
+  - root ## superusuario por defecto
+# - admin ## admin de algunos servidores , para nuevos servdiores no se debe tener en cuenta 
+  - tux ## Usuario admin global
+  - proactiva ## usuario de proactiva
+  - iacolcoauto ## usuario de automatizacion NNTDATA
+  - ansible_test ## usuario de automatizacion CORBETA
+  - halt ## Se usa internamente por el sistema
+  - shutdown ## Se usa internamente por el sistema
+  - sync ## Fuerza a escribir buffers de disco a almacenamiento
+  - nfsnobody ## Usuario de seguridad para NFS
+# - oracle ## usuario de BD
+# - postgres ## usuario de BD 
+# - pos ## usuario de Geopos
+# - alktstwms ## usuario de WMS
+# - alktstems ## usuario de WMS
+
+sudoers_exclude_nopasswd_users:
+  - tux
+  - proactiva
+  - iacolcoauto
+  - ansible_test
+
+# Regex listo para usar con grep/awk (escapa caracteres especiales)
+excluded_users_regex: "{{ excluded_users | map('regex_escape') | join('|') }}"

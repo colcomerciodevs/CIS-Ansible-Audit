@@ -5,10 +5,10 @@
   become: true
 
   vars_files:
-    - group_vars/all/pre_audit_controls.yml
-    - group_vars/all/audit_controls.yml
-    - group_vars/all/exclusions.yml
-    - group_vars/all/audit_command_descriptions.yml
+    - group_vars/RHEL/pre_audit_controls.yml
+    - group_vars/RHEL/audit_controls.yml
+    - group_vars/RHEL/exclusions.yml
+    - group_vars/RHEL/audit_command_descriptions.yml
 
   vars:
     # Convierte la distribución detectada en una etiqueta simple

@@ -5,10 +5,11 @@
   become: true
 
   vars_files:
-    - group_vars/all/pre_audit_controls.yml
-    - group_vars/all/audit_controls_sles.yml   # 👈 SOLO SLES
-    - group_vars/all/exclusions.yml
-    - group_vars/all/audit_command_descriptions_sles.yml
+      - group_vars/SLES/pre_audit_controls.yml
+      - group_vars/SLES/audit_controls_sles.yml
+      - group_vars/SLES/exclusions.yml
+      - group_vars/SLES/audit_command_descriptions_sles.yml
+
 
   vars:
     current_os_family: "SLES"
@@ -121,7 +122,7 @@
     #####################################################################
 
     - name: AUDIT | Ejecutar controles CIS SLES
-      ansible.builtin.shell: "{{ item.command }}"
+      ansible.builtin.shell: "{{ item.command }}"  # noqa command-instead-of-shell
       args:
         executable: /bin/bash
       loop: "{{ applicable_controls }}"
