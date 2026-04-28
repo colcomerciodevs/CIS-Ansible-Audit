@@ -77,6 +77,17 @@
       loop_control:
         label: "{{ item.id | default('SIN-ID') }}"
 
+    - name: DEBUG | Lista de controles sin os_scope
+      debug:
+        msg: >-
+          {{
+            normalized_controls
+            | selectattr('os_scope', 'equalto', [])
+            | map(attribute='id')
+            | list
+          }}
+
+
     - name: AUDIT | Construir lista de controles aplicables al sistema operativo
       ansible.builtin.set_fact:
         applicable_controls: >-

@@ -696,42 +696,49 @@ audit_controls:
 
   - id: CIS-2.2.1
     name: "Ensure NIS Client is not installed"
+    os_scope: [SLES]
     command: "rpm -q ypbind && echo FAIL || echo PASS"
     pass_if_regex: ["PASS"]
     fail_if_regex: ["FAIL"]
 
   - id: CIS-2.2.2
     name: "Ensure rsh client is not installed"
+    os_scope: [SLES]
     command: "rpm -q rsh && echo FAIL || echo PASS"
     pass_if_regex: ["PASS"]
     fail_if_regex: ["FAIL"]
 
   - id: CIS-2.2.3
     name: "Ensure talk client is not installed"
+    os_scope: [SLES]
     command: "rpm -q talk && echo FAIL || echo PASS"
     pass_if_regex: ["PASS"]
     fail_if_regex: ["FAIL"]
 
   - id: CIS-2.2.4
     name: "Ensure telnet client is not installed"
+    os_scope: [SLES]
     command: "rpm -q telnet && echo FAIL || echo PASS"
     pass_if_regex: ["PASS"]
     fail_if_regex: ["FAIL"]
 
   - id: CIS-2.2.5
     name: "Ensure LDAP client is not installed"
+    os_scope: [SLES]
     command: "rpm -q openldap2-client && echo FAIL || echo PASS"
     pass_if_regex: ["PASS"]
     fail_if_regex: ["FAIL"]
 
   - id: CIS-2.2.6
     name: "Ensure TFTP client is not installed"
+    os_scope: [SLES]
     command: "rpm -q tftp && echo FAIL || echo PASS"
     pass_if_regex: ["PASS"]
     fail_if_regex: ["FAIL"]
 
   - id: CIS-2.2.7
     name: "Ensure RPC bind is not installed"
+    os_scope: [SLES]
     command: "rpm -q rpcbind && echo FAIL || echo PASS"
     pass_if_regex: ["PASS"]
     fail_if_regex: ["FAIL"]
@@ -1159,62 +1166,77 @@ audit_controls:
 
   - id: CIS-5.3.5
     name: "Ensure SSH LogLevel is appropriate"
+    os_scope: [SLES]
     command: "grep -Ei '^LogLevel (VERBOSE|INFO)' /etc/ssh/sshd_config* && echo PASS || echo FAIL"
 
   - id: CIS-5.3.6
     name: "Ensure SSH X11 forwarding is disabled"
+    os_scope: [SLES]
     command: "grep -Ei '^X11Forwarding no' /etc/ssh/sshd_config* && echo PASS || echo FAIL"
 
   - id: CIS-5.3.7
     name: "Ensure SSH MaxAuthTries is set to 4 or less"
+    os_scope: [SLES]
     command: "grep -Ei '^MaxAuthTries [1-4]' /etc/ssh/sshd_config* && echo PASS || echo FAIL"
 
   - id: CIS-5.3.8
     name: "Ensure SSH IgnoreRhosts is enabled"
+    os_scope: [SLES]
     command: "grep -Ei '^IgnoreRhosts yes' /etc/ssh/sshd_config* && echo PASS || echo FAIL"
 
   - id: CIS-5.3.9
     name: "Ensure SSH HostbasedAuthentication is disabled"
+    os_scope: [SLES]
     command: "grep -Ei '^HostbasedAuthentication no' /etc/ssh/sshd_config* && echo PASS || echo FAIL"
 
   - id: CIS-5.3.10
     name: "Ensure SSH root login is disabled"
+    os_scope: [SLES]
     command: "grep -Ei '^PermitRootLogin no' /etc/ssh/sshd_config* && echo PASS || echo FAIL"
 
   - id: CIS-5.3.11
     name: "Ensure SSH PermitEmptyPasswords is disabled"
+    os_scope: [SLES]
     command: "grep -Ei '^PermitEmptyPasswords no' /etc/ssh/sshd_config* && echo PASS || echo FAIL"
 
   - id: CIS-5.3.12
     name: "Ensure SSH PermitUserEnvironment is disabled"
+    os_scope: [SLES]
     command: "grep -Ei '^PermitUserEnvironment no' /etc/ssh/sshd_config* && echo PASS || echo FAIL"
 
   - id: CIS-5.3.13
     name: "Ensure SSH Idle Timeout Interval is configured"
+    os_scope: [SLES]
     command: "grep -Ei 'ClientAliveInterval' /etc/ssh/sshd_config* && echo PASS || echo FAIL"
 
   - id: CIS-5.3.14
     name: "Ensure SSH LoginGraceTime is set to 60 seconds or less"
+    os_scope: [SLES]
     command: "grep -Ei '^LoginGraceTime (60|[1-5][0-9])' /etc/ssh/sshd_config* && echo PASS || echo FAIL"
 
   - id: CIS-5.3.15
     name: "Ensure SSH warning banner is configured"
+    os_scope: [SLES]
     command: "grep -Ei '^Banner' /etc/ssh/sshd_config* && echo PASS || echo FAIL"
 
   - id: CIS-5.3.16
     name: "Ensure SSH PAM is enabled"
+    os_scope: [SLES]
     command: "grep -Ei '^UsePAM yes' /etc/ssh/sshd_config* && echo PASS || echo FAIL"
 
   - id: CIS-5.3.17
     name: "Ensure SSH AllowTcpForwarding is disabled"
+    os_scope: [SLES]
     command: "grep -Ei '^AllowTcpForwarding no' /etc/ssh/sshd_config* && echo PASS || echo FAIL"
 
   - id: CIS-5.3.18
     name: "Ensure SSH MaxStartups is configured"
+    os_scope: [SLES]
     command: "grep -Ei '^MaxStartups' /etc/ssh/sshd_config* && echo PASS || echo FAIL"
 
   - id: CIS-5.3.19
     name: "Ensure SSH MaxSessions is limited"
+    os_scope: [SLES]
     command: "grep -Ei '^MaxSessions' /etc/ssh/sshd_config* && echo PASS || echo FAIL"
 
   ######################################################################
