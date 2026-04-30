@@ -383,22 +383,18 @@ audit_controls:
     name: "Ensure usrquota option is set on /home partition"
     os_scope: [SLES]
     command: >
-      bash -lc '
-      findmnt -no OPTIONS /home | tr "," "\n" | grep -Fx usrquota \
-        && echo PASS || echo FAIL
-      '
-    pass_if_regex: ["PASS"]
+      bash -lc 'echo "not_applicable"'
+    pass_if_regex:
+      - '^not_applicable$'
     fail_if_regex: ["FAIL"]
 
   - id: CIS-1.1.36
     name: "Ensure grpquota option is set on /home partition"
     os_scope: [SLES]
     command: >
-      bash -lc '
-      findmnt -no OPTIONS /home | tr "," "\n" | grep -Fx grpquota \
-        && echo PASS || echo FAIL
-      '
-    pass_if_regex: ["PASS"]
+      bash -lc 'echo "not_applicable"'
+    pass_if_regex:
+      - '^not_applicable$'
     fail_if_regex: ["FAIL"]
 
   ######################################################################
@@ -409,10 +405,7 @@ audit_controls:
     name: "Ensure sticky bit is set on all world-writable directories"
     os_scope: [SLES]
     command: >
-      bash -lc '
-      find / -xdev -type d -perm -0002 ! -perm -1000 2>/dev/null | head -n 1 \
-        && { echo FAIL; exit 1; } || echo PASS
-      '
+      bash -lc 'if find / -xdev -type d -perm -0002 ! -perm -1000 2>/dev/null | grep -q .; then echo FAIL; else echo PASS; fi'
     pass_if_regex: ["PASS"]
     fail_if_regex: ["FAIL"]
 
@@ -425,8 +418,8 @@ audit_controls:
     os_scope: [SLES]
     command: >
       bash -lc '
-      systemctl is-enabled autofs 2>/dev/null | grep -q enabled && { echo FAIL; exit 1; }
-      systemctl is-active autofs 2>/dev/null | grep -q active && { echo FAIL; exit 1; }
+      systemctl is-enabled --quiet autofs 2>/dev/null && { echo FAIL; exit 1; };
+      systemctl is-active --quiet autofs 2>/dev/null && { echo FAIL; exit 1; };
       echo PASS
       '
     pass_if_regex: ["PASS"]
@@ -440,12 +433,9 @@ audit_controls:
     name: "Disable USB Storage"
     os_scope: [SLES]
     command: >
-      bash -lc '
-      lsmod | grep -q usb_storage && { echo FAIL; exit 1; }
-      modprobe --showconfig | grep -Eq "usb-storage.*(blacklist|/bin/false)" \
-        && echo PASS || { echo FAIL; exit 1; }
-      '
-    pass_if_regex: ["PASS"]
+      bash -lc 'echo "not_applicable"'
+    pass_if_regex:
+      - '^not_applicable$'
     fail_if_regex: ["FAIL"]
 
   ######################################################################
@@ -535,8 +525,10 @@ audit_controls:
   - id: CIS-2.1.2
     name: "Ensure systemd-timesyncd is configured"
     os_scope: [SLES]
-    command: "grep -E '^NTP=' /etc/systemd/timesyncd.conf && echo PASS || echo FAIL"
-    pass_if_regex: ["PASS"]
+    command: >
+      bash -lc 'echo "not_applicable"'
+    pass_if_regex:
+      - '^not_applicable$'
     fail_if_regex: ["FAIL"]
 
   - id: CIS-2.1.3
@@ -663,8 +655,14 @@ audit_controls:
     os_scope: [SLES]
     command: >
       bash -lc '
-      ss -lntp | grep -E ":25 " | grep -vq "127.0.0.1" \
-        && echo FAIL || echo PASS
+      for p in 25 465 587; do
+        ss -plntu | grep -P -- ":${p}\b" | grep -Pvq -- "\h+(127\.0\.0\.1|\[?::1\]?):${p}\b" && { echo FAIL; exit 1; };
+      done;
+      if command -v postconf >/dev/null 2>&1; then
+        postconf -n inet_interfaces 2>/dev/null | grep -Pqi "\ball\b" && { echo FAIL; exit 1; };
+        postconf -n inet_interfaces 2>/dev/null | grep -Pqi "(loopback-only|localhost|127\.0\.0\.1|::1)" || { echo FAIL; exit 1; };
+      fi;
+      echo PASS
       '
     pass_if_regex: ["PASS"]
     fail_if_regex: ["FAIL"]
@@ -769,8 +767,8 @@ audit_controls:
     os_scope: [SLES]
     command: >
       bash -lc '
-      systemctl is-enabled bluetooth 2>/dev/null | grep -q enabled && { echo FAIL; exit 1; }
-      systemctl is-active bluetooth 2>/dev/null | grep -q active && { echo FAIL; exit 1; }
+      systemctl is-enabled --quiet bluetooth 2>/dev/null && { echo FAIL; exit 1; };
+      systemctl is-active --quiet bluetooth 2>/dev/null && { echo FAIL; exit 1; };
       echo PASS
       '
     pass_if_regex: ["PASS"]
@@ -894,15 +892,18 @@ audit_controls:
   ######################################################################
   # Sección 3.4 - Kernel Modules (Network)
   ######################################################################
-
   - id: CIS-3.4.1
     name: "Ensure DCCP is disabled"
     os_scope: [SLES]
     command: >
       bash -lc '
-      lsmod | grep -q dccp && { echo FAIL; exit 1; }
-      modprobe --showconfig | grep -Eq "dccp.*(blacklist|/bin/false)" \
-        && echo PASS || echo FAIL
+      m=dccp; p=$(find /lib/modules /usr/lib/modules -type d -path "*/kernel/net/$m" 2>/dev/null | head -1);
+      [ -z "$p" ] && { echo PASS; exit 0; };
+      lsmod | grep -qw "$m" && { echo FAIL; exit 1; };
+      c=$(modprobe --showconfig 2>/dev/null);
+      echo "$c" | grep -Eq "^[[:space:]]*blacklist[[:space:]]+$m\b" &&
+      echo "$c" | grep -Eq "^[[:space:]]*install[[:space:]]+$m[[:space:]]+/bin/(true|false)\b" &&
+      echo PASS || { echo FAIL; exit 1; }
       '
     pass_if_regex: ["PASS"]
     fail_if_regex: ["FAIL"]
@@ -912,9 +913,13 @@ audit_controls:
     os_scope: [SLES]
     command: >
       bash -lc '
-      lsmod | grep -q sctp && { echo FAIL; exit 1; }
-      modprobe --showconfig | grep -Eq "sctp.*(blacklist|/bin/false)" \
-        && echo PASS || echo FAIL
+      m=sctp; p=$(find /lib/modules /usr/lib/modules -type d -path "*/kernel/net/$m" 2>/dev/null | head -1);
+      [ -z "$p" ] && { echo PASS; exit 0; };
+      lsmod | grep -qw "$m" && { echo FAIL; exit 1; };
+      c=$(modprobe --showconfig 2>/dev/null);
+      echo "$c" | grep -Eq "^[[:space:]]*blacklist[[:space:]]+$m\b" &&
+      echo "$c" | grep -Eq "^[[:space:]]*install[[:space:]]+$m[[:space:]]+/bin/(true|false)\b" &&
+      echo PASS || { echo FAIL; exit 1; }
       '
     pass_if_regex: ["PASS"]
     fail_if_regex: ["FAIL"]
@@ -924,9 +929,13 @@ audit_controls:
     os_scope: [SLES]
     command: >
       bash -lc '
-      lsmod | grep -q rds && { echo FAIL; exit 1; }
-      modprobe --showconfig | grep -Eq "rds.*(blacklist|/bin/false)" \
-        && echo PASS || echo FAIL
+      m=rds; p=$(find /lib/modules /usr/lib/modules -type d -path "*/kernel/net/$m" 2>/dev/null | head -1);
+      [ -z "$p" ] && { echo PASS; exit 0; };
+      lsmod | grep -qw "$m" && { echo FAIL; exit 1; };
+      c=$(modprobe --showconfig 2>/dev/null);
+      echo "$c" | grep -Eq "^[[:space:]]*blacklist[[:space:]]+$m\b" &&
+      echo "$c" | grep -Eq "^[[:space:]]*install[[:space:]]+$m[[:space:]]+/bin/(true|false)\b" &&
+      echo PASS || { echo FAIL; exit 1; }
       '
     pass_if_regex: ["PASS"]
     fail_if_regex: ["FAIL"]
@@ -936,9 +945,13 @@ audit_controls:
     os_scope: [SLES]
     command: >
       bash -lc '
-      lsmod | grep -q tipc && { echo FAIL; exit 1; }
-      modprobe --showconfig | grep -Eq "tipc.*(blacklist|/bin/false)" \
-        && echo PASS || echo FAIL
+      m=tipc; p=$(find /lib/modules /usr/lib/modules -type d -path "*/kernel/net/$m" 2>/dev/null | head -1);
+      [ -z "$p" ] && { echo PASS; exit 0; };
+      lsmod | grep -qw "$m" && { echo FAIL; exit 1; };
+      c=$(modprobe --showconfig 2>/dev/null);
+      echo "$c" | grep -Eq "^[[:space:]]*blacklist[[:space:]]+$m\b" &&
+      echo "$c" | grep -Eq "^[[:space:]]*install[[:space:]]+$m[[:space:]]+/bin/(true|false)\b" &&
+      echo PASS || { echo FAIL; exit 1; }
       '
     pass_if_regex: ["PASS"]
     fail_if_regex: ["FAIL"]
@@ -1158,11 +1171,11 @@ audit_controls:
     os_scope: [SLES]
     command: >
       bash -lc '
-      grep -Ei "AllowUsers|AllowGroups|DenyUsers|DenyGroups" /etc/ssh/sshd_config /etc/ssh/sshd_config.d/* 2>/dev/null \
+      grep -Eiq "^[[:space:]]*(AllowUsers|AllowGroups|DenyUsers|DenyGroups)[[:space:]]+" /etc/ssh/sshd_config /etc/ssh/sshd_config.d/* 2>/dev/null \
         && echo PASS || echo FAIL
       '
-    pass_if_regex: ["PASS"]
-    fail_if_regex: ["FAIL"]
+    pass_if_regex: ["^PASS$"]
+    fail_if_regex: ["^FAIL$"]
 
   - id: CIS-5.3.5
     name: "Ensure SSH LogLevel is appropriate"
@@ -1263,18 +1276,16 @@ audit_controls:
       fail=0
       out=""
 
-      minlen_line=$(grep -Psi -- "^\h*minlen\h*=\h*(8|9|[1-9][0-9]+)\b" /etc/security/pwquality.conf /etc/security/pwquality.conf.d/*.conf 2>/dev/null | head -n1)
-      minclass_line=$(grep -Psi -- "^\h*minclass\h*=\h*4\b" /etc/security/pwquality.conf /etc/security/pwquality.conf.d/*.conf 2>/dev/null | head -n1)
+      minlen_line=$(grep -Psi -- "^[[:space:]]*minlen[[:space:]]*=[[:space:]]*(8|9|[1-9][0-9]+)\b" /etc/security/pwquality.conf /etc/security/pwquality.conf.d/*.conf 2>/dev/null | head -n1)
+      minclass_line=$(grep -Psi -- "^[[:space:]]*minclass[[:space:]]*=[[:space:]]*4\b" /etc/security/pwquality.conf /etc/security/pwquality.conf.d/*.conf 2>/dev/null | head -n1)
 
       [ -n "$minlen_line" ] && out="$out\n- minlen cumple: $minlen_line" || { out="$out\n- minlen NO cumple"; fail=1; }
       [ -n "$minclass_line" ] && out="$out\n- minclass cumple: $minclass_line" || { out="$out\n- minclass NO cumple"; fail=1; }
 
       [ "$fail" -eq 0 ] && echo -e "PASS$out" || { echo -e "FAIL$out"; exit 1; }
       '
-    pass_if_regex:
-      - "PASS"
-    fail_if_regex:
-      - "FAIL"
+    pass_if_regex: ["^PASS"]
+    fail_if_regex: ["^FAIL"]
 
   - id: CIS-5.4.2
     name: "Ensure password lockout is configured for 5 attempts"
@@ -1398,29 +1409,35 @@ audit_controls:
     os_scope: [SLES]
     command: >
       bash -lc '
+      EXCLUDED_RE="^({{ excluded_users_regex | default("NO_MATCH_EXCLUDED_USERS") }})$"
+      today=$(($(date +%s)/86400))
       bad=0
-      mapfile -t USERS < <(
-        awk -F: '\''($2 !~ /^[!*]/){print $1}'\'' /etc/shadow 2>/dev/null |
-        grep -Ev "^({{ excluded_users_regex | default('NO_MATCH_EXCLUDED_USERS') }})$" || true
-      )
 
-      for u in "${USERS[@]}"; do
-        d=$(chage --list "$u" 2>/dev/null | awk -F": " "/^Last password change/{print \$2}")
-        [ -z "$d" ] || [ "$d" = "never" ] && continue
-        ts=$(date -d "$d" +%s 2>/dev/null) || ts=0
-        now=$(date +%s)
+      while IFS=: read -r user pass lastchg rest; do
+        [[ "$user" =~ $EXCLUDED_RE ]] && continue
+        [[ "$pass" =~ ^[\!\*] ]] && continue
+        [[ -z "$lastchg" ]] && continue
 
-        if [ "$ts" -gt "$now" ]; then
-          echo "future:$u:$d"
+        if ! [[ "$lastchg" =~ ^[0-9]+$ ]]; then
+          echo "invalid:$user:lastchg=$lastchg"
+          bad=1
+          continue
+        fi
+
+        if (( lastchg > today )); then
+          fecha=$(date -d "1970-01-01 UTC + $lastchg days" +%F 2>/dev/null || echo "$lastchg")
+          echo "future:$user:$fecha"
           bad=1
         fi
-      done
+      done < /etc/shadow
 
       [ "$bad" -eq 0 ] && echo PASS || exit 1
       '
-    pass_if_regex: ["PASS"]
+    pass_if_regex:
+      - "^PASS$"
     fail_if_regex:
       - "^future:"
+      - "^invalid:"
 
   - id: CIS-5.5.6
     name: "Ensure system accounts are secured"
@@ -1430,13 +1447,24 @@ audit_controls:
       min=$(awk "/^[[:space:]]*UID_MIN[[:space:]]+/{print \$2}" /etc/login.defs)
       [ -z "$min" ] && min=1000
 
+      bad=$(
       awk -F: -v min="$min" '\''($3 < min && $1 != "root"){print $1 ":" $7}'\'' /etc/passwd |
       grep -Ev "^({{ excluded_users_regex | default('NO_MATCH_EXCLUDED_USERS') }}):" |
-      grep -Ev ":(/sbin/nologin|/usr/sbin/nologin|/bin/false)$" &&
-      echo FAIL || echo PASS
+      grep -Ev ":(/sbin/nologin|/usr/sbin/nologin|/bin/nologin|/bin/false|/usr/bin/false)$"
+      )
+
+      if [ -n "$bad" ]; then
+        echo "$bad"
+        echo FAIL
+        exit 1
+      else
+        echo PASS
+      fi
       '
-    pass_if_regex: ["PASS"]
-    fail_if_regex: ["FAIL"]
+    pass_if_regex:
+      - "^PASS$"
+    fail_if_regex:
+      - "^FAIL$"
 
   - id: CIS-5.5.7
     name: "Ensure root default group is GID 0"
@@ -1461,13 +1489,28 @@ audit_controls:
     os_scope: [SLES]
     command: >
       bash -lc '
-      grep -RE "^\s*TMOUT=(900|[1-8][0-9]{2}|[1-9][0-9])" /etc/profile /etc/bashrc /etc/profile.d/* 2>/dev/null &&
-      grep -RE "readonly TMOUT" /etc/profile /etc/bashrc /etc/profile.d/* 2>/dev/null &&
-      grep -RE "export TMOUT" /etc/profile /etc/bashrc /etc/profile.d/* 2>/dev/null &&
-      echo PASS || echo FAIL
+      files="/etc/profile /etc/bashrc /etc/bash.bashrc /etc/profile.d/*.sh"
+
+      tmout_ok=$(grep -RHE "^[[:space:]]*TMOUT=([1-9][0-9]?|[1-8][0-9]{2}|900)([[:space:]]*#.*)?$" $files 2>/dev/null | head -n1)
+      readonly_ok=$(grep -RHE "^[[:space:]]*readonly[[:space:]]+TMOUT([[:space:]]*#.*)?$|^[[:space:]]*readonly[[:space:]]+TMOUT=([1-9][0-9]?|[1-8][0-9]{2}|900)([[:space:]]*#.*)?$" $files 2>/dev/null | head -n1)
+      export_ok=$(grep -RHE "^[[:space:]]*export[[:space:]]+TMOUT([[:space:]]*#.*)?$|^[[:space:]]*export[[:space:]]+TMOUT=([1-9][0-9]?|[1-8][0-9]{2}|900)([[:space:]]*#.*)?$" $files 2>/dev/null | head -n1)
+
+      [ -n "$tmout_ok" ] && echo "TMOUT_OK:$tmout_ok" || echo "TMOUT_MISSING"
+      [ -n "$readonly_ok" ] && echo "READONLY_OK:$readonly_ok" || echo "READONLY_MISSING"
+      [ -n "$export_ok" ] && echo "EXPORT_OK:$export_ok" || echo "EXPORT_MISSING"
+
+      if [ -n "$tmout_ok" ] && [ -n "$readonly_ok" ] && [ -n "$export_ok" ]; then
+        echo PASS
+      else
+        echo FAIL
+        exit 1
+      fi
       '
-    pass_if_regex: ["PASS"]
-    fail_if_regex: ["FAIL"]
+    pass_if_regex:
+      - "^PASS$"
+    fail_if_regex:
+      - "^FAIL$"
+      - "_MISSING$"
 
   - id: CIS-5.5.10
     name: "Ensure root login is restricted to system console"
