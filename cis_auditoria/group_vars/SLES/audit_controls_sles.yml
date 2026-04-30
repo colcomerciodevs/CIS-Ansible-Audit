@@ -1019,26 +1019,34 @@ audit_controls:
     os_scope: [SLES]
     command: >
       bash -lc '
-      [ ! -e /etc/cron.deny ] &&
-      [ -f /etc/cron.allow ] &&
-      stat -Lc "%a %U %G" /etc/cron.allow | grep -Eq "^(600|640) root root$" &&
-      echo PASS || echo FAIL
-      '
-    pass_if_regex: ["PASS"]
-    fail_if_regex: ["FAIL"]
+      perm=$(stat -c "mode=%a owner=%U group=%G file=%n" /etc/cron.allow 2>/dev/null || echo "cron.allow_missing");
+      deny=$([ ! -e /etc/cron.deny ] && echo "cron.deny=absent" || echo "cron.deny=present");
+      users=$(awk "NF && \$1 !~ /^#/" /etc/cron.allow 2>/dev/null | paste -sd "," -);
+      [ -z "$users" ] && users="none";
+      echo "$perm | $deny | exclusions=$users";
+      [[ "$perm" == "mode=600 owner=root group=root file=/etc/cron.allow" && "$deny" == "cron.deny=absent" ]]'
+    pass_if_regex:
+      - '^mode=600 owner=root group=root file=/etc/cron.allow \| cron\.deny=absent'
+    fail_if_regex:
+      - 'cron\.deny=present'
+      - '^cron\.allow_missing'
 
   - id: CIS-5.1.9
     name: "Ensure at is restricted to authorized users"
     os_scope: [SLES]
     command: >
       bash -lc '
-      [ ! -e /etc/at.deny ] &&
-      [ -f /etc/at.allow ] &&
-      stat -Lc "%a %U %G" /etc/at.allow | grep -Eq "^(600|640) root root$" &&
-      echo PASS || echo FAIL
-      '
-    pass_if_regex: ["PASS"]
-    fail_if_regex: ["FAIL"]
+      perm=$(stat -c "mode=%a owner=%U group=%G file=%n" /etc/at.allow 2>/dev/null || echo "at.allow_missing");
+      deny=$([ ! -e /etc/at.deny ] && echo "at.deny=absent" || echo "at.deny=present");
+      users=$(awk "NF && \$1 !~ /^#/" /etc/at.allow 2>/dev/null | paste -sd "," -);
+      [ -z "$users" ] && users="none";
+      echo "$perm | $deny | exclusions=$users";
+      [[ "$perm" == "mode=600 owner=root group=root file=/etc/at.allow" && "$deny" == "at.deny=absent" ]]'
+    pass_if_regex:
+      - '^mode=600 owner=root group=root file=/etc/at.allow \| at\.deny=absent'
+    fail_if_regex:
+      - 'at\.deny=present'
+      - '^at\.allow_missing'
 
   ######################################################################
   # Sección 5.2 - Sudo / Authselect 
@@ -1078,11 +1086,36 @@ audit_controls:
     os_scope: [SLES]
     command: >
       bash -lc '
-      grep -REi "^[^#].*NOPASSWD" /etc/sudoers /etc/sudoers.d/* 2>/dev/null &&
-      echo FAIL || echo PASS
+      EXCLUDE="{{ sudoers_exclude_nopasswd_users | join(" ") }}";
+
+      hits=$(grep -RIP "^[[:space:]]*[^#].*NOPASSWD" /etc/sudoers /etc/sudoers.d 2>/dev/null || true);
+
+      all_users=$(echo "$hits" | awk "NF{print \$1}" | paste -sd "," -);
+      [ -z "$all_users" ] && all_users="none";
+
+      bad=$(echo "$hits" | while read line; do
+        user=$(echo "$line" | awk "{print \$1}")
+        skip=0
+
+        for u in $EXCLUDE; do
+          [ "$user" = "$u" ] && skip=1
+        done
+
+        [ $skip -eq 0 ] && echo "$line"
+      done)
+
+      echo "exclusions=$all_users";
+
+      if [ -n "$bad" ]; then
+        exit 1
+      else
+        exit 0
+      fi
       '
-    pass_if_regex: ["PASS"]
-    fail_if_regex: ["FAIL"]
+    pass_if_regex:
+      - '^exclusions='
+    fail_if_regex:
+      - 'NOPASSWD'
 
   - id: CIS-5.2.5
     name: "Ensure re-authentication for privilege escalation is not disabled globally"
@@ -1111,11 +1144,20 @@ audit_controls:
     os_scope: [SLES]
     command: >
       bash -lc '
-      grep -Eq "^[[:space:]]*auth[[:space:]]+required[[:space:]]+pam_wheel\.so[[:space:]].*use_uid" /etc/pam.d/su &&
-      echo PASS || echo FAIL
-      '
-    pass_if_regex: ["PASS"]
-    fail_if_regex: ["FAIL"]
+      line=$(grep -Pi "^[[:space:]]*auth[[:space:]]+(required|requisite)[[:space:]]+pam_wheel\.so.*(use_uid|group=)" /etc/pam.d/su | head -n1);
+      if [ -z "$line" ]; then
+        echo "group=none | exclusions=none";
+        exit 1;
+      fi;
+      grp=$(echo "$line" | sed -n "s/.*group=\([^[:space:]]*\).*/\1/p");
+      [ -z "$grp" ] && grp="wheel";
+      users=$(getent group "$grp" | awk -F: "{print \$4}");
+      [ -z "$users" ] && users="none";
+      echo "group=$grp | exclusions=$users";
+      exit 0'
+    pass_if_regex:
+      - '^group='
+    fail_if_regex: []
 
   - id: CIS-5.2.8
     name: "Ensure custom authselect profile is used"
@@ -1444,27 +1486,46 @@ audit_controls:
     os_scope: [SLES]
     command: >
       bash -lc '
-      min=$(awk "/^[[:space:]]*UID_MIN[[:space:]]+/{print \$2}" /etc/login.defs)
-      [ -z "$min" ] && min=1000
+        min=$(awk "/^[[:space:]]*UID_MIN[[:space:]]+/{print \$2}" /etc/login.defs);
 
-      bad=$(
-      awk -F: -v min="$min" '\''($3 < min && $1 != "root"){print $1 ":" $7}'\'' /etc/passwd |
-      grep -Ev "^({{ excluded_users_regex | default('NO_MATCH_EXCLUDED_USERS') }}):" |
-      grep -Ev ":(/sbin/nologin|/usr/sbin/nologin|/bin/nologin|/bin/false|/usr/bin/false)$"
-      )
+        excl_data=$(for u in {{ excluded_users | join(" ") }}; do
+          shell=$(getent passwd "$u" | awk -F: "{print \$7}");
+          [ -z "$shell" ] && shell="not_found";
 
-      if [ -n "$bad" ]; then
-        echo "$bad"
-        echo FAIL
-        exit 1
-      else
-        echo PASS
-      fi
+          pstat=$(passwd -S "$u" 2>/dev/null | awk "{print \$2}");
+          if [ "$pstat" = "L" ]; then
+            locked="yes";
+          elif [ -z "$pstat" ]; then
+            locked="unknown";
+          else
+            locked="no";
+          fi;
+
+          echo "${u}:shell=${shell},locked=${locked}";
+        done | paste -sd "; " -);
+
+        awk -F: -v m="$min" \
+            -v ex="^({{ excluded_users_regex }})$" \
+            -v re="^(/usr)?/sbin/nologin(/)?$|^(/usr)?/bin/false(/)?$" \
+        "
+        BEGIN{bad=0}
+        (\$3<m && \$1!~ex){
+          if (\$7 !~ re) { print \"bad:\" \$1 \":\" \$7; bad=1 }
+        }
+        END{
+          if(bad==0) {
+            print \"All system accounts use nologin/false\"
+          }
+          exit bad
+        }
+        " /etc/passwd
+
+        echo "exclusions=${excl_data}"
       '
     pass_if_regex:
-      - "^PASS$"
+      - '^All system accounts use nologin/false$'
     fail_if_regex:
-      - "^FAIL$"
+      - '^bad:'
 
   - id: CIS-5.5.7
     name: "Ensure root default group is GID 0"
