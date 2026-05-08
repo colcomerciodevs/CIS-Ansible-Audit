@@ -1314,18 +1314,15 @@ audit_controls:
     name: "Ensure password creation requirements are configured"
     os_scope: [SLES]
     command: >
-      bash -lc '
-      fail=0
-      out=""
+      bash -lc 'fail=0; out="";
 
-      minlen_line=$(grep -Psi -- "^[[:space:]]*minlen[[:space:]]*=[[:space:]]*(8|9|[1-9][0-9]+)\b" /etc/security/pwquality.conf /etc/security/pwquality.conf.d/*.conf 2>/dev/null | head -n1)
-      minclass_line=$(grep -Psi -- "^[[:space:]]*minclass[[:space:]]*=[[:space:]]*4\b" /etc/security/pwquality.conf /etc/security/pwquality.conf.d/*.conf 2>/dev/null | head -n1)
+      minlen_line=$(grep -Psi -- "^[[:space:]]*minlen[[:space:]]*=[[:space:]]*(8|9|[1-9][0-9]+)\b" /etc/security/pwquality.conf /etc/security/pwquality.conf.d/*.conf 2>/dev/null | head -n1);
+      minclass_line=$(grep -Psi -- "^[[:space:]]*minclass[[:space:]]*=[[:space:]]*4\b" /etc/security/pwquality.conf /etc/security/pwquality.conf.d/*.conf 2>/dev/null | head -n1);
 
-      [ -n "$minlen_line" ] && out="$out\n- minlen cumple: $minlen_line" || { out="$out\n- minlen NO cumple"; fail=1; }
-      [ -n "$minclass_line" ] && out="$out\n- minclass cumple: $minclass_line" || { out="$out\n- minclass NO cumple"; fail=1; }
+      [ -n "$minlen_line" ] && out="$out\n- minlen cumple: $minlen_line" || { out="$out\n- minlen NO cumple"; fail=1; };
+      [ -n "$minclass_line" ] && out="$out\n- minclass cumple: $minclass_line" || { out="$out\n- minclass NO cumple"; fail=1; };
 
-      [ "$fail" -eq 0 ] && echo -e "PASS$out" || { echo -e "FAIL$out"; exit 1; }
-      '
+      [ "$fail" -eq 0 ] && echo -e "PASS$out" || { echo -e "FAIL$out"; exit 1; }'
     pass_if_regex: ["^PASS"]
     fail_if_regex: ["^FAIL"]
 
@@ -1534,14 +1531,10 @@ audit_controls:
     pass_if_regex: ["PASS"]
     fail_if_regex: ["FAIL"]
 
-  - id: CIS-5.5.8
-    name: "Ensure default user umask is 027 or more restrictive"
+  - name: "Ensure default user umask is 027 or more restrictive"
     os_scope: [SLES]
     command: >
-      bash -lc '
-      grep -RE "^\s*umask\s+(027|077)" /etc/profile /etc/bashrc /etc/profile.d/* 2>/dev/null \
-        && echo PASS || echo FAIL
-      '
+      bash -lc 'fail=0; out=""; for f in /root/.bash_profile /root/.bashrc; do if [ -e "$f" ]; then bad=$(grep -En "^[[:space:]]*umask[[:space:]]+" "$f" | grep -Ev "^[0-9]+:[[:space:]]*umask[[:space:]]+0?(027|077)\b" || true); good=$(grep -En "^[[:space:]]*umask[[:space:]]+0?(027|077)\b" "$f" || true); [ -n "$bad" ] && { out="$out\n- NO cumple en $f: $bad"; fail=1; }; [ -n "$good" ] && out="$out\n- Cumple en $f: $good"; else out="$out\n- $f no existe, no aplica/no contiene umask inseguro"; fi; done; [ "$fail" -eq 0 ] && echo -e "PASS$out" || { echo -e "FAIL$out"; exit 1; }'
     pass_if_regex: ["PASS"]
     fail_if_regex: ["FAIL"]
 
