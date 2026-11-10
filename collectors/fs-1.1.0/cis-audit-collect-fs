@@ -1,0 +1,145 @@
+#!/bin/bash -p
+# =============================================================================
+# cis-audit-collect-fs 1.1.0 — Recolector de FILESYSTEM PROFUNDO para auditoría CIS (SOLO LECTURA)
+# =============================================================================
+# Generado por cis_audit (python3 src/auditar.py generar-recolector-fs). NO EDITAR: cualquier cambio altera el
+# SHA-256 autorizado en /etc/sudoers.d/cis_audit_fs y el precheck dejará de usarlo.
+# Uso TEMPORAL: se instala solo durante una ventana autorizada de filesystem profundo y se retira al terminar.
+#   /usr/local/libexec/cis-audit/cis-audit-collect-fs  root:root 0755
+#   sudoers: srvinnops ALL=(root) NOPASSWD: sha256:<digest> /usr/local/libexec/cis-audit/cis-audit-collect-fs ""
+# Garantías: sin argumentos ni stdin; solo metadatos (find -printf), nunca contenido; sin archivos temporales;
+# montajes y exclusiones literales del Audit CIS (7.1.11, 7.1.12, 7.1.13, 6.3.3.6, 7.2.9); límite 5000 por
+# categoría con truncamiento determinista; timeouts global 3600s / montaje 1800s / home 300s.
+# =============================================================================
+set -u
+umask 0077
+PATH=/usr/sbin:/usr/bin:/sbin:/bin
+LC_ALL=C
+LANG=C
+IFS=$' \t\n'
+export PATH LC_ALL LANG
+unset BASH_ENV ENV CDPATH GLOBIGNORE PS4
+exec 0</dev/null
+
+if [ "$#" -ne 0 ]; then echo "@@CIS_FATAL|argumentos_no_admitidos"; exit 2; fi
+if [ "$(id -u)" != "0" ]; then echo "@@CIS_FATAL|requiere_root"; exit 2; fi
+case "$(awk --version 2>&1)" in "GNU Awk "*) ;; *) echo "@@CIS_FATAL|awk_no_gnu"; exit 2 ;; esac
+
+__osv() { grep -m1 -E "^$1=" /etc/os-release | cut -d= -f2- | tr -d '"'; }
+__id="$(__osv ID)"; __ver="$(__osv VERSION_ID)"; __major="${__ver%%.*}"
+case "$__id:$__major" in
+  rhel:8) __bench=RHEL8 ;; rhel:9) __bench=RHEL9 ;; ol:8) __bench=ORACLE8 ;; ol:9) __bench=ORACLE9 ;; sles:15) __bench=SLES15 ;;
+  *) echo "@@CIS_FATAL|sistema_no_soportado|detectado=$__id $__ver"; exit 0 ;;
+esac
+
+__redactar() {
+  sed -u -E -e 's#\$(1|2[abxy]?|5|6|y|gy|7)\$[^[:space:]:]{8,}#<REDACTADO>#g' -e 's#-----BEGIN [A-Z ]*PRIVATE KEY-----.*#<REDACTADO>#'
+}
+__canario="$(printf '%s\n' 'h=$6$CANARIOcanario01234' | __redactar)" || __canario=""
+if [ "$__canario" != 'h=<REDACTADO>' ]; then echo "@@CIS_FATAL|redaccion_no_operativa"; exit 3; fi
+
+__AWK='function esc(s) { gsub(/\\/, "\\\\", s); gsub(/\n/, "\\n", s); gsub(/\|/, "\\x7c", s); gsub(/\t/, "\\t", s); return s }
+function compacta(t,   n, i, a) { n = asort(b[t], a); delete b[t]; for (i = 1; i <= n && i <= L; i++) b[t][i] = a[i]; c[t] = (n < L) ? n : L }
+NF >= 6 { t = $1; p = $6; for (i = 7; i <= NF; i++) p = p "\t" $i; r = esc(p) "\t" $2 "\t" $3 "\t" esc($4) "\t" esc($5); n[t]++; b[t][++c[t]] = r; if (c[t] >= 2 * L) compacta(t) }
+END {
+  for (k = 1; k <= split(TAGS, T, ","); k++) { t = T[k]; if (!(t in c)) continue; compacta(t)
+    for (i = 1; i <= c[t]; i++) { split(b[t][i], f, "\t"); print "E|" t "|" f[2] "|" f[3] "|" f[4] "|" f[5] "|" f[1] (t == "SG" ? X : "") } }
+  printf "%s|%s", CNT, ID; for (k = 1; k <= split(TAGS, T, ","); k++) printf "|%s=%d", tolower(T[k]), n[T[k]] + 0
+  tr = 0; for (k = 1; k <= split(TAGS, T, ","); k++) if (n[T[k]] > L) tr = 1; printf "|trunc=%d\n", tr
+}'
+__L=5000
+__F='\t%y\t%#m\t%u\t%g\t%p\0'   # -printf interpreta \t y \0 (en $'...' el NUL cortaría la cadena)
+
+# 1.1.0 — errores de find: un punto de montaje de OTRO sistema de archivos bajo la ruta recorrida (-xdev no entra en él,
+# solo lo consulta) se registra como montaje_ajeno y no cuenta; cualquier otro error cuenta (fail-closed). Siempre se
+# emiten ruta y mensaje. Variables de salida: n (errores), v (desaparecidos), a (montajes ajenos).
+__RE_FINDERR="^(.*/)?find: ('(.*)'|‘(.*)’): (.*)$"
+__clasificar() {
+  local base="$1" tag="$2" id="$3" err="$4" sub l p msg
+  n=0; v=0; a=0
+  sub="$(findmnt -n -r -k -o TARGET | while IFS= read -r t; do printf '%b
+' "$t"; done | awk -v b="$base" '$0 != b && (b == "/" || index($0, b "/") == 1)')"
+  while IFS= read -r l; do
+    case "$l" in ""|@@RC=*) continue ;; esac
+    case "$l" in *"No such file or directory"*) v=$((v + 1)); continue ;; esac
+    p=""; msg="$l"
+    if [[ "$l" =~ $__RE_FINDERR ]]; then p="${BASH_REMATCH[3]}${BASH_REMATCH[4]}"; msg="${BASH_REMATCH[5]}"; fi
+    if [ -n "$p" ] && printf '%s
+' "$sub" | grep -qxF -- "$p"; then
+      a=$((a + 1)); printf '%sERR|%s|montaje_ajeno|%s|%s
+' "$tag" "${id//|/%7C}" "${p//|/%7C}" "${msg//|/%7C}"
+    else
+      n=$((n + 1)); printf '%sERR|%s|error|%s|%s
+' "$tag" "${id//|/%7C}" "${p//|/%7C}" "${msg//|/%7C}"
+    fi
+  done <<< "$err"
+}
+
+# Recorrido único de un montaje: $1 destino, $2 ww, $3 nu, $4 sg, $5 s13, $6 s6, $7 tipo de fs.
+__montaje() {
+  local m="$1" ww="$2" nu="$3" sg="$4" s13="$5" s6="$6" ft="$7" rest tm err rc n
+  echo "MNT|$m|$ft|ww=$ww|nu=$nu|s13=$s13|s6=$s6"
+  rest=$(( __deadline - $(date +%s) ))
+  if [ "$rest" -le 0 ]; then echo "MFIN|$m|NO_INICIADO"; return; fi
+  tm=1800; [ "$rest" -lt "$tm" ] && tm="$rest"
+  local e=( "$m" -xdev \( -false )
+  [ "$ww" = 1 ] && e+=( , \( ! -path '/run/user/*' -a ! -path '/proc/*' -a ! -path '*/containerd/*' -a ! -path '*/kubelet/pods/*' -a ! -path '*/kubelet/plugins/*' -a ! -path '/sys/*' -a ! -path '/snap/*' \) \( -type f -o -type d \) -perm -0002 -printf "WW$__F" )
+  [ "$nu" = 1 ] && e+=( , \( ! -path '/run/user/*' -a ! -path '/proc/*' -a ! -path '*/containerd/*' -a ! -path '*/kubelet/pods/*' -a ! -path '*/kubelet/plugins/*' -a ! -path '/sys/fs/cgroup/memory/*' -a ! -path '/var/*/private/*' \) \( -type f -o -type d \) \( \( -nouser -printf "NU$__F" \) , \( -nogroup -printf "NG$__F" \) \) )
+  [ "$sg" = 1 ] && e+=( , -type f -perm /6000 -printf "SG$__F" )
+  e+=( \) )
+  exec 4>&1
+  err=$( { timeout "$tm" nice -n 19 ionice -c3 find "${e[@]}" | awk -v RS='\0' -F'\t' -v L="$__L" -v TAGS=WW,NU,NG,SG \
+           -v CNT=MCNT -v ID="$m" -v X="|s13=$s13|s6=$s6" "$__AWK" 1>&4; printf '@@RC=%s %s\n' "${PIPESTATUS[0]}" "${PIPESTATUS[1]}" >&2; } 2>&1 )
+  exec 4>&-
+  rc="$(printf '%s\n' "$err" | sed -n 's/^@@RC=\([0-9]*\) .*/\1/p')"; ra="$(printf '%s\n' "$err" | sed -n 's/^@@RC=[0-9]* //p')"
+  __clasificar "$m" M "$m" "$err"
+  echo "MFIN|$m|rc_find=${rc:-255}|rc_awk=${ra:-255}|timeout=$([ "$rc" = 124 ] && echo 1 || echo 0)|errores=$n|desaparecidos=$v|ajenos=$a"
+}
+
+{
+echo "@@CIS_RECOLECTOR_FS|formato=fs1|version=1.1.0|benchmark=$__bench|limite=$__L|timeout_global=3600|timeout_montaje=1800|timeout_home=300"
+__deadline=$(( $(date +%s) + 3600 ))
+# 6.3.3.6 (Audit CIS): filesystems con dispositivo (tipos no 'nodev') sin noexec/nosuid.
+__nd="$(awk '/nodev/ { print $2 }' /proc/filesystems | paste -sd,)"
+__s6="$(findmnt -n -r -k -it "$__nd" -o TARGET,SOURCE,FSTYPE,OPTIONS | grep -Pv 'noexec|nosuid' | awk '{print $1}')"
+# 7.1.11 / 7.1.12 / 7.1.13 (Audit CIS): findmnt -Dkerno fstype,target,options y filtros literales; se unen con 6.3.3.6.
+while IFS='|' read -r m ft ww nu s13 s6; do
+  sg=0; { [ "$s13" = 1 ] || [ "$s6" = 1 ]; } && sg=1
+  { [ "$ww" = 1 ] || [ "$nu" = 1 ] || [ "$sg" = 1 ]; } || continue
+  __montaje "$(printf '%b' "$m")" "$ww" "$nu" "$sg" "$s13" "$s6" "$ft"
+done < <( { findmnt -Dkerno fstype,target,options; printf '%s\n' "$__s6" | awk 'NF {print "@S6 " $1 " -"}'; findmnt -n -r -k -o FSTYPE,TARGET; } \
+          | awk -v XT='^[[:space:]]*(nfs|proc|smb|vfat|iso9660|efivarfs|selinuxfs)' -v XW='^(/run/user/|/tmp|/var/tmp)' -v XU='^/run/user/' '
+  $1 == "@S6" { s6[$2] = 1; next }
+  NF == 2 { if (!($2 in ft)) ft[$2] = $1; next }
+  NF >= 3 { t = $2; ft[t] = $1; ex = ($1 ~ XT); ww[t] = (!ex && t !~ XW); nu[t] = (!ex && t !~ XU); s13[t] = (!ex && t !~ XU && $3 !~ /noexec/ && $3 !~ /nosuid/); vis[t] = 1 }
+  END { for (t in vis) all[t] = 1; for (t in s6) all[t] = 1; n = asorti(all, o)
+         for (i = 1; i <= n; i++) { t = o[i]; printf "%s|%s|%d|%d|%d|%d\n", t, (t in ft ? ft[t] : "?"), ww[t] + 0, nu[t] + 0, s13[t] + 0, (t in s6) } }' )
+
+# 7.2.9 (Audit CIS): dotfiles de usuarios con shell válida (/etc/shells sin nologin).
+__vs="^($(awk -F/ '$NF != "nologin" && /^\// {print}' /etc/shells | sed -e 's/[.[\*^$]/\\&/g' | paste -sd'|' -))$"
+while IFS=' ' read -r u h; do
+  [ -d "$h" ] || continue
+  g="$(id -gn -- "$u" 2>&1)" || g="?"
+  echo "DUSR|$u|$g|$h"
+  rest=$(( __deadline - $(date +%s) ))
+  if [ "$rest" -le 0 ]; then echo "DFIN|$u|NO_INICIADO"; continue; fi
+  tm=300; [ "$rest" -lt "$tm" ] && tm="$rest"
+  exec 4>&1
+  err=$( { timeout "$tm" nice -n 19 ionice -c3 find "$h" -xdev -type f -name '.*' -printf "DOT$__F" | awk -v RS='\0' -F'\t' -v L="$__L" \
+           -v TAGS=DOT -v CNT=DCNT -v ID="$u" -v X="" "$__AWK" 1>&4; printf '@@RC=%s %s\n' "${PIPESTATUS[0]}" "${PIPESTATUS[1]}" >&2; } 2>&1 )
+  exec 4>&-
+  rc="$(printf '%s\n' "$err" | sed -n 's/^@@RC=\([0-9]*\) .*/\1/p')"; ra="$(printf '%s\n' "$err" | sed -n 's/^@@RC=[0-9]* //p')"
+  __clasificar "$h" D "$u" "$err"
+  echo "DFIN|$u|rc_find=${rc:-255}|rc_awk=${ra:-255}|timeout=$([ "$rc" = 124 ] && echo 1 || echo 0)|errores=$n|desaparecidos=$v|ajenos=$a"
+done < <(awk -v pat="$__vs" -F: '$(NF) ~ pat { print $1 " " $(NF-1) }' /etc/passwd)
+
+# Instrumentación temporal (D-3B-01): identidad del sudoers FS instalado (bytes exactos), nunca su contenido.
+f=/etc/sudoers.d/cis_audit_fs
+if [ -e "$f" ] || [ -L "$f" ]; then echo "INSTR_FS|existe=1|$(stat -c '%a|%u|%g' -- "$f")|tipo=$(stat -c '%F' -- "$f" | tr ' ' '_')|sha_archivo=$(sha256sum < "$f" | cut -d' ' -f1)"
+else echo "INSTR_FS|existe=0"; fi
+echo "@@CIS_FS_FIN"
+} 2>&1 | __redactar
+__st=("${PIPESTATUS[@]}")
+if [ "${__st[1]}" -ne 0 ]; then printf '\n@@CIS_FATAL|redaccion_fallida|rc=%s\n' "${__st[1]}"; exit 3; fi
+if [ "${__st[0]}" -ne 0 ]; then printf '\n@@CIS_FATAL|recoleccion_interrumpida|rc=%s\n' "${__st[0]}"; exit 3; fi
+exit 0

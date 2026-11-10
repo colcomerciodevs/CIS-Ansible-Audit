@@ -1,0 +1,27 @@
+---
+# Inventario de ejemplo de CIS Linux Audit 1.0.0.
+# Copiar a inventory/hosts.yml y completar. No incluir contraseñas: autenticación exclusivamente por llave SSH.
+#
+# El grupo indica el perfil ESPERADO; el perfil real se determina en el precheck leyendo /etc/os-release.
+# Si no coinciden, el host se detiene y no se audita.
+# Grupos válidos: rhel_oracle_8 (Oracle Linux 8 / RHEL 8), rhel_oracle_9 (Oracle Linux 9 / RHEL 9), sles_15 (SLES 15).
+all:
+  vars:
+    ansible_user: srvinnops                                   # cuenta de auditoría (sin sudo general)
+    ansible_ssh_private_key_file: ~/.ssh/srvinnops   # home de la cuenta que audita, FUERA del proyecto, 0600
+    ansible_port: 22
+    # Huellas SSH: registrarlas verificadas en ~/.ssh/known_hosts (docs/Instalacion_Controlador.pdf).
+    # ansible_ssh_common_args: "-o ProxyJump=bastion.ejemplo"   # si se requiere bastión
+  children:
+    rhel_oracle_8:
+      hosts: {}
+        # VM-OL8-PRD-01:
+        #   ansible_host: 10.0.0.11
+    rhel_oracle_9:
+      hosts: {}
+        # VM-ORA9-PRD-01:
+        #   ansible_host: 10.0.0.21
+    sles_15:
+      hosts: {}
+        # VM-SLES15-PRD-01:
+        #   ansible_host: 10.0.0.31

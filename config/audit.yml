@@ -1,0 +1,110 @@
+---
+# CIS Linux Audit 1.0.0 — configuración activa (auditoría de solo lectura).
+#
+# IMPORTANTE: los valores de alcance van entre comillas. En YAML 1.1 (PyYAML)
+# YES/NO sin comillas se interpretan como booleanos true/false.
+project:
+  language: es
+  mode: audit_only
+  read_only: true
+
+paths:
+  baseline: input/baseline
+  cis: input/cis
+  data: data
+  results: results
+
+scope:
+  # Comparación sin distinguir mayúsculas, acentos ni espacios extremos.
+  provider_positive_values:
+    - "YES"
+    - "SI"
+    - "SÍ"
+  provider_negative_values:
+    - "NO"
+
+# Selección automática de hoja Excel y Benchmark por sistema operativo.
+# El valor de /etc/os-release (ID + VERSION_ID major) determina el perfil.
+os_profiles:
+  rhel:
+    "8": {perfil: RHEL_ORACLE_8, benchmark: RHEL8}
+    "9": {perfil: RHEL_ORACLE_9, benchmark: RHEL9}
+  ol:
+    "8": {perfil: RHEL_ORACLE_8, benchmark: ORACLE8}
+    "9": {perfil: RHEL_ORACLE_9, benchmark: ORACLE9}
+  sles:
+    "15": {perfil: SLES_15, benchmark: SLES15}
+
+# Ejecución remota (Ansible, solo ansible.builtin.raw). 'ejecutar' y 'precheck' exigen --limit con hosts explícitos.
+ejecucion:
+  habilitada: true
+  inventario: inventory/hosts.yml
+  # Debe permanecer en false: los recorridos completos de filesystem (7.1.11, 7.1.12, 7.1.13, 6.3.3.6) solo se
+  # ejecutan con el recolector de filesystem profundo y la opción explícita --filesystem-profundo.
+  auditoria_filesystem_profunda: false
+  timeout_comando_seg: 120
+  timeout_filesystem_seg: 3600
+  serial: 10
+  # Máximo de hosts por ejecución (--limit).
+  max_hosts_por_ejecucion: 10
+
+# Parámetros de evaluación. audit_backlog_limit NO se configura aquí: se toma del Benchmark suministrado.
+evaluacion:
+  # Antigüedad máxima de caché (días) aceptada por Infraestructura para concluir "sin pendientes".
+  # null = no definida: 0 pendientes en caché -> REQUIERE VALIDACIÓN MANUAL.
+  actualizaciones_cache_max_dias: null
+  # Exclusión de Infraestructura: /var/log/audit >= 15 GB, interpretado como 15.000.000.000 bytes.
+  particion_audit_min_bytes: 15000000000
+
+# Recolector PRINCIPAL (privilegiado) cis-audit-collect. Lo instala Infraestructura mediante cambio controlado
+# (docs/Instalacion_Collectors.pdf); este proyecto NUNCA lo instala ni modifica sudoers. El precheck verifica
+# owner/grupo/modo/ACL, directorios padre y SHA-256 antes de usarlo; si algo no coincide no se ejecuta y los controles
+# afectados quedan en ERROR DE AUDITORÍA (RECOLECTOR_PRIVILEGIADO_NO_CONFIABLE). Artefactos: collectors/principal-1.8.0/.
+recolector_privilegiado:
+  ruta: /usr/local/libexec/cis-audit/cis-audit-collect
+  version: "1.8.0"
+  # SHA-256 del script: el que autoriza sudoers y verifica el precheck.
+  sha256: f4d5a4a7166e52e906329b7e374db6877e3599182ebe299c58648715d01cf257
+  # SHA-256 de los bytes exactos de /etc/sudoers.d/cis_audit (identidad de la instrumentación de auditoría).
+  sudoers_sha256_archivo: 3c7af32ec498d5e5606c00ad5bec01631ca938454b8a6cfe8ad2ce795ac4f7e9
+  # SHA-256 semántico (contenido efectivo normalizado): solo comprobación adicional, nunca la identidad.
+  sudoers_sha256_semantico: 0cbf303af05d3e111b65f2e99b2e781a4b7111239dff295c0e983ce988537b77
+
+# Recolector de FILESYSTEM PROFUNDO cis-audit-collect-fs (7.1.11, 7.1.12, 7.1.13, 6.3.3.6 y homes de 7.2.9).
+# TEMPORAL: Infraestructura lo instala solo durante una ventana autorizada junto con /etc/sudoers.d/cis_audit_fs y retira
+# ambos al terminar. Solo se usa con --filesystem-profundo explícito; el gate exige CONFIABLE. Artefactos: collectors/fs-1.1.0/.
+filesystem_profundo:
+  ruta: /usr/local/libexec/cis-audit/cis-audit-collect-fs
+  version: "1.1.0"
+  sha256: 9b3fa54edb054ea1d4ad54022257bd9fec0ccb5bc73036a477b9f38ec0f6b91c
+  sudoers_sha256_archivo: f406f580f372a3b13e93e6d4f0feef3b5fd5d94a88f339e48cbe11795569b122
+  sudoers_sha256_semantico: 55d4c84dcbd6c104400c6238c748ee4628c3ca054a78b1373b97a2dec3439f76
+  # Audit CIS literal: sin exclusiones adicionales de montajes. Una exclusión operativa futura debe documentarse aquí
+  # y nunca puede producir CUMPLE sin evidencia.
+  excluir_montajes: []
+
+# Banners aprobados (fuentes canónicas, input/baseline/files/p1/): Message_Day -> /etc/motd; login_banner -> /etc/issue y
+# /etc/issue.net. El motor lee el archivo y calcula su SHA-256 al evaluar (el texto no se copia a YAML ni a código).
+# Comparación SIMILITUD_TEXTUAL: sin el marco decorativo de '*', espacios de relleno, CRLF/LF ni líneas vacías;
+# CUMPLE si la similitud del contenido textual >= similitud_minima. El SHA-256 no es condición de cumplimiento.
+banners_aprobados:
+  motd:
+    archivo: input/baseline/files/p1/Message_Day
+  issue:
+    archivo: input/baseline/files/p1/login_banner
+  issue_net:
+    archivo: input/baseline/files/p1/login_banner
+banners_comparacion:
+  similitud_minima: 0.95
+
+# Partes del proyecto. Toda fila de matriz, resultado, evidencia y reporte lleva parte_proyecto (PARTE_1 | PARTE_2)
+# y tipo_control (CIS | PRERREQUISITO). Las matrices y exclusiones de data/ se generan con 'auditar.py preparar'.
+partes_proyecto:
+  PARTE_1:
+    linea_base: "input/baseline/Linea Base - Analisis de Impacto _Parte1.xlsx"
+    matriz: data/alcance/matriz_alcance_parte1.json
+    mapeo: config/mapeo_parte1.yml
+    prerrequisitos: config/prerrequisitos_parte1.yml
+  PARTE_2:
+    linea_base: "input/baseline/Linea Base - Analisis de Impacto _Parte2.xlsx"
+    matriz: data/alcance/matriz_alcance.json

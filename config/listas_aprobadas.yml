@@ -1,0 +1,60 @@
+---
+# Listas y políticas aprobadas por la organización (evidencia organizacional, D-07).
+# ÚNICA fuente editable de políticas organizacionales del proyecto (no crear fuentes paralelas).
+# Mientras una lista esté vacía, los controles que dependen de ella se reportan como
+# REQUIERE EVIDENCIA ORGANIZACIONAL. No inventar contenido: completar solo con
+# listas oficiales aprobadas y registrar su origen.
+origen: null              # p. ej. "Acta/ticket CHG-1234, aprobado por <área>, fecha"
+repositorios: []          # ids de repositorio autorizados, p. ej. rhel-9-for-x86_64-baseos-rpms
+claves_gpg: []            # ids de clave gpg-pubkey autorizados, p. ej. fd431d51
+suid_sgid: []             # rutas absolutas de binarios SUID/SGID aprobados
+destinos_log: []          # host/IP del SIEM o syslog central autorizado
+
+# ---------------------------------------------------------------------------------------------------------------
+# Políticas del sitio aprobadas por Infraestructura Linux (2026-10-14).
+# Son POLÍTICA DEL SITIO (lo que el CIS deja a "site policy" o a la elección del método de logging). Nunca sustituyen
+# el criterio del Benchmark ni definen exclusiones: las exclusiones P1 provienen de la columna "Exclusiones de
+# Infraestructura" del Excel P1 (más las decisiones posteriores de config/exclusiones_infraestructura.yml, que solo se
+# unen por usuario) y las P2 de la columna "EXCLUSIONES (Infraestructura Linux)" del Excel P2.
+# ---------------------------------------------------------------------------------------------------------------
+decisiones_origen: "Políticas del sitio aprobadas por Infraestructura Linux, 2026-10-14"
+
+# CIS 3.1.1 (Manual): "IPv6 enabled or disabled in accordance with ... local site policy".
+ipv6_politica:
+  requerido: false          # IPv6 NO es requerido por la arquitectura
+  estado_aprobado: deshabilitado
+
+# CIS 5.3.3.2.3 (Manual): complejidad "conforms to local site policy" (minclass -- AND/OR -- [dulo]credit).
+# Política aprobada: un dígito, una mayúscula, una minúscula y un carácter especial como mínimo (créditos negativos).
+pwquality_complejidad_aprobada:
+  dcredit: -1
+  ucredit: -1
+  lcredit: -1
+  ocredit: -1
+
+# CIS 6.2.1.4 / 6.2.2 / 6.2.3: método corporativo principal de logging (rsyslog o journald). FUENTE ÚNICA de esta decisión.
+# Con rsyslog: los controles del camino journald cuya nota de aplicabilidad dice "Do not apply this recommendation if
+# rsyslog is used" quedan NO APLICA (NO_APLICA_METODO_LOGGING) y los de "Configure rsyslog" aplican. Journald sigue
+# siendo el componente nativo de systemd (6.2.1.x aplica en ambos casos).
+metodo_logging:
+  metodo: rsyslog
+
+# CIS 6.2.3.5 (Manual, "appropriate for your environment"): reglas de rsyslog aprobadas (selector -> destino).
+# Comparación semántica (selector normalizado + destino; el '-' de "sin sync" y los espacios no cuentan).
+# Reglas adicionales no producen falla si no contradicen las aprobadas.
+rsyslog_reglas_aprobadas:
+  - {selector: "*.info;mail.none;authpriv.none;cron.none", destino: /var/log/messages}
+  - {selector: "authpriv.*", destino: /var/log/secure}
+  - {selector: "mail.*", destino: /var/log/maillog}
+  - {selector: "cron.*", destino: /var/log/cron}
+  - {selector: "*.emerg", destino: ":omusrmsg:*"}
+  - {selector: "uucp,news.crit", destino: /var/log/spooler}
+  - {selector: "local7.*", destino: /var/log/boot.log}
+
+# CIS 6.2.3.8 (Manual, "rotated according to site policy"): la configuración del ejemplo del CIS (weekly, rotate 4,
+# compress, missingok, notifempty, postrotate que recarga rsyslog) debe cubrir cada archivo que rsyslog escribe
+# realmente según sus reglas activas (no se asume /var/log/rsyslog/*.log).
+logrotate_rsyslog_politica:
+  directivas: [weekly, "rotate 4", compress, missingok, notifempty]
+  postrotate_recarga_rsyslog: true
+

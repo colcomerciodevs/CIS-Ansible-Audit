@@ -1,0 +1,57 @@
+# =============================================================================
+# Prerrequisitos internos de la Parte 1 (PRE-*) — fuente activa única
+# =============================================================================
+# NO son controles CIS: son requisitos internos de Infraestructura (REQUISITO_INTERNO).
+# - Se evalúan con la evidencia de la ejecución (src/cis_audit/motor/prerrequisitos_eval.py).
+# - No entran en ningún indicador CIS ni en el cumplimiento final de línea base: bloque propio en los reportes.
+# - Fail-closed: sin evidencia suficiente el resultado es ERROR DE AUDITORÍA o REQUIERE VALIDACIÓN MANUAL, nunca CUMPLE.
+# - La auditoría NO modifica sudoers ni crea cuentas, grupos o llaves.
+# - Llaves SSH: solo fingerprint SHA256 (dato público); nunca la llave completa en evidencias o reportes.
+#
+# Tipos de criterio:
+#   cuentas_cambio_forzado  cada cuenta existe y su último cambio de contraseña es 0 (cambio forzado)
+#   cuentas_nopasswd_all    cada cuenta tiene una regla sudo NOPASSWD cargada
+#   llaves_authorized_keys  cada cuenta tiene la llave esperada (fingerprint SHA256) en su AuthorizedKeysFile efectivo, con
+#                           archivo y directorio no escribibles por terceros (recolector principal 1.5.0, priv.authorized_keys;
+#                           las cuentas están fijadas en el recolector: cambiarlas exige un recolector nuevo)
+#   grupo_miembros          el grupo existe y contiene a cada cuenta como miembro
+#   sin_requisito           sin requisito técnico definido: NO APLICA
+# =============================================================================
+
+prerrequisitos:
+  PRE-1:
+    descripcion: "Usuarios administradores de S.O creados y con cambio de contraseña forzado"
+    objetivo: "Garantizar acceso administrativo nominal y que la contraseña inicial se cambie en el primer acceso."
+    criterio: {tipo: cuentas_cambio_forzado, usuarios: [aromero, csotomonte, jcastano]}
+    requiere_sudo: true
+    sensibilidad: "Media: nombres de personas. Nunca hashes ni campos completos de /etc/shadow."
+  PRE-2:
+    descripcion: "Usuarios de automatización creados con NOPASSWD ALL"
+    objetivo: "Permitir la operación de herramientas de automatización (AWX/Ansible) sin interacción."
+    criterio: {tipo: cuentas_nopasswd_all, usuarios: [iacolcoauto, ansible_test, proactiva]}
+    requiere_sudo: true
+    sensibilidad: "Alta: describe privilegios. Se reporta solo el resumen normalizado (archivo:línea de la regla)."
+    nota: "Requisito interno independiente del resultado técnico de CIS 5.2.4 (que exige contraseña para escalar privilegios)."
+  PRE-3:
+    descripcion: "Llaves SSH configuradas para usuarios de automatización"
+    objetivo: "Acceso por llave para la automatización corporativa."
+    criterio:
+      tipo: llaves_authorized_keys
+      usuarios: [iacolcoauto, ansible_test]
+      fingerprints:
+        iacolcoauto: "SHA256:/DQNJlEXFV0xqVbwj/03ztVShuKy7xy7MyaFeJaW5uY"
+        ansible_test: "SHA256:ab8PCAkrtbmcjQj0lbF1CRf2bDtqVdbc0XTj/Fm26rE"
+    requiere_sudo: true
+    sensibilidad: "Media: las llaves públicas no son secretas, pero se minimiza a fingerprint."
+  PRE-4:
+    descripcion: "Grupo ssh_access creado y miembros requeridos"
+    objetivo: "Restringir el acceso SSH a un grupo controlado (relacionado con CIS 5.1.7 'sshd access is configured')."
+    criterio: {tipo: grupo_miembros, grupo: ssh_access, usuarios: [tux, aromero, csotomonte, jcastano, iacolcoauto, ansible_test]}
+    requiere_sudo: false
+    sensibilidad: "Baja/Media: nombres de cuenta."
+  PRE-5:
+    descripcion: "Usuarios de automatización con llaves y sudo requeridos"
+    objetivo: "Sin requisito técnico definido por Infraestructura."
+    criterio: {tipo: sin_requisito}
+    requiere_sudo: false
+    sensibilidad: "N/A"

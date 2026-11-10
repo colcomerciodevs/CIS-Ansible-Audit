@@ -1,0 +1,88 @@
+---
+# Precheck READ-ONLY previo a la auditoría.
+# Determina: conectividad SSH, hostname, /etc/os-release, kernel, arquitectura,
+# usuario conectado y disponibilidad de "sudo -n" (sin pedir contraseña).
+# Recolector privilegiado (si existe): tipo sin seguir enlaces (stat -c), destino (readlink -f),
+# metadatos y ACL reales (getfacl) de la ruta, directorios padre y del PATH, contexto SELinux, SHA-256 y
+# "sudo -n -l <ruta>" (solo consulta la política; no ejecuta el script).
+# Con --filesystem-profundo (cis_fs_ruta): la misma verificación para cis-audit-collect-fs y el impacto previsto
+# (findmnt, df -PTk, df -Pi: solo metadatos de montajes, NO recorre el filesystem).
+# No ejecuta controles CIS y no modifica nada. Solo ansible.builtin.raw.
+#
+# Ejecutar únicamente vía: python3 src/auditar.py precheck|ejecutar --inventory … --limit …
+- name: Precheck read-only de hosts a auditar
+  hosts: all
+  gather_facts: false
+  become: false
+  any_errors_fatal: false
+
+  tasks:
+    - name: Validar parámetros  # noqa: run-once[task] (estrategia linear; validación única en el controlador)
+      ansible.builtin.assert:
+        that:
+          - cis_destino is defined
+          - ansible_limit is defined
+        fail_msg: "Ejecutar mediante src/auditar.py con --limit explícito"
+      delegate_to: localhost
+      run_once: true
+
+    - name: Directorio local de precheck (controlador)
+      ansible.builtin.file:
+        path: "{{ cis_destino }}/{{ inventory_hostname }}/precheck"
+        state: directory
+        mode: "0700"
+      delegate_to: localhost
+
+    - name: Identificación del host (solo lectura)
+      ansible.builtin.raw: >-
+        echo "@@PRE|hostname|$(hostname -f 2>/dev/null || hostname)";
+        echo "@@PRE|kernel|$(uname -r)"; echo "@@PRE|arch|$(uname -m)";
+        echo "@@PRE|user|$(id -un)";
+        if sudo -n true 2>/dev/null; then echo "@@PRE|sudo_n|si"; else echo "@@PRE|sudo_n|no"; fi;
+        echo "@@PRE|os_release_inicio"; cat /etc/os-release; echo "@@PRE|os_release_fin";
+        P={{ cis_priv_ruta | default('/usr/local/libexec/cis-audit/cis-audit-collect', true) | quote }};
+        if [ -e "$P" ] || [ -L "$P" ]; then echo "@@PRE|priv_existe|si";
+        for x in "$P" /usr/local/libexec/cis-audit /usr/local/libexec /usr/local /usr / /usr/sbin /usr/bin /sbin /bin; do
+        d="$(readlink -f -- "$x" 2>&1)";
+        echo "@@PRE|priv_obj|$x|$(stat -c '%u|%g|%F' -- "$x" 2>&1)|$d|$(stat -c '%u|%g|%a|%F' -- "$d" 2>&1)|$(ls -ldn -- "$d" 2>&1 | cut -c11)";
+        if command -v getfacl >/dev/null; then a="$(getfacl -cpn -- "$d" 2>&1)"; r=$?; echo "@@PRE|priv_acl|$x|$r|$(printf '%s' "$a" | tr '\n' ',')";
+        else echo "@@PRE|priv_acl|$x|NO_DISPONIBLE|"; fi; done;
+        echo "@@PRE|priv_selinux|$(ls -ldZ -- "$P" 2>&1)";
+        if [ -f "$P" ] && [ ! -L "$P" ]; then echo "@@PRE|priv_sha|$(sha256sum -- "$P" 2>&1 | cut -d' ' -f1)"; else echo "@@PRE|priv_sha|NO_CALCULADO"; fi;
+        o="$(sudo -n -l "$P" 2>&1)"; echo "@@PRE|priv_sudo_l|$?|$(printf '%s' "$o" | head -c 300 | tr '\n' ' ')";
+        else echo "@@PRE|priv_existe|no"; fi{% if (cis_fs_ruta | default('')) %};
+        F={{ cis_fs_ruta | quote }};
+        if [ -e "$F" ] || [ -L "$F" ]; then echo "@@PRE|fs_existe|si";
+        for x in "$F" /usr/local/libexec/cis-audit /usr/local/libexec /usr/local /usr / /usr/sbin /usr/bin /sbin /bin; do
+        d="$(readlink -f -- "$x" 2>&1)";
+        echo "@@PRE|fs_obj|$x|$(stat -c '%u|%g|%F' -- "$x" 2>&1)|$d|$(stat -c '%u|%g|%a|%F' -- "$d" 2>&1)|$(ls -ldn -- "$d" 2>&1 | cut -c11)";
+        if command -v getfacl >/dev/null; then a="$(getfacl -cpn -- "$d" 2>&1)"; r=$?; echo "@@PRE|fs_acl|$x|$r|$(printf '%s' "$a" | tr '\n' ',')";
+        else echo "@@PRE|fs_acl|$x|NO_DISPONIBLE|"; fi; done;
+        echo "@@PRE|fs_selinux|$(ls -ldZ -- "$F" 2>&1)";
+        if [ -f "$F" ] && [ ! -L "$F" ]; then echo "@@PRE|fs_sha|$(sha256sum -- "$F" 2>&1 | cut -d' ' -f1)"; else echo "@@PRE|fs_sha|NO_CALCULADO"; fi;
+        o="$(sudo -n -l "$F" 2>&1)"; echo "@@PRE|fs_sudo_l|$?|$(printf '%s' "$o" | head -c 300 | tr '\n' ' ')";
+        else echo "@@PRE|fs_existe|no"; fi;
+        echo "@@PRE|fs_nodev|$(awk '/nodev/ {print $2}' /proc/filesystems | paste -sd,)";
+        findmnt -Dkerno fstype,target,options | sed 's/^/@@PRE|fs_mnt|/';
+        timeout 30 df -PTk 2>/dev/null | awk 'NR != 1 {print "@@PRE|fs_df|" $7 "|" $2 "|" $3}';
+        timeout 30 df -Pi 2>/dev/null | awk 'NR != 1 {print "@@PRE|fs_dfi|" $6 "|" $3}'
+        {% endif %}
+      register: cis_pre
+      changed_when: false
+      failed_when: false
+      ignore_unreachable: true
+      no_log: true
+
+    - name: Guardar precheck redactado (controlador)
+      ansible.builtin.copy:
+        content: "{{ {'host': inventory_hostname,
+                      'grupo_inventario': group_names,
+                      'inalcanzable': cis_pre.unreachable | default(false),
+                      'rc': cis_pre.rc | default(None),
+                      'mensaje': (cis_pre.msg | default('')) | cis_redactar,
+                      'stdout': (cis_pre.stdout | default('')) | cis_redactar,
+                      'stderr': (cis_pre.stderr | default('')) | cis_redactar} | to_nice_json }}"
+        dest: "{{ cis_destino }}/{{ inventory_hostname }}/precheck/precheck_ansible.json"
+        mode: "0600"
+      delegate_to: localhost
+      no_log: true

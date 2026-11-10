@@ -1,0 +1,311 @@
+---
+# Revisiones de mapeo Excel -> CIS realizadas por el auditor y aprobadas por el usuario (trazabilidad del mapeo).
+#
+# Reglas:
+# - Solo se registran casos donde el mapeo automático es ambiguo, incorrecto o
+#   requiere confirmar un retiro.
+# - `control_cis` debe existir en el catálogo del Benchmark suministrado; el
+#   generador falla si no existe (no se inventan controles).
+# - `verificar_ausencia`: grupos de palabras clave; si algún título vigente del
+#   Benchmark contiene todas las palabras de un grupo, el retiro NO se confirma
+#   y el estado pasa a PENDIENTE_REVISION.
+# - Las correcciones registran control original, id CIS original, control
+#   corregido, versión CIS, evidencia (documento y página) y, si aplica, aprobación.
+# - Si `benchmarks` se omite, la revisión aplica a todos los Benchmark de la hoja.
+
+revisiones:
+
+  # ------------------------------------------------------------------ RHEL/OL 8
+  - hoja: "LBS SO_ RHEL_ORA_8"
+    fila: 3
+    estado_mapeo: RETIRADO
+    control_cis: null
+    verificar_ausencia: [["subscription"]]
+    justificacion: >-
+      "Ensure Red Hat Subscription Manager connection is configured" no existe en
+      CIS RHEL 8 v4.0.0 ni en CIS Oracle Linux 8 v4.0.0. Retiro confirmado.
+
+  - hoja: "LBS SO_ RHEL_ORA_8"
+    fila: 4
+    estado_mapeo: MAPEADO_TITULO_ACTUALIZADO
+    control_cis: "1.2.1.2"
+    justificacion: >-
+      En v4.0.0 el título es "Ensure gpgcheck is configured". El Audit exige
+      gpgcheck habilitado globalmente en /etc/dnf/dnf.conf y que ningún repo lo
+      deshabilite: mismo requisito, ampliado. La similitud textual con 1.2.1.3
+      (repo_gpgcheck) es engañosa y se descarta.
+
+  - hoja: "LBS SO_ RHEL_ORA_8"
+    fila: 9
+    estado_mapeo: MAPEADO_TITULO_ACTUALIZADO
+    control_cis: "1.4.2"
+    justificacion: >-
+      "Ensure permissions on bootloader config are configured" pasó a "Ensure access
+      to bootloader config is configured"; el Audit valida modo/propietario de los
+      archivos GRUB. Mismo requisito.
+
+  - hoja: "LBS SO_ RHEL_ORA_8"
+    fila: 10
+    estado_mapeo: RETIRADO
+    control_cis: null
+    verificar_ausencia: [["rescue"], ["single", "user"], ["emergency"]]
+    justificacion: >-
+      La autenticación para modo usuario único/rescate no existe como
+      recomendación en CIS RHEL 8 v4.0.0 ni OL 8 v4.0.0. Retiro confirmado.
+
+  - {hoja: "LBS SO_ RHEL_ORA_8", fila: 14, estado_mapeo: ID_EXCEL_INCORRECTO, control_cis: "1.3.1.1",
+     justificacion: "El id 1.6.1.1 no existe en v4.0.0; 'Ensure SELinux is installed' es 1.3.1.1."}
+  - {hoja: "LBS SO_ RHEL_ORA_8", fila: 15, estado_mapeo: ID_EXCEL_INCORRECTO, control_cis: "1.3.1.2",
+     justificacion: "El id 1.6.1.2 no existe en v4.0.0; 'Ensure SELinux is not disabled in bootloader configuration' es 1.3.1.2."}
+  - {hoja: "LBS SO_ RHEL_ORA_8", fila: 16, estado_mapeo: ID_EXCEL_INCORRECTO, control_cis: "1.3.1.3",
+     justificacion: "El id 1.6.1.3 no existe en v4.0.0; 'Ensure SELinux policy is configured' es 1.3.1.3."}
+  - {hoja: "LBS SO_ RHEL_ORA_8", fila: 17, estado_mapeo: ID_EXCEL_INCORRECTO, control_cis: "1.3.1.4",
+     justificacion: "El id 1.6.1.4 no existe en v4.0.0; 'Ensure the SELinux mode is not disabled' es 1.3.1.4."}
+
+  - hoja: "LBS SO_ RHEL_ORA_8"
+    fila: 19
+    estado_mapeo: ID_EXCEL_INCORRECTO
+    control_excel_original: "1.6.10"
+    cis_id_excel_original: "1.6.1.6"
+    control_cis_corregido: "1.3.1.6"
+    version_cis: {RHEL8: v4.0.0, ORACLE8: v4.0.0}
+    evidencia_mapeo: >-
+      CIS RHEL 8 v4.0.0 p.158 y CIS Oracle Linux 8 v4.0.0 p.157: '1.3.1.6 Ensure no unconfined services exist (Manual)'. El id 1.6.1.6 no existe en ninguno de los dos documentos.
+    control_cis: "1.3.1.6"
+    justificacion: >-
+      El id 1.6.1.6 no existe en v4.0.0. "Ensure no unconfined services exist" es
+      1.3.1.6 (Manual) en RHEL 8 v4.0.0 y OL 8 v4.0.0.
+
+  - {hoja: "LBS SO_ RHEL_ORA_8", fila: 20, estado_mapeo: ID_EXCEL_INCORRECTO, control_cis: "1.3.1.7",
+     justificacion: "El id 1.6.1.8 no existe en v4.0.0; mcstrans es 1.3.1.7 (el Excel tenía intercambiados mcstrans/SETroubleshoot)."}
+
+  - hoja: "LBS SO_ RHEL_ORA_8"
+    fila: 21
+    estado_mapeo: ID_EXCEL_INCORRECTO
+    control_excel_original: "1.6.12"
+    cis_id_excel_original: "1.6.1.7"
+    control_cis_corregido: "1.3.1.8"
+    version_cis: {RHEL8: v4.0.0, ORACLE8: v4.0.0}
+    evidencia_mapeo: >-
+      CIS RHEL 8 v4.0.0 p.163 y CIS Oracle Linux 8 v4.0.0 p.162: '1.3.1.8 Ensure SETroubleshoot is not installed (Automated)'. El id 1.6.1.7 no existe.
+    control_cis: "1.3.1.8"
+    justificacion: >-
+      El id 1.6.1.7 no existe en v4.0.0. "Ensure SETroubleshoot is not installed"
+      es 1.3.1.8 en RHEL 8 v4.0.0 y OL 8 v4.0.0.
+
+  - hoja: "LBS SO_ RHEL_ORA_8"
+    fila: 24
+    estado_mapeo: ID_EXCEL_INCORRECTO
+    control_excel_original: "1.8.3"
+    cis_id_excel_original: "1.8.3"
+    control_cis_corregido: "1.8.2"
+    version_cis: {RHEL8: v4.0.0, ORACLE8: v4.0.0}
+    evidencia_mapeo: >-
+      CIS RHEL 8 v4.0.0 p.264 y CIS Oracle Linux 8 v4.0.0 p.263: '1.8.2 Ensure GDM disable-user-list is configured (Automated)'. En ambos documentos 1.8.3 es 'Ensure GDM screen lock is configured'.
+    aprobacion: "Aprobado por el usuario en la revisión de la Fase 1 (decisión D-02), 2026-10-07"
+    control_cis: "1.8.2"
+    justificacion: >-
+      El Excel indica que el control queda absorbido en "1.8.3 Ensure GDM
+      disable-user-list is configured", pero en v4.0.0 el id 1.8.3 es "Ensure GDM
+      screen lock is configured". El control de disable-user-list es 1.8.2. Además,
+      la fila 25 (1.8.4) mapea al mismo 1.8.2 con propuesta NO, mientras esta fila
+      tiene propuesta YES: contradicción a resolver por el responsable del Excel.
+
+  - hoja: "LBS SO_ RHEL_ORA_8"
+    fila: 28
+    estado_mapeo: ID_EXCEL_INCORRECTO
+    control_excel_original: "1.9.1"
+    cis_id_excel_original: "1.9"
+    control_cis_corregido: "1.2.2.1"
+    version_cis: {RHEL8: v4.0.0, ORACLE8: v4.0.0}
+    evidencia_mapeo: >-
+      CIS RHEL 8 v4.0.0 p.140 y CIS Oracle Linux 8 v4.0.0 p.139: '1.2.2.1 Ensure updates, patches, and additional security software are installed (Manual)'. El id 1.9 no existe.
+    control_cis: "1.2.2.1"
+    justificacion: >-
+      El id 1.9 no existe en v4.0.0. "Ensure updates, patches, and additional
+      security software are installed" es 1.2.2.1 (Manual).
+
+  - hoja: "LBS SO_ RHEL_ORA_8"
+    fila: 30
+    estado_mapeo: RETIRADO
+    control_cis: null
+    verificar_ausencia: [["over-ridden"], ["overridden", "crypto"], ["override"]]
+    justificacion: >-
+      "Ensure system-wide crypto policy is not over-ridden" no existe en RHEL/OL 8
+      v4.0.0. Retiro confirmado.
+
+  - {hoja: "LBS SO_ RHEL_ORA_8", fila: 36, estado_mapeo: MAPEADO_TITULO_ACTUALIZADO, control_cis: "6.3.1.1",
+     justificacion: "'Ensure auditd is installed' pasó a 'Ensure auditd packages are installed' (audit y audit-libs). Mismo requisito."}
+  - {hoja: "LBS SO_ RHEL_ORA_8", fila: 39, estado_mapeo: MAPEADO_TITULO_ACTUALIZADO, control_cis: "6.3.1.3",
+     justificacion: "'audit_backlog_limit is sufficient' pasó a 'is configured'; el Audit recomienda 8192 o más."}
+  - {hoja: "LBS SO_ RHEL_ORA_8", fila: 69, estado_mapeo: MAPEADO_TITULO_ACTUALIZADO, control_cis: "6.2.2.5",
+     justificacion: "'Ensure logging is configured' pasó a 'Ensure rsyslog logging is configured' (Manual)."}
+
+  - hoja: "LBS SO_ RHEL_ORA_8"
+    fila: 71
+    estado_mapeo: ID_EXCEL_INCORRECTO
+    control_excel_original: "4.2.8"
+    cis_id_excel_original: "6.2.2.7"
+    control_cis_corregido: "6.2.2.6"
+    version_cis: {RHEL8: v4.0.0, ORACLE8: v4.0.0}
+    evidencia_mapeo: >-
+      CIS RHEL 8 v4.0.0 p.857 y CIS Oracle Linux 8 v4.0.0 p.865: '6.2.2.6 Ensure rsyslog is configured to send logs to a remote log host (Manual)'. 6.2.2.7 es 'Ensure rsyslog is not configured to receive logs from a remote client'.
+    control_cis: "6.2.2.6"
+    justificacion: >-
+      El Excel asigna 6.2.2.7 (que es "rsyslog is not configured to receive logs
+      from a remote client", ya mapeado en la fila 70). "Ensure rsyslog is
+      configured to send logs to a remote log host" es 6.2.2.6 (Manual).
+
+  - hoja: "LBS SO_ RHEL_ORA_8"
+    fila: 84
+    estado_mapeo: RETIRADO
+    control_cis: null
+    verificar_ausencia: [["logrotate", "permission"]]
+    justificacion: >-
+      "Ensure logrotate assigns appropriate permissions" no existe en RHEL/OL 8
+      v4.0.0 (solo 6.2.2.8 "Ensure logrotate is configured"). Retiro confirmado.
+
+  - hoja: "LBS SO_ RHEL_ORA_8"
+    fila: 85
+    estado_mapeo: RETIRADO
+    control_cis: null
+    verificar_ausencia: [["system file permissions"], ["audit system"]]
+    justificacion: "'Audit system file permissions' no existe en RHEL/OL 8 v4.0.0. Retiro confirmado."
+
+  - {hoja: "LBS SO_ RHEL_ORA_8", fila: 91, estado_mapeo: MAPEADO_TITULO_ACTUALIZADO, control_cis: "7.1.1",
+     justificacion: "'permissions on' pasó a 'access to /etc/passwd is configured'; Audit: modo 644 o más restrictivo, root:root."}
+  - {hoja: "LBS SO_ RHEL_ORA_8", fila: 92, estado_mapeo: MAPEADO_TITULO_ACTUALIZADO, control_cis: "7.1.2",
+     justificacion: "'permissions on' pasó a 'access to /etc/passwd- is configured'."}
+  - {hoja: "LBS SO_ RHEL_ORA_8", fila: 93, estado_mapeo: MAPEADO_TITULO_ACTUALIZADO, control_cis: "7.1.3",
+     justificacion: "'permissions on' pasó a 'access to /etc/group is configured'."}
+  - {hoja: "LBS SO_ RHEL_ORA_8", fila: 94, estado_mapeo: MAPEADO_TITULO_ACTUALIZADO, control_cis: "7.1.4",
+     justificacion: "'permissions on' pasó a 'access to /etc/group- is configured'."}
+  - {hoja: "LBS SO_ RHEL_ORA_8", fila: 95, estado_mapeo: MAPEADO_TITULO_ACTUALIZADO, control_cis: "7.1.5",
+     justificacion: "'permissions on' pasó a 'access to /etc/shadow is configured'."}
+  - {hoja: "LBS SO_ RHEL_ORA_8", fila: 96, estado_mapeo: MAPEADO_TITULO_ACTUALIZADO, control_cis: "7.1.6",
+     justificacion: "'permissions on' pasó a 'access to /etc/shadow- is configured'."}
+  - {hoja: "LBS SO_ RHEL_ORA_8", fila: 97, estado_mapeo: MAPEADO_TITULO_ACTUALIZADO, control_cis: "7.1.7",
+     justificacion: "'permissions on' pasó a 'access to /etc/gshadow is configured'."}
+  - {hoja: "LBS SO_ RHEL_ORA_8", fila: 98, estado_mapeo: MAPEADO_TITULO_ACTUALIZADO, control_cis: "7.1.8",
+     justificacion: "'permissions on' pasó a 'access to /etc/gshadow- is configured'."}
+
+  # ------------------------------------------------------------------ RHEL/OL 9
+  - hoja: "LBS SO_ RHEL_ORA_9"
+    fila: 3
+    estado_mapeo: RETIRADO
+    control_cis: null
+    verificar_ausencia: [["subscription"]]
+    justificacion: "No existe en CIS RHEL 9 v2.0.0 ni OL 9 v2.0.0. Retiro confirmado."
+
+  - hoja: "LBS SO_ RHEL_ORA_9"
+    fila: 10
+    estado_mapeo: RETIRADO
+    control_cis: null
+    verificar_ausencia: [["rescue"], ["single", "user"], ["emergency"]]
+    justificacion: >-
+      Las columnas D/E del Excel indican 5.4.2.4 "Ensure root account access is
+      controlled", que es un control distinto (acceso a la cuenta root). El propio
+      Excel (NOVEDADES) aclara que la numeración es incorrecta y que la
+      autenticación en modo rescate ya no existe. Verificado: no existe en RHEL/OL 9
+      v2.0.0.
+
+  - hoja: "LBS SO_ RHEL_ORA_9"
+    fila: 25
+    estado_mapeo: MAPEADO_TITULO_ACTUALIZADO
+    control_cis: "1.8.3"
+    justificacion: >-
+      "Ensure GDM disable-user-list is configured" corresponde en v2.0.0 a 1.8.3
+      "Ensure GDM disable-user-list option is enabled". Observación: la fila 24
+      (YES) también queda consolidada en 1.8.3 mientras esta fila es NO.
+
+  - hoja: "LBS SO_ RHEL_ORA_9"
+    fila: 30
+    estado_mapeo: RETIRADO
+    control_cis: null
+    verificar_ausencia: [["over-ridden"], ["overridden", "crypto"], ["override", "crypto"]]
+    justificacion: "No existe en RHEL/OL 9 v2.0.0. Retiro confirmado."
+
+  - hoja: "LBS SO_ RHEL_ORA_9"
+    fila: 84
+    estado_mapeo: RETIRADO
+    control_cis: null
+    verificar_ausencia: [["logrotate", "permission"]]
+    justificacion: "No existe en RHEL/OL 9 v2.0.0 (solo 6.2.3.8 'rsyslog logrotate'). Retiro confirmado."
+
+  - hoja: "LBS SO_ RHEL_ORA_9"
+    fila: 98
+    estado_mapeo: MAPEADO_CONSOLIDADO
+    control_excel_original: "6.1.13"
+    cis_id_excel_original: "(remite a NOVEDADES)"
+    control_cis_corregido: "7.1.13"
+    version_cis: {RHEL9: v2.0.0, ORACLE9: v2.0.0}
+    evidencia_mapeo: >-
+      CIS RHEL 9 v2.0.0 p.949 y CIS Oracle Linux 9 v2.0.0 p.887: '7.1.13 Ensure SUID and SGID files are reviewed (Manual)'. Duplicidad gestionada: la fila 94 (6.1.13, YES) define el alcance; esta fila (NO) se conserva solo para trazabilidad y no amplía el alcance (D-03).
+    aprobacion: "Aprobado por el usuario en la revisión de la Fase 1 (decisión D-02), 2026-10-07"
+    control_cis: "7.1.13"
+    justificacion: >-
+      Fila duplicada: el control Excel 6.1.13 "Auditar ejecutables SUID" aparece
+      también en la fila 94 con propuesta YES. Esta fila tiene NO y remite a 7.1.13.
+      Por analogía con las otras hojas (6.1.14 = ejecutables SGID) es probable un
+      error de numeración. 7.1.13 se audita igualmente por la fila 94.
+
+  - hoja: "LBS SO_ RHEL_ORA_9"
+    fila: 99
+    estado_mapeo: RETIRADO
+    control_cis: null
+    verificar_ausencia: [["system file permissions"], ["audit system"]]
+    justificacion: "'Audit system file permissions' no existe en RHEL/OL 9 v2.0.0. Retiro confirmado."
+
+  # ------------------------------------------------------------------ SLES 15
+  - {hoja: "LBS SO_ SUSES15 ", fila: 9, estado_mapeo: RETIRADO, control_cis: null,
+     verificar_ausencia: [["rescue"], ["single", "user"], ["emergency"]],
+     justificacion: "No existe en CIS SLES 15 v2.0.1. Retiro confirmado."}
+  - {hoja: "LBS SO_ SUSES15 ", fila: 10, estado_mapeo: RETIRADO, control_cis: null,
+     verificar_ausencia: [["XD/NX"], ["NX support"], ["execute disable"]],
+     justificacion: "'Ensure XD/NX support is enabled' no existe en SLES 15 v2.0.1. Retiro confirmado."}
+  - {hoja: "LBS SO_ SUSES15 ", fila: 12, estado_mapeo: RETIRADO, control_cis: null,
+     verificar_ausencia: [["core dump", "storage"], ["coredump"]],
+     justificacion: "'Ensure core dump storage is disabled' no existe en SLES 15 v2.0.1 (solo 1.5.2 'Ensure core dumps are restricted'). Retiro confirmado."}
+  - {hoja: "LBS SO_ SUSES15 ", fila: 13, estado_mapeo: RETIRADO, control_cis: null,
+     verificar_ausencia: [["backtrace"]],
+     justificacion: "'Ensure core dump backtraces are disabled' no existe en SLES 15 v2.0.1. Retiro confirmado."}
+  - {hoja: "LBS SO_ SUSES15 ", fila: 27, estado_mapeo: RETIRADO, control_cis: null,
+     verificar_ausencia: [["over-ridden"], ["overridden", "crypto"], ["override", "crypto"]],
+     justificacion: "No existe en SLES 15 v2.0.1. Retiro confirmado."}
+  - {hoja: "LBS SO_ SUSES15 ", fila: 68, estado_mapeo: RETIRADO, control_cis: null,
+     verificar_ausencia: [["designated"]],
+     justificacion: "'Ensure remote rsyslog messages are only accepted on designated log hosts' no existe en SLES 15 v2.0.1. Retiro confirmado."}
+  - {hoja: "LBS SO_ SUSES15 ", fila: 71, estado_mapeo: RETIRADO, control_cis: null,
+     verificar_ausencia: [["system file permissions"], ["audit system"]],
+     justificacion: "No existe en SLES 15 v2.0.1. Retiro confirmado."}
+
+  - hoja: "LBS SO_ SUSES15 "
+    fila: 73
+    estado_mapeo: ID_EXCEL_INCORRECTO
+    control_excel_original: "6.1.11"
+    cis_id_excel_original: "7.1.11"
+    control_cis_corregido: "7.1.12"
+    version_cis: {SLES15: v2.0.1}
+    evidencia_mapeo: >-
+      CIS SLES 15 v2.0.1 p.915: '7.1.12 Ensure no files or directories without an owner and a group exist (Automated)', que corresponde al texto del control Excel 6.1.11; 7.1.11 es 'Ensure world writable files and directories are secured'.
+    aprobacion: "Aprobado por el usuario en la revisión de la Fase 1 (decisión D-02), 2026-10-07"
+    control_cis: "7.1.12"
+    justificacion: >-
+      El control Excel 6.1.11 "Asegurar que no existan archivos o directorios sin
+      dueños" está mapeado en el Excel a 7.1.11 "Ensure world writable files and
+      directories are secured" (columnas D/E). En las hojas RHEL/OL 8 y 9 el mismo
+      control 6.1.11 se mapea a 7.1.12 "Ensure no files or directories without an
+      owner and a group exist", que corresponde al texto del control. Se propone
+      7.1.12 (consolidado con la fila 74). 7.1.11 sigue en alcance por la fila 72.
+
+  - {hoja: "LBS SO_ SUSES15 ", fila: 83, estado_mapeo: MAPEADO_TITULO_ACTUALIZADO, control_cis: "7.1.7",
+     justificacion: "'permissions on /etc/gshadow' corresponde a 'Ensure access to /etc/gshadow is configured' en v2.0.1."}
+  - {hoja: "LBS SO_ SUSES15 ", fila: 84, estado_mapeo: MAPEADO_TITULO_ACTUALIZADO, control_cis: "7.1.8",
+     justificacion: "'permissions on /etc/gshadow-' corresponde a 'Ensure access to /etc/gshadow- is configured' en v2.0.1."}
+
+  - hoja: "LBS SO_ SUSES15 "
+    fila: 93
+    estado_mapeo: RETIRADO
+    control_cis: null
+    verificar_ausencia: [["shadow group"]]
+    justificacion: "'Ensure shadow group is empty' no existe en SLES 15 v2.0.1. Retiro confirmado."

@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.coverage
+coverage*
+htmlcov/
+
+# Editores / SO
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# Secretos
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Temporales
+*.tmp
+.tmp*
+*.bak
+~$*
+
+# Generados en tiempo de ejecución
+build/
+results/*
+
+# Inventario real (datos internos); solo se versiona el ejemplo
+inventory/*
+!inventory/hosts.yml.example
+
+# Contenido CIS licenciado: no redistribuir por control de versiones (términos de uso de CIS)
+input/cis/*.pdf
+data/cis_catalog/*.json

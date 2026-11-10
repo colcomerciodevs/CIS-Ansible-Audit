@@ -1,0 +1,6 @@
+# CIS Linux Audit 1.0.0 — dependencias del controlador de auditoría
+# Python >= 3.9
+openpyxl>=3.0
+PyYAML>=5.4
+# Sistema: ansible-core >= 2.13 (solo se usa ansible.builtin.raw) y cliente OpenSSH.
+# Sistema: poppler-utils (pdftotext), solo para 'auditar.py preparar --reconstruir-catalogo'.

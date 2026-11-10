@@ -1,0 +1,6242 @@
+{
+ "generado": "2026-11-10T12:20:31-05:00",
+ "fuente": {
+  "archivo": "input/baseline/Linea Base - Analisis de Impacto _Parte2.xlsx",
+  "sha256": "08ff02585cba8be0d04cc28df0c9f3022abe189f0f70000008cbf0fd6ce3e572",
+  "columna": "EXCLUSIONES (Infraestructura Linux)"
+ },
+ "sustitutivas": {
+  "AUDITD_ROTATE": [
+   "max_log_file_action"
+  ],
+  "AUDITD_DISK_ACTION_SYSLOG": [
+   "disk_full_action",
+   "disk_error_action"
+  ]
+ },
+ "exclusiones": [
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 2,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "1.2.1",
+   "control_cis": "1.2.1.4",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 3,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "1.2.2",
+   "control_cis": null,
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 4,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "1.2.3",
+   "control_cis": "1.2.1.2",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 5,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "1.2.4",
+   "control_cis": "1.2.1.1",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 6,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "1.3.1",
+   "control_cis": "6.1.1",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna\n\nNOTA: Importante para DETECCION de cambios (integridad de archivos)",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA_CON_NOTA_INFORMATIVA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 7,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "1.3.2",
+   "control_cis": "6.1.2",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna\n  \nNOTA: Ejecutar en horario controlado para no afectar el performance",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "MIXTA",
+   "reglas": [
+    "AIDE_HORARIO_CONTROLADO"
+   ],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 8,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "1.4.1",
+   "control_cis": "1.4.1",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna\n\nNOTA: La contraseña configurada en el bootloader debe ser almacenada de forma segura (por ejemplo, en una bóveda de contraseñas), ya que no es posible recuperarla posteriormente. Esto es fundamental para evitar inconvenientes al momento de realizar modificaciones en GRUB o tareas de recuperación del sistema.",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "ORGANIZACIONAL",
+   "reglas": [
+    "BOOTLOADER_PASSWORD_BOVEDA"
+   ],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 9,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "1.4.2",
+   "control_cis": "1.4.2",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 10,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "1.4.3",
+   "control_cis": null,
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 11,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "1.5.2",
+   "control_cis": "1.5.8",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 12,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "1.5.3",
+   "control_cis": "1.5.10",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 13,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "1.5.4",
+   "control_cis": "1.5.9",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 14,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "1.6.5",
+   "control_cis": "1.3.1.1",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna\n\nNOTA: Importante para PREVENCIÓN (control de acceso)",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA_CON_NOTA_INFORMATIVA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 15,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "1.6.6",
+   "control_cis": "1.3.1.2",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 16,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "1.6.7",
+   "control_cis": "1.3.1.3",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 17,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "1.6.8",
+   "control_cis": "1.3.1.4",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 18,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "1.6.9",
+   "control_cis": "1.3.1.5",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 19,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "1.6.10",
+   "control_cis": "1.3.1.6",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 20,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "1.6.11",
+   "control_cis": "1.3.1.7",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 21,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "1.6.12",
+   "control_cis": "1.3.1.8",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 22,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "1.8.1",
+   "control_cis": "2.1.21",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 23,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "1.8.2",
+   "control_cis": "1.8.1",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "NOTA:  N/A, ya que el anterior control esta solicitando remover GDM (Recomendado para servidores)",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "TECNICA_VERIFICABLE",
+   "reglas": [
+    "GDM_NO_APLICA_SI_REMOVIDO"
+   ],
+   "parametros": {},
+   "contenido": "CONTENIDO",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 24,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "1.8.3",
+   "control_cis": "1.8.2",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "NOTA: N/A, ya que el anterior control esta solicitando remover GDM (Recomendado para servidores)",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "TECNICA_VERIFICABLE",
+   "reglas": [
+    "GDM_NO_APLICA_SI_REMOVIDO"
+   ],
+   "parametros": {},
+   "contenido": "CONTENIDO",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 25,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "1.8.4",
+   "control_cis": "1.8.2",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "NOTA: N/A, ya que el anterior control esta solicitando remover GDM (Recomendado para servidores)",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "TECNICA_VERIFICABLE",
+   "reglas": [
+    "GDM_NO_APLICA_SI_REMOVIDO"
+   ],
+   "parametros": {},
+   "contenido": "CONTENIDO",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 26,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "1.8.5",
+   "control_cis": "1.8.4",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "NOTA: N/A, ya que el anterior control esta solicitando remover GDM (Recomendado para servidores)",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "TECNICA_VERIFICABLE",
+   "reglas": [
+    "GDM_NO_APLICA_SI_REMOVIDO"
+   ],
+   "parametros": {},
+   "contenido": "CONTENIDO",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 27,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "1.8.6",
+   "control_cis": "1.8.6",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "NOTA: N/A, ya que el anterior control esta solicitando remover GDM (Recomendado para servidores)",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "TECNICA_VERIFICABLE",
+   "reglas": [
+    "GDM_NO_APLICA_SI_REMOVIDO"
+   ],
+   "parametros": {},
+   "contenido": "CONTENIDO",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 28,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "1.9.1",
+   "control_cis": "1.2.2.1",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna\n\nNOTA:  El cumplimiento de este control depende del proceso formal de parchado y seguridad",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "ORGANIZACIONAL",
+   "reglas": [
+    "PARCHADO_PROCESO"
+   ],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 29,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "1.10.1",
+   "control_cis": "1.6.1",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 30,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "1.10.2",
+   "control_cis": null,
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 31,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "3.5.1",
+   "control_cis": "4.1.1",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna\n\nNOTA:  Importante para control de tráfico de red",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA_CON_NOTA_INFORMATIVA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 32,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "3.5.2",
+   "control_cis": "4.1.3",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 33,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "3.5.3",
+   "control_cis": "4.1.4",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 34,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "3.5.4",
+   "control_cis": "4.1.4",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 35,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "3.5.5",
+   "control_cis": "4.1.7",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 36,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.1.1.1",
+   "control_cis": "6.3.1.1",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "IMPORTANTE:\nLa siguiente particion debera tener como minimo 15GB  (/var/log/audit) y contar con una configuracion de rotacion de logs que se puede configurar en el control CIS \"Asegurar audit logs no son borrados automáticamente  \"\n\nNOTA= importante para REGISTRO de eventos de seguridad",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "TECNICA_VERIFICABLE",
+   "reglas": [
+    "AUDITD_PARTICION_15GB"
+   ],
+   "parametros": {},
+   "contenido": "CONTENIDO",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 37,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.1.1.2",
+   "control_cis": "6.3.1.4",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 38,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.1.1.3",
+   "control_cis": "6.3.1.2",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 39,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.1.1.4",
+   "control_cis": "6.3.1.3",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 40,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.1.2.1",
+   "control_cis": "6.3.2.1",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "CONFIGURACION RECOMENDADA:\nmax_log_file = 200\nnum_logs = 50\n\nNOTA: Con esta configuración, tu servidor está preparado para almacenar hasta 10 GB de datos de auditoría antes de empezar a sobrescribir la información más vieja (200 MB x 50 archivos = 10,000 MB).",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "TECNICA_VERIFICABLE",
+   "reglas": [
+    "AUDITD_MAX_LOG_FILE"
+   ],
+   "parametros": {
+    "max_log_file": "200",
+    "num_logs": "50"
+   },
+   "contenido": "CONTENIDO",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 41,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.1.2.2",
+   "control_cis": "6.3.2.2",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "CONFIGURACION RECOMENDADA:\nmax_log_file_action = rotate\n\nCUMPLIMIENTO DEL CONTROL CIS\nParcial\n\nsi se configura con keep_logs no habra rotacion de logs y el disco se puede llenar",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "TECNICA_VERIFICABLE",
+   "reglas": [
+    "AUDITD_ROTATE"
+   ],
+   "parametros": {
+    "max_log_file_action": "rotate"
+   },
+   "contenido": "CONTENIDO",
+   "sustitutiva": [
+    "AUDITD_ROTATE"
+   ],
+   "declara_cis_parcial": true
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 42,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.1.2.3",
+   "control_cis": "6.3.2.3",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "CONFIGURACION RECOMENDADA:\n(disk_full_action = syslog\ndisk_error_action = syslog) \n\nCUMPLIMIENTO DEL CONTROL CIS\nParcial\n\nSi se configura de otra manera puede generar interrupcion del servicio , asi solo registra los eventos",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "TECNICA_VERIFICABLE",
+   "reglas": [
+    "AUDITD_DISK_ACTION_SYSLOG"
+   ],
+   "parametros": {
+    "disk_full_action": "syslog",
+    "disk_error_action": "syslog"
+   },
+   "contenido": "CONTENIDO",
+   "sustitutiva": [
+    "AUDITD_DISK_ACTION_SYSLOG"
+   ],
+   "declara_cis_parcial": true
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 43,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.1.3",
+   "control_cis": "6.3.3.4",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 44,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.1.4",
+   "control_cis": "6.3.3.8",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 45,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.1.5",
+   "control_cis": "6.3.3.5",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 46,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.1.6",
+   "control_cis": "6.3.3.14",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 47,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.1.7",
+   "control_cis": "6.3.3.12",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 48,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.1.8",
+   "control_cis": "6.3.3.3",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 49,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.1.9",
+   "control_cis": "6.3.3.2",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 50,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.1.10",
+   "control_cis": "6.3.3.11",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 51,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.1.11",
+   "control_cis": "6.3.3.9",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 52,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.1.12",
+   "control_cis": "6.3.3.7",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 53,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.1.13",
+   "control_cis": "6.3.3.6",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 54,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.1.14",
+   "control_cis": "6.3.3.10",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 55,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.1.15",
+   "control_cis": "6.3.3.13",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 56,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.1.16",
+   "control_cis": "6.3.3.1",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 57,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.1.17",
+   "control_cis": "6.3.3.15",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 58,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.1.18",
+   "control_cis": "6.3.3.16",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 59,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.1.19",
+   "control_cis": "6.3.3.17",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 60,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.1.20",
+   "control_cis": "6.3.3.18",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 61,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.1.21",
+   "control_cis": "6.3.3.3",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 62,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.1.22",
+   "control_cis": "6.3.3.19",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 63,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.1.23",
+   "control_cis": "6.3.3.22",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 64,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.1.24",
+   "control_cis": "6.3.3.21",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 65,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.2.1",
+   "control_cis": "6.2.2.1",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna \n\nNOTA:  Importante para CENTRALIZACION Y GESTION de logs del sistema",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA_CON_NOTA_INFORMATIVA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 66,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.2.2",
+   "control_cis": "6.2.2.2",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 67,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.2.3",
+   "control_cis": "6.2.2.3",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 68,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.2.4",
+   "control_cis": "6.2.2.4",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 69,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.2.5",
+   "control_cis": "6.2.2.5",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 70,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.2.6",
+   "control_cis": "6.2.2.7",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 71,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.2.8",
+   "control_cis": "6.2.2.6",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna\n\nNOTA: El cumplimiento de este control depende de la integracion con algun SIEM o Syslog central - Se debe validar con el Area de seguridad",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "MIXTA",
+   "reglas": [
+    "SIEM_INTEGRACION"
+   ],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 72,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.2.9",
+   "control_cis": "6.2.1.2.1",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 73,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.2.10",
+   "control_cis": "6.2.1.2.2",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 74,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.2.11",
+   "control_cis": "6.2.1.2.3",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 75,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.2.12",
+   "control_cis": "6.2.1.2.4",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 76,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.2.13",
+   "control_cis": "6.2.1.1.1",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 77,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.2.14",
+   "control_cis": "6.2.1.1.6",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 78,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.2.15",
+   "control_cis": "6.2.1.1.5",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 79,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.2.16",
+   "control_cis": "6.2.1.1.4",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna\n\nNOTA: Importante para evitar logs duplicados",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA_CON_NOTA_INFORMATIVA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 80,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.2.17",
+   "control_cis": "6.2.1.1.3",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "CONFIGURACION RECOMENDADA:\n[Journal]\nSystemMaxUse=4G\nSystemKeepFree=1G\nRuntimeMaxUse=200M\nRuntimeKeepFree=50M\nMaxFileSec=1month\n\nEsta configuracion es importante para evitar que se rote muy rapido los logs y se pierda trazabilidad - sin embargo esto se puede complmentar si se tiene un servidor de logs remoto",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "TECNICA_VERIFICABLE",
+   "reglas": [
+    "JOURNALD_ROTACION"
+   ],
+   "parametros": {
+    "SystemMaxUse": "4G",
+    "SystemKeepFree": "1G",
+    "RuntimeMaxUse": "200M",
+    "RuntimeKeepFree": "50M",
+    "MaxFileSec": "1month"
+   },
+   "contenido": "CONTENIDO",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 81,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.2.18",
+   "control_cis": "6.2.1.1.2",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 82,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.2.19",
+   "control_cis": "6.2.3.1",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "TIPO: ARCHIVOS_LOG_AUTORIZADOS\nORIGEN: LINEA_BASE_P2\nARCHIVOS: /var/log/vmware-vmtoolsd-<usuario>[.N].log, /var/log/vmware-vmusr-<usuario>[.N].log\nCONDICION: propietario root y modo 0600 o más restrictivo (el grupo del usuario no obtiene ningún acceso)\nMOTIVO: Logs por usuario de VMware Tools (open-vm-tools, servicio vmusr en la sesión del usuario). El script CIS rechaza el grupo primario de un usuario interactivo aunque el modo no le dé acceso.\nTRATAMIENTO: EXCLUSION_INFRAESTRUCTURA",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "TECNICA_VERIFICABLE",
+   "reglas": [
+    "LOGS_ARCHIVOS_AUTORIZADOS"
+   ],
+   "parametros": {},
+   "contenido": "CONTENIDO",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 83,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.3.1",
+   "control_cis": "6.2.2.8",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna\n\nNOTA: Importante para no saturar almacenamiento",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA_CON_NOTA_INFORMATIVA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 84,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "4.3.2",
+   "control_cis": null,
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 85,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "6.1.1",
+   "control_cis": null,
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 86,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "6.1.10",
+   "control_cis": "7.1.11",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 87,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "6.1.11",
+   "control_cis": "7.1.12",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 88,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "6.1.12",
+   "control_cis": "7.1.12",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 89,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "6.1.13",
+   "control_cis": "7.1.13",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 90,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "6.1.14",
+   "control_cis": "7.1.13",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 91,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "6.1.2",
+   "control_cis": "7.1.1",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 92,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "6.1.3",
+   "control_cis": "7.1.2",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 93,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "6.1.4",
+   "control_cis": "7.1.3",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 94,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "6.1.5",
+   "control_cis": "7.1.4",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 95,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "6.1.6",
+   "control_cis": "7.1.5",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 96,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "6.1.7",
+   "control_cis": "7.1.6",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 97,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "6.1.8",
+   "control_cis": "7.1.7",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 98,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "6.1.9",
+   "control_cis": "7.1.8",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 99,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "6.2.2",
+   "control_cis": "7.2.2",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 100,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "6.2.3",
+   "control_cis": "7.2.3",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 101,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "6.2.4",
+   "control_cis": "7.2.8",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna\n\nNOTA: Esto es unicamente para usuarios que puedan hacer login (/bin/bash o \n/bin/sh)",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "TECNICA_VERIFICABLE",
+   "reglas": [
+    "USUARIOS_CON_LOGIN"
+   ],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 102,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "6.2.5",
+   "control_cis": "7.2.8",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 103,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "6.2.6",
+   "control_cis": "7.2.8",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 104,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "6.2.7",
+   "control_cis": "7.2.9",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 105,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "6.2.8",
+   "control_cis": "7.2.9",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 106,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "6.2.9",
+   "control_cis": "7.2.9",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 107,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "6.2.10",
+   "control_cis": "7.2.9",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 108,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "6.2.11",
+   "control_cis": "5.4.2.1",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 109,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "6.2.12",
+   "control_cis": "5.4.2.5",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 110,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "6.2.13",
+   "control_cis": "7.2.4",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 111,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "6.2.14",
+   "control_cis": "7.2.5",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 112,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "6.2.15",
+   "control_cis": "7.2.6",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_8",
+   "fila_excel": 113,
+   "benchmarks": [
+    "RHEL8",
+    "ORACLE8"
+   ],
+   "control_excel": "6.2.16",
+   "control_cis": "7.2.7",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 2,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "1.2.1",
+   "control_cis": "1.2.1.4",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 3,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "1.2.2",
+   "control_cis": null,
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 4,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "1.2.3",
+   "control_cis": "1.2.1.2",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 5,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "1.2.4",
+   "control_cis": "1.2.1.1",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 6,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "1.3.1",
+   "control_cis": "6.1.1",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna \nNOTA: importante para DETECCION de cambios (integridad de archivos)",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA_CON_NOTA_INFORMATIVA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 7,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "1.3.2",
+   "control_cis": "6.1.2",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna \nNOTA: Ejecutar en horario controlado para no afectar el performance",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "MIXTA",
+   "reglas": [
+    "AIDE_HORARIO_CONTROLADO"
+   ],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 8,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "1.4.1",
+   "control_cis": "1.4.1",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna\n\nNOTA: La contraseña configurada en el bootloader debe ser almacenada de forma segura (por ejemplo, en una bóveda de contraseñas), ya que no es posible recuperarla posteriormente. Esto es fundamental para evitar inconvenientes al momento de realizar modificaciones en GRUB o tareas de recuperación del sistema.",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "ORGANIZACIONAL",
+   "reglas": [
+    "BOOTLOADER_PASSWORD_BOVEDA"
+   ],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 9,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "1.4.2",
+   "control_cis": "1.4.2",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 10,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "1.4.3",
+   "control_cis": null,
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 11,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "1.5.2",
+   "control_cis": "1.5.1",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 12,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "1.5.3",
+   "control_cis": "1.5.4",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 13,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "1.5.4",
+   "control_cis": "1.5.3",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 14,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "1.6.5",
+   "control_cis": "1.3.1.1",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna\nNOTA: Importante para PREVENCIÓN (control de acceso)",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA_CON_NOTA_INFORMATIVA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 15,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "1.6.6",
+   "control_cis": "1.3.1.2",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 16,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "1.6.7",
+   "control_cis": "1.3.1.3",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 17,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "1.6.8",
+   "control_cis": "1.3.1.4",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 18,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "1.6.9",
+   "control_cis": "1.3.1.5",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 19,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "1.6.10",
+   "control_cis": "1.3.1.6",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 20,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "1.6.11",
+   "control_cis": "1.3.1.7",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 21,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "1.6.12",
+   "control_cis": "1.3.1.8",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 22,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "1.8.1",
+   "control_cis": "1.8.1",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 23,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "1.8.2",
+   "control_cis": "1.8.2",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "NOTA: N/A, ya que el anterior control esta solicitando remover GDM (Recomendado para servidores)",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "TECNICA_VERIFICABLE",
+   "reglas": [
+    "GDM_NO_APLICA_SI_REMOVIDO"
+   ],
+   "parametros": {},
+   "contenido": "CONTENIDO",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 24,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "1.8.3",
+   "control_cis": "1.8.3",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "NOTA: N/A, ya que el anterior control esta solicitando remover GDM (Recomendado para servidores)",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "TECNICA_VERIFICABLE",
+   "reglas": [
+    "GDM_NO_APLICA_SI_REMOVIDO"
+   ],
+   "parametros": {},
+   "contenido": "CONTENIDO",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 25,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "1.8.4",
+   "control_cis": "1.8.3",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "NOTA: N/A, ya que el anterior control esta solicitando remover GDM (Recomendado para servidores)",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "TECNICA_VERIFICABLE",
+   "reglas": [
+    "GDM_NO_APLICA_SI_REMOVIDO"
+   ],
+   "parametros": {},
+   "contenido": "CONTENIDO",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 26,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "1.8.5",
+   "control_cis": "1.8.6",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "NOTA: N/A, ya que el anterior control esta solicitando remover GDM (Recomendado para servidores)",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "TECNICA_VERIFICABLE",
+   "reglas": [
+    "GDM_NO_APLICA_SI_REMOVIDO"
+   ],
+   "parametros": {},
+   "contenido": "CONTENIDO",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 27,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "1.8.6",
+   "control_cis": "1.8.10",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "NOTA: N/A, ya que el anterior control esta solicitando remover GDM (Recomendado para servidores)",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "TECNICA_VERIFICABLE",
+   "reglas": [
+    "GDM_NO_APLICA_SI_REMOVIDO"
+   ],
+   "parametros": {},
+   "contenido": "CONTENIDO",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 28,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "1.9.1",
+   "control_cis": "1.2.2.1",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna \nNOTA: El cumplimiento de este control depende del proceso formal de parchado y seguridad",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "ORGANIZACIONAL",
+   "reglas": [
+    "PARCHADO_PROCESO"
+   ],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 29,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "1.10.1",
+   "control_cis": "1.6.1",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 30,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "1.10.2",
+   "control_cis": null,
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 31,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "3.5.1",
+   "control_cis": "4.1.2",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna\nNOTA: Importante para CONTROL de tráfico de red",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA_CON_NOTA_INFORMATIVA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 32,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "3.5.3",
+   "control_cis": "4.2.1",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 33,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "3.5.2",
+   "control_cis": "4.2.1",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 34,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "3.5.4",
+   "control_cis": "4.2.1",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 35,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "3.5.5",
+   "control_cis": "4.2.1",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 36,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.1.1.1",
+   "control_cis": "6.3.1.1",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "IMPORTANTE: \nLa siguiente particion debera tener como minimo 15GB  (/var/log/audit) y contar con una configuracion de rotacion de logs que se puede configurar en el control CIS \"Asegurar audit logs no son borrados automáticamente  \"\n\nNOTA: Importante para REGISTRO de eventos de seguridad",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "TECNICA_VERIFICABLE",
+   "reglas": [
+    "AUDITD_PARTICION_15GB"
+   ],
+   "parametros": {},
+   "contenido": "CONTENIDO",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 37,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.1.1.2",
+   "control_cis": "6.3.1.4",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 38,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.1.1.3",
+   "control_cis": "6.3.1.2",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 39,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.1.1.4",
+   "control_cis": "6.3.1.3",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 40,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.1.10",
+   "control_cis": "6.3.3.11",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 41,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.1.11",
+   "control_cis": "6.3.3.9",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 42,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.1.12",
+   "control_cis": "6.3.3.7",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 43,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.1.13",
+   "control_cis": "6.3.3.6",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 44,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.1.14",
+   "control_cis": "6.3.3.10",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 45,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.1.15",
+   "control_cis": "6.3.3.13",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 46,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.1.16",
+   "control_cis": "6.3.3.1",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 47,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.1.17",
+   "control_cis": "6.3.3.15",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 48,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.1.18",
+   "control_cis": "6.3.3.16",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 49,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.1.19",
+   "control_cis": "6.3.3.17",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 50,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.1.2.1",
+   "control_cis": "6.3.2.1",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "CONFIGURACION RECOMENDADA\nmax_log_file = 200\nnum_logs = 50\n\nNOTA:Con esta configuración, tu servidor está preparado para almacenar hasta 10 GB de datos de auditoría antes de empezar a sobrescribir la información más vieja (200 MB x 50 archivos = 10,000 MB).",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "TECNICA_VERIFICABLE",
+   "reglas": [
+    "AUDITD_MAX_LOG_FILE"
+   ],
+   "parametros": {
+    "max_log_file": "200",
+    "num_logs": "50"
+   },
+   "contenido": "CONTENIDO",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 51,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.1.2.2",
+   "control_cis": "6.3.2.2",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "CONFIGURACION RECOMENDADA\nmax_log_file_action = rotate\n\nCUMPLIMIENTO DEL CONTROL CIS\nParcial\n\nsi se configura con keep_logs no habra rotacion de logs y el disco se puede llenar",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "TECNICA_VERIFICABLE",
+   "reglas": [
+    "AUDITD_ROTATE"
+   ],
+   "parametros": {
+    "max_log_file_action": "rotate"
+   },
+   "contenido": "CONTENIDO",
+   "sustitutiva": [
+    "AUDITD_ROTATE"
+   ],
+   "declara_cis_parcial": true
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 52,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.1.2.3",
+   "control_cis": "6.3.2.3",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "CONFIGURACION RECOMENDADA:\n(disk_full_action = syslog\ndisk_error_action = syslog) \n\nCUMPLIMIENTO DEL CONTROL CIS:\nParcial\n\nSi se configura de otra manera puede generar interrupcion del servicio , asi solo registra los eventos",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "TECNICA_VERIFICABLE",
+   "reglas": [
+    "AUDITD_DISK_ACTION_SYSLOG"
+   ],
+   "parametros": {
+    "disk_full_action": "syslog",
+    "disk_error_action": "syslog"
+   },
+   "contenido": "CONTENIDO",
+   "sustitutiva": [
+    "AUDITD_DISK_ACTION_SYSLOG"
+   ],
+   "declara_cis_parcial": true
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 53,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.1.20",
+   "control_cis": "6.3.3.18",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 54,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.1.21",
+   "control_cis": "6.3.3.3",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 55,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.1.22",
+   "control_cis": "6.3.3.19",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 56,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.1.23",
+   "control_cis": "6.3.3.21",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 57,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.1.24",
+   "control_cis": "6.3.3.20",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 58,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.1.3",
+   "control_cis": "6.3.3.4",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 59,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.1.4",
+   "control_cis": "6.3.3.8",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 60,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.1.5",
+   "control_cis": "6.3.3.5",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 61,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.1.6",
+   "control_cis": "6.3.3.14",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 62,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.1.7",
+   "control_cis": "6.3.3.12",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 63,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.1.8",
+   "control_cis": "6.3.3.3",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 64,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.1.9",
+   "control_cis": "6.3.3.2",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 65,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.2.1",
+   "control_cis": "6.2.3.1",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna \nNOTA: Importante para CENTRALIZACION Y GESTION de logs del sistema",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA_CON_NOTA_INFORMATIVA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 66,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.2.10",
+   "control_cis": "6.2.2.1.2",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 67,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.2.11",
+   "control_cis": "6.2.2.1.3",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 68,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.2.12",
+   "control_cis": "6.2.2.1.4",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 69,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.2.13",
+   "control_cis": "6.2.1.1",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 70,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.2.14",
+   "control_cis": "6.2.2.3",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 71,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.2.15",
+   "control_cis": "6.2.2.4",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 72,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.2.16",
+   "control_cis": "6.2.2.2",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna\n\nNOTA: Importante para evitar logs duplicados",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA_CON_NOTA_INFORMATIVA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 73,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.2.17",
+   "control_cis": "6.2.1.3",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "CONFIGURACION RECOMENDADA\n[Journal]\nSystemMaxUse=4G\nSystemKeepFree=1G\nRuntimeMaxUse=200M\nRuntimeKeepFree=50M\nMaxFileSec=1month\n\nEsta configuracion es importante para evitar que se rote muy rapido los logs y se pierda trazabilidad - sin embargo esto se puede complmentar si se tiene un servidor de logs remoto",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "TECNICA_VERIFICABLE",
+   "reglas": [
+    "JOURNALD_ROTACION"
+   ],
+   "parametros": {
+    "SystemMaxUse": "4G",
+    "SystemKeepFree": "1G",
+    "RuntimeMaxUse": "200M",
+    "RuntimeKeepFree": "50M",
+    "MaxFileSec": "1month"
+   },
+   "contenido": "CONTENIDO",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 74,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.2.18",
+   "control_cis": "6.2.1.2",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 75,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.2.19",
+   "control_cis": "6.2.4.1",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "TIPO: ARCHIVOS_LOG_AUTORIZADOS\nORIGEN: LINEA_BASE_P2\nARCHIVOS: /var/log/vmware-vmtoolsd-<usuario>[.N].log, /var/log/vmware-vmusr-<usuario>[.N].log\nCONDICION: propietario root y modo 0600 o más restrictivo (el grupo del usuario no obtiene ningún acceso)\nMOTIVO: Logs por usuario de VMware Tools (open-vm-tools, servicio vmusr en la sesión del usuario). El script CIS rechaza el grupo primario de un usuario interactivo aunque el modo no le dé acceso.\nTRATAMIENTO: EXCLUSION_INFRAESTRUCTURA",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "TECNICA_VERIFICABLE",
+   "reglas": [
+    "LOGS_ARCHIVOS_AUTORIZADOS"
+   ],
+   "parametros": {},
+   "contenido": "CONTENIDO",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 76,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.2.2",
+   "control_cis": "6.2.3.2",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 77,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.2.3",
+   "control_cis": "6.2.3.3",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 78,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.2.4",
+   "control_cis": "6.2.3.4",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 79,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.2.5",
+   "control_cis": "6.2.3.5",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 80,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.2.6",
+   "control_cis": "6.2.3.7",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 81,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.2.8",
+   "control_cis": "6.2.3.6",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna\nNOTA: El cumplimiento de este control depende de la integracion con algun SIEM o Syslog central - Se debe validar con el Area de seguridad",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "MIXTA",
+   "reglas": [
+    "SIEM_INTEGRACION"
+   ],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 82,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.2.9",
+   "control_cis": "6.2.2.1.1",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 83,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.3.1",
+   "control_cis": "6.2.3.8",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna\nNOTA: Importante para no saturar almacenamiento",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA_CON_NOTA_INFORMATIVA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 84,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "4.3.2",
+   "control_cis": null,
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 85,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "6.1.2",
+   "control_cis": "7.1.1",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 86,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "6.1.3",
+   "control_cis": "7.1.2",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 87,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "6.1.4",
+   "control_cis": "7.1.3",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 88,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "6.1.5",
+   "control_cis": "7.1.4",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 89,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "6.1.6",
+   "control_cis": "7.1.5",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 90,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "6.1.7",
+   "control_cis": "7.1.6",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 91,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "6.1.8",
+   "control_cis": "7.1.7",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 92,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "6.1.9",
+   "control_cis": "7.1.8",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 93,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "6.1.11",
+   "control_cis": "7.1.12",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 94,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "6.1.13",
+   "control_cis": "7.1.13",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 95,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "6.1.10",
+   "control_cis": "7.1.11",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 96,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "6.1.11",
+   "control_cis": "7.1.12",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 97,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "6.1.12",
+   "control_cis": "7.1.12",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 98,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "6.1.13",
+   "control_cis": "7.1.13",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 99,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "6.1.1",
+   "control_cis": null,
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 100,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "6.2.2",
+   "control_cis": "7.2.2",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 101,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "6.2.3",
+   "control_cis": "7.2.3",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 102,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "6.2.4",
+   "control_cis": "7.2.8",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna\nNOTA: Esto es unicamente para usuarios que puedan hacer login (/bin/bash o \n/bin/sh)",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "TECNICA_VERIFICABLE",
+   "reglas": [
+    "USUARIOS_CON_LOGIN"
+   ],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 103,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "6.2.5",
+   "control_cis": "7.2.8",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 104,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "6.2.6",
+   "control_cis": "7.2.8",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 105,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "6.2.7",
+   "control_cis": "7.2.9",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 106,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "6.2.8",
+   "control_cis": "7.2.9",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 107,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "6.2.9",
+   "control_cis": "7.2.9",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 108,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "6.2.10",
+   "control_cis": "7.2.9",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 109,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "6.2.11",
+   "control_cis": "5.4.2.1",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 110,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "6.2.12",
+   "control_cis": "5.4.2.5",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 111,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "6.2.13",
+   "control_cis": "7.2.4",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 112,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "6.2.14",
+   "control_cis": "7.2.5",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 113,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "6.2.15",
+   "control_cis": "7.2.6",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ RHEL_ORA_9",
+   "fila_excel": 114,
+   "benchmarks": [
+    "RHEL9",
+    "ORACLE9"
+   ],
+   "control_excel": "6.2.16",
+   "control_cis": "7.2.7",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 2,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "1.2.1",
+   "control_cis": "1.2.1.4",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 3,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "1.2.3",
+   "control_cis": "1.2.1.2",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 4,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "1.2.4",
+   "control_cis": "1.2.1.1",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 5,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "1.3.1",
+   "control_cis": "6.1.1",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna\nNOTA: importante para DETECCION de cambios (integridad de archivos)",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA_CON_NOTA_INFORMATIVA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 6,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "1.3.2",
+   "control_cis": "6.1.2",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna  \nNOTA: Ejecutar en horario controlado para no afectar el performance",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "MIXTA",
+   "reglas": [
+    "AIDE_HORARIO_CONTROLADO"
+   ],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 7,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "1.4.1",
+   "control_cis": "1.4.1",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna\n\nNOTA: La contraseña configurada en el bootloader debe ser almacenada de forma segura (por ejemplo, en una bóveda de contraseñas), ya que no es posible recuperarla posteriormente. Esto es fundamental para evitar inconvenientes al momento de realizar modificaciones en GRUB o tareas de recuperación del sistema.",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "ORGANIZACIONAL",
+   "reglas": [
+    "BOOTLOADER_PASSWORD_BOVEDA"
+   ],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 8,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "1.4.2",
+   "control_cis": "1.4.2",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 9,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "1.4.3",
+   "control_cis": null,
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 10,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "1.5.1",
+   "control_cis": null,
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 11,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "1.5.2",
+   "control_cis": "1.5.1",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 12,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "1.5.3",
+   "control_cis": null,
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 13,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "1.5.4",
+   "control_cis": null,
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 14,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "1.5.5",
+   "control_cis": "1.5.3",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 15,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "1.5.6",
+   "control_cis": "1.5.2",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 16,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "1.6.1",
+   "control_cis": "1.3.1.1",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna\nNOTA: importante para PREVENCIÓN (control de acceso)",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA_CON_NOTA_INFORMATIVA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 17,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "1.6.2",
+   "control_cis": "1.3.1.2",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 18,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "1.6.3",
+   "control_cis": "1.3.1.4",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 19,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "1.6.4",
+   "control_cis": "1.3.1.3",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 20,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "1.8.1",
+   "control_cis": "1.8.1",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 21,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "1.8.2",
+   "control_cis": "1.8.2",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "NOTA: N/A, ya que el anterior control esta solicitando remover GDM (Recomendado para servidores)",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "TECNICA_VERIFICABLE",
+   "reglas": [
+    "GDM_NO_APLICA_SI_REMOVIDO"
+   ],
+   "parametros": {},
+   "contenido": "CONTENIDO",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 22,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "1.8.4",
+   "control_cis": "1.8.3",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "NOTA: N/A, ya que el anterior control esta solicitando remover GDM (Recomendado para servidores)",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "TECNICA_VERIFICABLE",
+   "reglas": [
+    "GDM_NO_APLICA_SI_REMOVIDO"
+   ],
+   "parametros": {},
+   "contenido": "CONTENIDO",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 23,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "1.8.5",
+   "control_cis": "1.8.6",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "NOTA: N/A, ya que el anterior control esta solicitando remover GDM (Recomendado para servidores)",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "TECNICA_VERIFICABLE",
+   "reglas": [
+    "GDM_NO_APLICA_SI_REMOVIDO"
+   ],
+   "parametros": {},
+   "contenido": "CONTENIDO",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 24,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "1.8.6",
+   "control_cis": "1.8.10",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "NOTA: N/A, ya que el anterior control esta solicitando remover GDM (Recomendado para servidores)",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "TECNICA_VERIFICABLE",
+   "reglas": [
+    "GDM_NO_APLICA_SI_REMOVIDO"
+   ],
+   "parametros": {},
+   "contenido": "CONTENIDO",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 25,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "1.9.1",
+   "control_cis": "1.2.2.1",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna \nNOTA: el cumplimiento de este control depende del proceso formal de parchado y seguridad",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "ORGANIZACIONAL",
+   "reglas": [
+    "PARCHADO_PROCESO"
+   ],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 26,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "1.10.1",
+   "control_cis": "1.6.2",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 27,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "1.10.2",
+   "control_cis": null,
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 28,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "3.5.1",
+   "control_cis": "4.2.1",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna\nNOTA: importante para CONTROL de tráfico de red",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA_CON_NOTA_INFORMATIVA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 29,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "3.5.2",
+   "control_cis": "4.2.5",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 30,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "3.5.3",
+   "control_cis": "4.2.4",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 31,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "3.5.4",
+   "control_cis": "4.2.4",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 32,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "3.5.5",
+   "control_cis": "4.2.2",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 33,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "4.1.1.1",
+   "control_cis": "6.3.1.1",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "IMPORTANTE\nla siguiente particion debera tener como minimo 15GB  (/var/log/audit) y contar con una configuracion de rotacion de logs que se puede configurar en el control CIS \"Asegurar audit logs no son borrados automáticamente  \"\n\nNOTA: Importante para REGISTRO de eventos de seguridad",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "TECNICA_VERIFICABLE",
+   "reglas": [
+    "AUDITD_PARTICION_15GB"
+   ],
+   "parametros": {},
+   "contenido": "CONTENIDO",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 34,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "4.1.1.2",
+   "control_cis": "6.3.1.4",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 35,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "4.1.1.3",
+   "control_cis": "6.3.1.2",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 36,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "4.1.1.4",
+   "control_cis": "6.3.1.3",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 37,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "4.1.10",
+   "control_cis": "6.3.3.11",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 38,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "4.1.11",
+   "control_cis": "6.3.3.9",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 39,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "4.1.12",
+   "control_cis": "6.3.3.7",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 40,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "4.1.13",
+   "control_cis": "6.3.3.6",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 41,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "4.1.14",
+   "control_cis": "6.3.3.10",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 42,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "4.1.15",
+   "control_cis": "6.3.3.13",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 43,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "4.1.16",
+   "control_cis": "6.3.3.1",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 44,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "4.1.2.1",
+   "control_cis": "6.3.2.1",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "CONFIGURACION RECOMENDADA\nmax_log_file = 200\nnum_logs = 50\n\nNOTA=Con esta configuración, tu servidor está preparado para almacenar hasta 10 GB de datos de auditoría antes de empezar a sobrescribir la información más vieja (200 MB x 50 archivos = 10,000 MB).",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "TECNICA_VERIFICABLE",
+   "reglas": [
+    "AUDITD_MAX_LOG_FILE"
+   ],
+   "parametros": {
+    "max_log_file": "200",
+    "num_logs": "50"
+   },
+   "contenido": "CONTENIDO",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 45,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "4.1.2.2",
+   "control_cis": "6.3.2.2",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "CONFIGURACION RECOMENDADA\nmax_log_file_action = rotate\n\nCUMPLIMIENTO DEL CONTROL CIS\nParcial\n\nsi se configura con keep_logs no habra rotacion de logs y el disco se puede llenar",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "TECNICA_VERIFICABLE",
+   "reglas": [
+    "AUDITD_ROTATE"
+   ],
+   "parametros": {
+    "max_log_file_action": "rotate"
+   },
+   "contenido": "CONTENIDO",
+   "sustitutiva": [
+    "AUDITD_ROTATE"
+   ],
+   "declara_cis_parcial": true
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 46,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "4.1.2.3",
+   "control_cis": "6.3.2.3",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "CONFIGURACION RECOMENDADA\n(disk_full_action = syslog\ndisk_error_action = syslog) \n\nCUMPLIMIENTO DEL CONTROL CIS\nParcial\n\nSi se configura de otra manera puede generar interrupcion del servicio , asi solo registra los eventos",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "TECNICA_VERIFICABLE",
+   "reglas": [
+    "AUDITD_DISK_ACTION_SYSLOG"
+   ],
+   "parametros": {
+    "disk_full_action": "syslog",
+    "disk_error_action": "syslog"
+   },
+   "contenido": "CONTENIDO",
+   "sustitutiva": [
+    "AUDITD_DISK_ACTION_SYSLOG"
+   ],
+   "declara_cis_parcial": true
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 47,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "4.1.21",
+   "control_cis": "6.3.3.3",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 48,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "4.1.22",
+   "control_cis": "6.3.3.19",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 49,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "4.1.23",
+   "control_cis": "6.3.3.21",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 50,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "4.1.24",
+   "control_cis": "6.3.3.20",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 51,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "4.1.3",
+   "control_cis": "6.3.3.4",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 52,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "4.1.4",
+   "control_cis": "6.3.3.8",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 53,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "4.1.5",
+   "control_cis": "6.3.3.5",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 54,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "4.1.6",
+   "control_cis": "6.3.3.14",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 55,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "4.1.7",
+   "control_cis": "6.3.3.12",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 56,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "4.2.1",
+   "control_cis": "6.2.3.2",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna \nNOTA: Importante para CENTRALIZACION Y GESTION de logs del sistema",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA_CON_NOTA_INFORMATIVA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 57,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "4.2.14",
+   "control_cis": "6.2.2.3",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 58,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "4.2.15",
+   "control_cis": "6.2.2.4",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 59,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "4.2.16",
+   "control_cis": "6.2.2.2",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna\nNOTA: Importante para evitar logs duplicados",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA_CON_NOTA_INFORMATIVA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 60,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "4.2.17",
+   "control_cis": "6.2.1.3",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "CONFIGURACION RECOMENDADA\n[Journal]\nSystemMaxUse=4G\nSystemKeepFree=1G\nRuntimeMaxUse=200M\nRuntimeKeepFree=50M\nMaxFileSec=1month\n\nEsta configuracion es importante para evitar que se rote muy rapido los logs y se pierda trazabilidad - sin embargo esto se puede complmentar si se tiene un servidor de logs remoto",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "TECNICA_VERIFICABLE",
+   "reglas": [
+    "JOURNALD_ROTACION"
+   ],
+   "parametros": {
+    "SystemMaxUse": "4G",
+    "SystemKeepFree": "1G",
+    "RuntimeMaxUse": "200M",
+    "RuntimeKeepFree": "50M",
+    "MaxFileSec": "1month"
+   },
+   "contenido": "CONTENIDO",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 61,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "4.2.18",
+   "control_cis": "6.2.1.2",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 62,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "4.2.19",
+   "control_cis": "6.2.4.1",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "TIPO: ARCHIVOS_LOG_AUTORIZADOS\nORIGEN: LINEA_BASE_P2\nARCHIVOS: /var/log/vmware-vmtoolsd-<usuario>[.N].log, /var/log/vmware-vmusr-<usuario>[.N].log\nCONDICION: propietario root y modo 0600 o más restrictivo (el grupo del usuario no obtiene ningún acceso)\nMOTIVO: Logs por usuario de VMware Tools (open-vm-tools, servicio vmusr en la sesión del usuario). El script CIS rechaza el grupo primario de un usuario interactivo aunque el modo no le dé acceso.\nTRATAMIENTO: EXCLUSION_INFRAESTRUCTURA",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "TECNICA_VERIFICABLE",
+   "reglas": [
+    "LOGS_ARCHIVOS_AUTORIZADOS"
+   ],
+   "parametros": {},
+   "contenido": "CONTENIDO",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 63,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "4.2.2",
+   "control_cis": "6.2.3.3",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 64,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "4.2.3",
+   "control_cis": "6.2.3.4",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 65,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "4.2.4",
+   "control_cis": "6.2.3.5",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 66,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "4.2.5",
+   "control_cis": "6.2.3.6",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 67,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "4.2.6",
+   "control_cis": "6.2.3.1.2",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 68,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "4.2.7",
+   "control_cis": null,
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 69,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "4.2.8",
+   "control_cis": "6.2.3.1.1",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna\nNOTA: El cumplimiento de este control depende de la integracion con algun SIEM o Syslog central - Se debe validar con el Area de seguridad",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "MIXTA",
+   "reglas": [
+    "SIEM_INTEGRACION"
+   ],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 70,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "4.3.1",
+   "control_cis": "6.2.3.7",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna\nNOTA: Importante para no saturar almacenamiento",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA_CON_NOTA_INFORMATIVA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 71,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "6.1.1",
+   "control_cis": null,
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguno",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 72,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "6.1.10",
+   "control_cis": "7.1.11",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguno",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 73,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "6.1.11",
+   "control_cis": "7.1.12",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguno",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 74,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "6.1.12",
+   "control_cis": "7.1.12",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguno",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 75,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "6.1.13",
+   "control_cis": "7.1.13",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguno",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 76,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "6.1.14",
+   "control_cis": "7.1.13",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguno",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 77,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "6.1.2",
+   "control_cis": "7.1.1",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguno",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 78,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "6.1.3",
+   "control_cis": "7.1.2",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguno",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 79,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "6.1.4",
+   "control_cis": "7.1.3",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguno",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 80,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "6.1.5",
+   "control_cis": "7.1.4",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguno",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 81,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "6.1.6",
+   "control_cis": "7.1.5",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguno",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 82,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "6.1.7",
+   "control_cis": "7.1.6",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguno",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 83,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "6.1.8",
+   "control_cis": "7.1.7",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguno",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 84,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "6.1.9",
+   "control_cis": "7.1.8",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguno",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 85,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "6.2.1",
+   "control_cis": "7.2.1",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 86,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "6.2.10",
+   "control_cis": "7.2.9",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 87,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "6.2.11",
+   "control_cis": "5.4.2.1",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 88,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "6.2.12",
+   "control_cis": "5.4.2.5",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 89,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "6.2.13",
+   "control_cis": "7.2.4",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 90,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "6.2.14",
+   "control_cis": "7.2.5",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 91,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "6.2.15",
+   "control_cis": "7.2.6",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 92,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "6.2.16",
+   "control_cis": "7.2.7",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 93,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "6.2.17",
+   "control_cis": null,
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 94,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "6.2.2",
+   "control_cis": "7.2.2",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 95,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "6.2.3",
+   "control_cis": "7.2.3",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 96,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "6.2.4",
+   "control_cis": "7.2.8",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna\nNOTA: Esto es unicamente para usuarios que puedan hacer login (/bin/bash o \n/bin/sh)",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "TECNICA_VERIFICABLE",
+   "reglas": [
+    "USUARIOS_CON_LOGIN"
+   ],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 97,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "6.2.5",
+   "control_cis": "7.2.8",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 98,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "6.2.6",
+   "control_cis": "7.2.8",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 99,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "6.2.7",
+   "control_cis": "7.2.9",
+   "estado_alcance": "EN ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 100,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "6.2.8",
+   "control_cis": "7.2.9",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  },
+  {
+   "hoja_excel": "LBS SO_ SUSES15 ",
+   "fila_excel": 101,
+   "benchmarks": [
+    "SLES15"
+   ],
+   "control_excel": "6.2.9",
+   "control_cis": "7.2.9",
+   "estado_alcance": "FUERA DE ALCANCE",
+   "texto_excel": "Ninguna",
+   "coincide_con_matriz": true,
+   "tipo_exclusion": "NINGUNA",
+   "reglas": [],
+   "parametros": {},
+   "contenido": "NINGUNA",
+   "sustitutiva": [],
+   "declara_cis_parcial": false
+  }
+ ]
+}

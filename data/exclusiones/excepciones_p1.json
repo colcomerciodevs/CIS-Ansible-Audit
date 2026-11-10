@@ -1,0 +1,162 @@
+{
+ "generado": "2026-11-10T12:20:31-05:00",
+ "fuente": {
+  "archivo": "input/baseline/Linea Base - Analisis de Impacto _Parte1.xlsx",
+  "sha256": "db68b10bdc858a5b27cb93e49000b21aef155cc8d13cc5e8834c162745e2f352",
+  "columna": "Exclusiones de Infraestructura",
+  "origen": "LINEA_BASE_P1"
+ },
+ "exclusiones": [
+  {
+   "source_file": "Linea Base - Analisis de Impacto _Parte1.xlsx",
+   "source_sheet": "SLES15-ORA8-9",
+   "source_row": 92,
+   "control_excel": "3.4.3",
+   "control_cis": [
+    "3.2.3"
+   ],
+   "tipo": "CONTROL_NO_APLICADO",
+   "origen": "LINEA_BASE_P1",
+   "elementos_excluidos": [],
+   "valor": "false",
+   "motivo": "Control excluido por decisión de Infraestructura (solicitud de ajustes de auditoría del 2026-10-26).",
+   "tratamiento": "EXCLUSION_INFRAESTRUCTURA",
+   "exclusion_definida": true
+  },
+  {
+   "source_file": "Linea Base - Analisis de Impacto _Parte1.xlsx",
+   "source_sheet": "SLES15-ORA8-9",
+   "source_row": 93,
+   "control_excel": "3.4.4",
+   "control_cis": [
+    "3.2.2"
+   ],
+   "tipo": "CONTROL_NO_APLICADO",
+   "origen": "LINEA_BASE_P1",
+   "elementos_excluidos": [],
+   "valor": "false",
+   "motivo": "Control excluido por decisión de Infraestructura (solicitud de ajustes de auditoría del 2026-10-26).",
+   "tratamiento": "EXCLUSION_INFRAESTRUCTURA",
+   "exclusion_definida": true
+  },
+  {
+   "source_file": "Linea Base - Analisis de Impacto _Parte1.xlsx",
+   "source_sheet": "SLES15-ORA8-9",
+   "source_row": 106,
+   "control_excel": "5.2.4",
+   "control_cis": [
+    "5.2.4"
+   ],
+   "tipo": "USUARIOS",
+   "origen": "LINEA_BASE_P1",
+   "elementos_excluidos": [
+    "tux",
+    "proactiva",
+    "iacolcoauto",
+    "ansible_test"
+   ],
+   "valor": null,
+   "motivo": "Cuentas autorizadas por Infraestructura para conservar NOPASSWD.",
+   "tratamiento": "EXCLUSION_INFRAESTRUCTURA",
+   "exclusion_definida": true
+  },
+  {
+   "source_file": "Linea Base - Analisis de Impacto _Parte1.xlsx",
+   "source_sheet": "SLES15-ORA8-9",
+   "source_row": 109,
+   "control_excel": "5.2.7",
+   "control_cis": [
+    "5.2.7"
+   ],
+   "tipo": "USUARIOS",
+   "origen": "LINEA_BASE_P1",
+   "elementos_excluidos": [
+    "tux",
+    "aromero",
+    "csotomonte",
+    "jcastano"
+   ],
+   "valor": null,
+   "motivo": "Usuarios autorizados por Infraestructura para utilizar el comando su.",
+   "tratamiento": "EXCLUSION_INFRAESTRUCTURA",
+   "exclusion_definida": true
+  },
+  {
+   "source_file": "Linea Base - Analisis de Impacto _Parte1.xlsx",
+   "source_sheet": "SLES15-ORA8-9",
+   "source_row": 135,
+   "control_excel": "5.5.1",
+   "control_cis": [
+    "5.4.1.1"
+   ],
+   "tipo": "USUARIOS",
+   "origen": "LINEA_BASE_P1",
+   "elementos_excluidos": [
+    "root",
+    "admin",
+    "tux",
+    "proactiva",
+    "iacolcoauto",
+    "ansible_test",
+    "halt",
+    "shutdown",
+    "sync",
+    "nfsnobody",
+    "nobody",
+    "oracle",
+    "postgres",
+    "pos",
+    "alktstwms",
+    "alktstems",
+    "aromero",
+    "csotomonte",
+    "jcastano"
+   ],
+   "valor": null,
+   "motivo": "Usuarios críticos que no deben ser afectados por la política de expiración de contraseñas (PASS_MAX_DAYS); aromero, csotomonte y jcastano aprobados por decisión de Infraestructura.",
+   "tratamiento": "EXCLUSION_INFRAESTRUCTURA",
+   "exclusion_definida": true
+  },
+  {
+   "source_file": "Linea Base - Analisis de Impacto _Parte1.xlsx",
+   "source_sheet": "SLES15-ORA8-9",
+   "source_row": 136,
+   "control_excel": "5.5.2",
+   "control_cis": [
+    "5.4.1.2"
+   ],
+   "tipo": "USUARIOS",
+   "origen": "LINEA_BASE_P1",
+   "elementos_excluidos": [
+    "root",
+    "proactiva",
+    "aromero",
+    "csotomonte",
+    "jcastano",
+    "tux"
+   ],
+   "valor": null,
+   "motivo": "Cuentas aprobadas por Infraestructura como excepción a los días mínimos entre cambios de contraseña (PASS_MIN_DAYS).",
+   "tratamiento": "EXCLUSION_INFRAESTRUCTURA",
+   "exclusion_definida": true
+  },
+  {
+   "source_file": "Linea Base - Analisis de Impacto _Parte1.xlsx",
+   "source_sheet": "SLES15-ORA8-9",
+   "source_row": 138,
+   "control_excel": "5.5.4",
+   "control_cis": [
+    "5.4.1.5"
+   ],
+   "tipo": "USUARIOS",
+   "origen": "LINEA_BASE_P1",
+   "elementos_excluidos": [
+    "root"
+   ],
+   "valor": null,
+   "motivo": "Cuenta root exceptuada por Infraestructura del bloqueo de contraseña por inactividad (INACTIVE).",
+   "tratamiento": "EXCLUSION_INFRAESTRUCTURA",
+   "exclusion_definida": true
+  }
+ ]
+}

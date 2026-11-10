@@ -1,0 +1,25 @@
+CIS Linux Audit
+Versión 1.0.0
+
+Auditoría CIS de hardening Linux, independiente y de solo lectura
+(Oracle Linux 8/9, RHEL 8/9, SLES 15).
+
+Documentación (docs/, formato PDF):
+  Instalacion_Controlador.pdf            Nuevo servidor Ansible: requisitos, traslado,
+                                         llave SSH de srvinnops, known_hosts, verificación
+  Manual_Operacion.pdf                   Operación completa de la herramienta
+  Guia_Ejecucion_Auditoria.pdf           Procedimiento paso a paso de una auditoría
+  Instalacion_Collectors.pdf             Recolectores y sudoers (lo ejecuta Infraestructura)
+  Modelo_Resultados_y_Cumplimiento.pdf   Estados, indicadores y fórmulas
+  Arquitectura_Proyecto.pdf              Componentes y flujo de datos
+  Validacion_Version_1.pdf               Pruebas y dictamen de cierre de la versión
+
+Primer uso:
+  sha256sum -c --quiet SHA256SUMS        (sin salida = copia íntegra)
+  python3 -m pip install --user -r requirements.txt
+  python3 src/auditar.py preparar
+  python3 src/auditar.py demo
+  Inventario incluido: inventory/hosts.yml (revisar IP vigentes)
+
+La llave privada de srvinnops va en ~/.ssh/srvinnops (0600) de la cuenta
+que ejecuta la auditoría, nunca dentro de este directorio.

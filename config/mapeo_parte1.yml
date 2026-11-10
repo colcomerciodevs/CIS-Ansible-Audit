@@ -1,0 +1,229 @@
+# =============================================================================
+# Mapeo Parte 1 -> CIS vigente suministrado (aprobado 2026-10-12)
+# =============================================================================
+# Fuente: input/baseline/"Linea Base - Analisis de Impacto _Parte1.xlsx", hoja "SLES15-ORA8-9".
+# La numeración de la Parte 1 corresponde a una generación anterior del Benchmark (estilo
+# RHEL 7 / CIS v2-v3). El número del Excel NO es autoridad: cada fila se mapea al control
+# vigente de cada PDF de input/cis/ por título y requisito, revisado por el auditor.
+#
+# Familias de Benchmark (el constructor verifica cada id en CADA benchmark de la familia y
+# que su título contenga el patrón de la fila; si no, falla):
+#   v2   = ORACLE9 v2.0.0 y RHEL9 v2.0.0
+#   v4   = ORACLE8 v4.0.0 y RHEL8 v4.0.0 (sysctl de red y permisos divididos en más controles)
+#   sles = SLES15 v2.0.1
+#
+# estado (por familia o común):
+#   MAPEADO                    mismo requisito, renumerado
+#   MAPEADO_TITULO_ACTUALIZADO mismo requisito con redacción/alcance actualizado
+#   MAPEADO_CONSOLIDADO        la fila quedó absorbida en un control CIS más amplio
+#   MAPEADO_DIVIDIDO           la fila corresponde a varios controles CIS actuales
+#   RETIRADO                   no existe en el Benchmark suministrado (búsqueda verificada)
+#   NO_APLICA_PLATAFORMA       el mecanismo no existe en esa plataforma (p. ej. authselect en SLES)
+#
+# patron: expresión que debe aparecer en el título CIS de TODOS los ids indicados.
+# criterio_excel: valor exigido por la línea base cuando difiere del CIS (se documenta; el
+#   Resultado CIS siempre usa el criterio del Benchmark).
+# =============================================================================
+
+filas:
+  2:  {control: "1.1.1", patron: "cramfs", ids: {v2: [1.1.1.1], v4: [1.1.1.1], sles: [1.1.1.1]}, estado: MAPEADO}
+  3:  {control: "1.1.2", patron: "squashfs", ids: {v2: [1.1.1.6], v4: [1.1.1.7], sles: [1.1.1.7]}, estado: MAPEADO}
+  4:  {control: "1.1.3", patron: "udf", ids: {v2: [1.1.1.7], v4: [1.1.1.8], sles: [1.1.1.8]}, estado: MAPEADO}
+  5:  {control: "1.1.4", estado: RETIRADO,
+       nota: "Los Benchmarks suministrados no contienen un control para vfat/FAT; 1.1.1.9/1.1.1.11 (módulos no usados, Manual) no lo exige y la partición EFI requiere vfat."}
+  6:  {control: "1.1.5", titulo_reconstruido: "Asegurar que /tmp esté en una partición separada", patron: "/tmp is",
+       ids: {v2: [1.1.2.1.1], v4: [1.1.2.1.1], sles: [1.1.2.1.1]}, estado: MAPEADO,
+       estado_familia: {v4: MAPEADO_TITULO_ACTUALIZADO},
+       nota: "La celda 'Punto a tratar' contiene el número 0 (error de datos del Excel); se identifica por la columna 'Información' ('/tmp en partición separada'), por su posición (entre 1.1.4 y 1.1.6) y por la auditoría histórica (CIS-1.1.5). v4 acepta tmpfs o partición separada."}
+  7:  {control: "1.1.6", patron: "nodev option set on /tmp", ids: {v2: [1.1.2.1.2], v4: [1.1.2.1.2], sles: [1.1.2.1.2]}, estado: MAPEADO}
+  8:  {control: "1.1.7", patron: "nosuid option set on /tmp", ids: {v2: [1.1.2.1.3], v4: [1.1.2.1.3], sles: [1.1.2.1.3]}, estado: MAPEADO}
+  9:  {control: "1.1.8", patron: "noexec option set on /tmp", ids: {v2: [1.1.2.1.4], v4: [1.1.2.1.4], sles: [1.1.2.1.4]}, estado: MAPEADO}
+  10: {control: "1.1.9", patron: "/dev/shm is", ids: {v2: [1.1.2.2.1], v4: [1.1.2.2.1], sles: [1.1.2.2.1]}, estado: MAPEADO_TITULO_ACTUALIZADO,
+       nota: "v2/SLES: '/dev/shm is a separate partition'; v4: '/dev/shm is tmpfs'."}
+  11: {control: "1.1.10", patron: "nodev option set on /dev/shm", ids: {v2: [1.1.2.2.2], v4: [1.1.2.2.2], sles: [1.1.2.2.2]}, estado: MAPEADO}
+  12: {control: "1.1.11", patron: "nosuid option set on /dev/shm", ids: {v2: [1.1.2.2.3], v4: [1.1.2.2.3], sles: [1.1.2.2.3]}, estado: MAPEADO}
+  13: {control: "1.1.12", patron: "noexec option set on /dev/shm", ids: {v2: [1.1.2.2.4], v4: [1.1.2.2.4], sles: [1.1.2.2.4]}, estado: MAPEADO}
+  14: {control: "1.1.13", patron: "separate partition exists for /var", ids: {v2: [1.1.2.4.1], v4: [1.1.2.4.1], sles: [1.1.2.4.1]}, estado: MAPEADO}
+  15: {control: "1.1.14", patron: "nodev option set on /var partition", ids: {v2: [1.1.2.4.2], v4: [1.1.2.4.2], sles: [1.1.2.4.2]}, estado: MAPEADO}
+  16: {control: "1.1.15", patron: "nosuid option set on /var partition", ids: {v2: [1.1.2.4.3], v4: [1.1.2.4.3], sles: [1.1.2.4.3]}, estado: MAPEADO}
+  17: {control: "1.1.16", estado: RETIRADO,
+       nota: "El Benchmark vigente define nodev y nosuid para /var, pero no noexec (sección 1.1.2.4)."}
+  18: {control: "1.1.17", patron: "separate partition exists for /var/tmp", ids: {v2: [1.1.2.5.1], v4: [1.1.2.5.1], sles: [1.1.2.5.1]}, estado: MAPEADO}
+  19: {control: "1.1.18", patron: "nodev option set on /var/tmp", ids: {v2: [1.1.2.5.2], v4: [1.1.2.5.2], sles: [1.1.2.5.2]}, estado: MAPEADO}
+  20: {control: "1.1.19", patron: "nosuid option set on /var/tmp", ids: {v2: [1.1.2.5.3], v4: [1.1.2.5.3], sles: [1.1.2.5.3]}, estado: MAPEADO}
+  21: {control: "1.1.20", patron: "noexec option set on /var/tmp", ids: {v2: [1.1.2.5.4], v4: [1.1.2.5.4], sles: [1.1.2.5.4]}, estado: MAPEADO}
+  22: {control: "1.1.21", patron: "separate partition exists for /var/log", ids: {v2: [1.1.2.6.1], v4: [1.1.2.6.1], sles: [1.1.2.6.1]}, estado: MAPEADO}
+  23: {control: "1.1.22", patron: "nodev option set on /var/log partition", ids: {v2: [1.1.2.6.2], v4: [1.1.2.6.2], sles: [1.1.2.6.2]}, estado: MAPEADO}
+  24: {control: "1.1.23", patron: "nosuid option set on /var/log partition", ids: {v2: [1.1.2.6.3], v4: [1.1.2.6.3], sles: [1.1.2.6.3]}, estado: MAPEADO}
+  25: {control: "1.1.24", patron: "noexec option set on /var/log partition", ids: {v2: [1.1.2.6.4], v4: [1.1.2.6.4], sles: [1.1.2.6.4]}, estado: MAPEADO}
+  26: {control: "1.1.25", patron: "separate partition exists for /var/log/audit", ids: {v2: [1.1.2.7.1], v4: [1.1.2.7.1], sles: [1.1.2.7.1]}, estado: MAPEADO}
+  27: {control: "1.1.26", patron: "nodev option set on /var/log/audit", ids: {v2: [1.1.2.7.2], v4: [1.1.2.7.2], sles: [1.1.2.7.2]}, estado: MAPEADO}
+  28: {control: "1.1.27", patron: "nosuid option set on /var/log/audit", ids: {v2: [1.1.2.7.3], v4: [1.1.2.7.3], sles: [1.1.2.7.3]}, estado: MAPEADO}
+  29: {control: "1.1.28", patron: "noexec option set on /var/log/audit", ids: {v2: [1.1.2.7.4], v4: [1.1.2.7.4], sles: [1.1.2.7.4]}, estado: MAPEADO}
+  30: {control: "1.1.29", patron: "separate partition exists for /home", ids: {v2: [1.1.2.3.1], v4: [1.1.2.3.1], sles: [1.1.2.3.1]}, estado: MAPEADO}
+  31: {control: "1.1.30", patron: "nodev option set on /home", ids: {v2: [1.1.2.3.2], v4: [1.1.2.3.2], sles: [1.1.2.3.2]}, estado: MAPEADO}
+  32: {control: "1.1.31", patron: "nosuid option set on /home", ids: {v2: [1.1.2.3.3], v4: [1.1.2.3.3], sles: [1.1.2.3.3]}, estado: MAPEADO}
+  33: {control: "1.1.32", estado: RETIRADO, nota: "Controles de medios removibles (Manual) retirados de los Benchmarks vigentes. Relacionado (no equivalente): GDM automount de la Parte 2."}
+  34: {control: "1.1.33", estado: RETIRADO, nota: "Ídem 1.1.32."}
+  35: {control: "1.1.34", estado: RETIRADO, nota: "Ídem 1.1.32."}
+  36: {control: "1.1.35", estado: RETIRADO, nota: "Las cuotas de /home no forman parte de los Benchmarks suministrados."}
+  37: {control: "1.1.36", estado: RETIRADO, nota: "Ídem 1.1.35."}
+  38: {control: "1.1.37", patron: "world writable files and directories", ids: {v2: [7.1.11], v4: [7.1.11], sles: [7.1.11]}, estado: MAPEADO_CONSOLIDADO,
+       nota: "El sticky bit en directorios world-writable quedó absorbido en 7.1.11, que también mapea la Parte 2 (6.1.10). Requiere recorrido de filesystem (auditoría profunda)."}
+  39: {control: "1.1.38", patron: "autofs", ids: {v2: [2.1.1], v4: [2.1.1], sles: [2.1.1]}, estado: MAPEADO_TITULO_ACTUALIZADO}
+  40: {control: "1.1.39", patron: "usb-storage", ids: {v2: [1.1.1.8], v4: [1.1.1.10]}, estado: MAPEADO,
+       estado_familia: {sles: RETIRADO}, nota: "SLES 15 v2.0.1 no contiene control usb-storage (búsqueda verificada)."}
+  41: {control: "1.7.1", patron: "motd|message of the day", ids: {v2: [1.7.1], v4: [1.7.1], sles: [1.7.1]}, estado: MAPEADO,
+       estado_familia: {v4: MAPEADO_TITULO_ACTUALIZADO, sles: MAPEADO_TITULO_ACTUALIZADO}}
+  42: {control: "1.7.2", patron: "local login warning banner|/etc/issue is", ids: {v2: [1.7.2], v4: [1.7.2], sles: [1.7.2]}, estado: MAPEADO,
+       estado_familia: {v4: MAPEADO_TITULO_ACTUALIZADO, sles: MAPEADO_TITULO_ACTUALIZADO}}
+  43: {control: "1.7.3", patron: "remote login warning banner|/etc/issue.net is", ids: {v2: [1.7.3], v4: [1.7.3], sles: [1.7.3]}, estado: MAPEADO,
+       estado_familia: {v4: MAPEADO_TITULO_ACTUALIZADO, sles: MAPEADO_TITULO_ACTUALIZADO}}
+  44: {control: "1.7.4", patron: "/etc/motd", ids: {v2: [1.7.4], v4: [1.7.4], sles: [1.7.4]}, estado: MAPEADO_TITULO_ACTUALIZADO}
+  45: {control: "1.7.5", patron: "access to /etc/issue is", ids: {v2: [1.7.5], v4: [1.7.5], sles: [1.7.5]}, estado: MAPEADO_TITULO_ACTUALIZADO}
+  46: {control: "1.7.6", patron: "/etc/issue.net", ids: {v2: [1.7.6], v4: [1.7.6], sles: [1.7.6]}, estado: MAPEADO_TITULO_ACTUALIZADO}
+  47: {control: "2.1.1", patron: "time synchronization", ids: {v2: [2.3.1], v4: [2.3.1], sles: [2.3.1.1]}, estado: MAPEADO,
+       estado_familia: {sles: MAPEADO_TITULO_ACTUALIZADO}}
+  48: {control: "2.1.2", patron: "timesyncd", ids: {sles: [2.3.2.1, 2.3.2.2]}, estado: NO_APLICA_PLATAFORMA,
+       estado_familia: {sles: MAPEADO_DIVIDIDO},
+       nota: "OL/RHEL: los Benchmarks no contienen controles systemd-timesyncd (chrony). SLES: aplica solo si timesyncd es el demonio en uso; el Excel indica que se usa chrony y la fila no tiene playbook."}
+  49: {control: "2.1.3", patron: "chrony is configured", ids: {v2: [2.3.2], v4: [2.3.2], sles: [2.3.3.1]}, estado: MAPEADO}
+  50: {control: "2.1.4", patron: "xinetd", ids: {v2: [2.1.19], v4: [2.1.20], sles: [2.1.20]}, estado: MAPEADO_TITULO_ACTUALIZADO}
+  51: {control: "2.1.5", patron: "X window server", ids: {v2: [2.1.20], v4: [2.1.22], sles: [2.1.21]}, estado: MAPEADO_TITULO_ACTUALIZADO}
+  52: {control: "2.1.6", patron: "avahi", ids: {v2: [2.1.2], v4: [2.1.2], sles: [2.1.2]}, estado: MAPEADO_TITULO_ACTUALIZADO}
+  53: {control: "2.1.7", patron: "print server", ids: {v2: [2.1.11], v4: [2.1.11], sles: [2.1.12]}, estado: MAPEADO_TITULO_ACTUALIZADO}
+  54: {control: "2.1.8", patron: "dhcp server", ids: {v2: [2.1.3], v4: [2.1.4], sles: [2.1.3]}, estado: MAPEADO_TITULO_ACTUALIZADO}
+  55: {control: "2.1.9", patron: "ldap server", ids: {sles: [2.1.7]}, estado: RETIRADO, estado_familia: {sles: MAPEADO_TITULO_ACTUALIZADO},
+       nota: "OL/RHEL 8-9: los Benchmarks vigentes no contienen control de servidor LDAP (búsqueda verificada)."}
+  56: {control: "2.1.10", patron: "network file system", ids: {v2: [2.1.9], v4: [2.1.9], sles: [2.1.10]}, estado: MAPEADO_TITULO_ACTUALIZADO}
+  57: {control: "2.1.11", patron: "dns server", ids: {v2: [2.1.4], v4: [2.1.5], sles: [2.1.4]}, estado: MAPEADO_TITULO_ACTUALIZADO}
+  58: {control: "2.1.12", patron: "ftp server", ids: {v2: [2.1.7], v4: [2.1.7], sles: [2.1.8]}, estado: MAPEADO_TITULO_ACTUALIZADO}
+  59: {control: "2.1.13", patron: "ftp server", ids: {v2: [2.1.7], v4: [2.1.7], sles: [2.1.8]}, estado: MAPEADO_CONSOLIDADO,
+       nota: "Duplicado dentro de la Parte 1: vsftpd es el servidor FTP evaluado por el mismo control que 2.1.12. Ambas filas se conservan y comparten evidencia."}
+  60: {control: "2.1.14", patron: "tftp server", ids: {v2: [2.1.16], v4: [2.1.17], sles: [2.1.17]}, estado: MAPEADO_TITULO_ACTUALIZADO}
+  61: {control: "2.1.15", patron: "web server services", ids: {v2: [2.1.18], v4: [2.1.19], sles: [2.1.19]}, estado: MAPEADO_TITULO_ACTUALIZADO}
+  62: {control: "2.1.16", patron: "message access server", ids: {v2: [2.1.8], v4: [2.1.8], sles: [2.1.9]}, estado: MAPEADO_TITULO_ACTUALIZADO}
+  63: {control: "2.1.17", patron: "samba", ids: {v2: [2.1.6], v4: [2.1.14], sles: [2.1.6]}, estado: MAPEADO_TITULO_ACTUALIZADO}
+  64: {control: "2.1.18", patron: "web proxy server", ids: {v2: [2.1.17], v4: [2.1.18], sles: [2.1.18]}, estado: MAPEADO_TITULO_ACTUALIZADO}
+  65: {control: "2.1.19", patron: "snmp", ids: {v2: [2.1.14], v4: [2.1.15], sles: [2.1.15]}, estado: MAPEADO_TITULO_ACTUALIZADO}
+  66: {control: "2.1.20", patron: "mail transfer agents", ids: {v2: [2.1.21], v4: [2.1.23], sles: [2.1.22]}, estado: MAPEADO}
+  67: {control: "2.1.21", patron: "telnet server", ids: {v2: [2.1.15], v4: [2.1.16], sles: [2.1.16]}, estado: MAPEADO_TITULO_ACTUALIZADO}
+  68: {control: "2.1.22", patron: "rsync", ids: {v2: [2.1.13], v4: [2.1.13], sles: [2.1.14]}, estado: MAPEADO_TITULO_ACTUALIZADO}
+  69: {control: "2.1.23", patron: "nis server", ids: {v2: [2.1.10], v4: [2.1.10], sles: [2.1.11]}, estado: MAPEADO_TITULO_ACTUALIZADO}
+  70: {control: "2.2.1", patron: "nis client", ids: {v2: [2.2.3], v4: [2.2.3], sles: [2.2.3]}, estado: MAPEADO}
+  71: {control: "2.2.2", estado: RETIRADO, nota: "El cliente rsh no figura en la sección 2.2 de los Benchmarks vigentes."}
+  72: {control: "2.2.3", estado: RETIRADO, nota: "El cliente talk no figura en la sección 2.2 de los Benchmarks vigentes."}
+  73: {control: "2.2.4", patron: "telnet client", ids: {v2: [2.2.4], v4: [2.2.4], sles: [2.2.4]}, estado: MAPEADO}
+  74: {control: "2.2.5", patron: "ldap client", ids: {v2: [2.2.2], v4: [2.2.2], sles: [2.2.2]}, estado: MAPEADO}
+  75: {control: "2.2.6", patron: "tftp client", ids: {v2: [2.2.5], v4: [2.2.5], sles: [2.2.5]}, estado: MAPEADO}
+  76: {control: "2.2.7", patron: "rpcbind", ids: {v2: [2.1.12], v4: [2.1.12], sles: [2.1.13]}, estado: MAPEADO_TITULO_ACTUALIZADO,
+       nota: "El Benchmark vigente evalúa servicios rpcbind (paquete o servicio/socket deshabilitado)."}
+  77: {control: "3.1.1", patron: "IPv6 status", ids: {v2: [3.1.1], v4: [3.1.1], sles: [3.1.1]}, estado: MAPEADO_TITULO_ACTUALIZADO,
+       nota: "El Excel dice 'Deshabilitar IPv6'; el CIS vigente (Manual) solo exige identificar el estado de IPv6 según la política del sitio."}
+  78: {control: "3.1.2", patron: "wireless", ids: {v2: [3.1.2], v4: [3.1.2], sles: [3.1.2]}, estado: MAPEADO,
+       estado_familia: {v4: MAPEADO_TITULO_ACTUALIZADO, sles: MAPEADO_TITULO_ACTUALIZADO}}
+  79: {control: "3.2.1", patron: "send_redirects|packet redirect sending", ids: {v2: [3.3.2], v4: [3.3.1.4, 3.3.1.5], sles: [3.3.2]}, estado: MAPEADO,
+       estado_familia: {v4: MAPEADO_DIVIDIDO}}
+  80: {control: "3.2.2", patron: "forward", ids: {v2: [3.3.1], v4: [3.3.1.1, 3.3.1.2, 3.3.1.3, 3.3.2.1, 3.3.2.2], sles: [3.3.1]}, estado: MAPEADO,
+       estado_familia: {v4: MAPEADO_DIVIDIDO}}
+  81: {control: "3.3.1", patron: "source_route|source routed", ids: {v2: [3.3.8], v4: [3.3.1.14, 3.3.1.15, 3.3.2.5, 3.3.2.6], sles: [3.3.8]}, estado: MAPEADO,
+       estado_familia: {v4: MAPEADO_DIVIDIDO}}
+  82: {control: "3.3.2", patron: "accept_redirects|icmp redirects", ids: {v2: [3.3.5], v4: [3.3.1.8, 3.3.1.9, 3.3.2.3, 3.3.2.4], sles: [3.3.5]}, estado: MAPEADO,
+       estado_familia: {v4: MAPEADO_DIVIDIDO}}
+  83: {control: "3.3.3", patron: "secure_redirects|secure icmp", ids: {v2: [3.3.6], v4: [3.3.1.10, 3.3.1.11], sles: [3.3.6]}, estado: MAPEADO,
+       estado_familia: {v4: MAPEADO_DIVIDIDO}}
+  84: {control: "3.3.4", patron: "log_martians|suspicious packets", ids: {v2: [3.3.9], v4: [3.3.1.16, 3.3.1.17], sles: [3.3.9]}, estado: MAPEADO,
+       estado_familia: {v4: MAPEADO_DIVIDIDO}}
+  85: {control: "3.3.5", patron: "broadcast", ids: {v2: [3.3.4], v4: [3.3.1.7], sles: [3.3.4]}, estado: MAPEADO,
+       estado_familia: {v4: MAPEADO_TITULO_ACTUALIZADO}}
+  86: {control: "3.3.6", patron: "bogus", ids: {v2: [3.3.3], v4: [3.3.1.6], sles: [3.3.3]}, estado: MAPEADO,
+       estado_familia: {v4: MAPEADO_TITULO_ACTUALIZADO}}
+  87: {control: "3.3.7", patron: "rp_filter|reverse path", ids: {v2: [3.3.7], v4: [3.3.1.12, 3.3.1.13], sles: [3.3.7]}, estado: MAPEADO,
+       estado_familia: {v4: MAPEADO_DIVIDIDO}}
+  88: {control: "3.3.8", patron: "syncookies|syn cookies", ids: {v2: [3.3.10], v4: [3.3.1.18], sles: [3.3.10]}, estado: MAPEADO,
+       estado_familia: {v4: MAPEADO_TITULO_ACTUALIZADO}}
+  89: {control: "3.3.9", patron: "accept_ra|router advertisements", ids: {v2: [3.3.11], v4: [3.3.2.7, 3.3.2.8], sles: [3.3.11]}, estado: MAPEADO,
+       estado_familia: {v4: MAPEADO_DIVIDIDO}}
+  90: {control: "3.4.1", patron: "dccp", ids: {v2: [3.2.1], v4: [3.2.3], sles: [3.2.1]}, estado: MAPEADO_TITULO_ACTUALIZADO}
+  91: {control: "3.4.2", patron: "sctp", ids: {v2: [3.2.4], v4: [3.2.5], sles: [3.2.4]}, estado: MAPEADO_TITULO_ACTUALIZADO}
+  92: {control: "3.4.3", patron: "rds", ids: {v2: [3.2.3], v4: [3.2.4], sles: [3.2.3]}, estado: MAPEADO_TITULO_ACTUALIZADO}
+  93: {control: "3.4.4", patron: "tipc", ids: {v2: [3.2.2], v4: [3.2.6], sles: [3.2.2]}, estado: MAPEADO_TITULO_ACTUALIZADO}
+  94: {control: "5.1.1", patron: "cron daemon", ids: {v2: [2.4.1.1], v4: [2.4.1.1], sles: [2.4.1.1]}, estado: MAPEADO_TITULO_ACTUALIZADO}
+  95: {control: "5.1.2", patron: "/etc/crontab", ids: {v2: [2.4.1.2], v4: [2.4.1.2], sles: [2.4.1.2]}, estado: MAPEADO}
+  96: {control: "5.1.3", patron: "/etc/cron.hourly", ids: {v2: [2.4.1.3], v4: [2.4.1.3], sles: [2.4.1.3]}, estado: MAPEADO}
+  97: {control: "5.1.4", patron: "/etc/cron.daily", ids: {v2: [2.4.1.4], v4: [2.4.1.4], sles: [2.4.1.4]}, estado: MAPEADO}
+  98: {control: "5.1.5", patron: "/etc/cron.weekly", ids: {v2: [2.4.1.5], v4: [2.4.1.5], sles: [2.4.1.5]}, estado: MAPEADO}
+  99: {control: "5.1.6", patron: "/etc/cron.monthly", ids: {v2: [2.4.1.6], v4: [2.4.1.6], sles: [2.4.1.6]}, estado: MAPEADO}
+  100: {control: "5.1.7", patron: "/etc/cron.d ", ids: {v2: [2.4.1.7], v4: [2.4.1.8], sles: [2.4.1.7]}, estado: MAPEADO}
+  101: {control: "5.1.8", patron: "crontab", ids: {v2: [2.4.1.8], v4: [2.4.1.9], sles: [2.4.1.8]}, estado: MAPEADO_TITULO_ACTUALIZADO}
+  102: {control: "5.1.9", patron: "\\bat\\b", ids: {v2: [2.4.2.1], v4: [2.4.2.1], sles: [2.4.2.1]}, estado: MAPEADO,
+        estado_familia: {v4: MAPEADO_TITULO_ACTUALIZADO, sles: MAPEADO_TITULO_ACTUALIZADO}}
+  103: {control: "5.2.1", patron: "sudo is installed", ids: {v2: [5.2.1], v4: [5.2.1], sles: [5.2.1]}, estado: MAPEADO}
+  104: {control: "5.2.2", patron: "use pty", ids: {v2: [5.2.2], v4: [5.2.2], sles: [5.2.2]}, estado: MAPEADO}
+  105: {control: "5.2.3", patron: "sudo log file exists", ids: {v2: [5.2.3], v4: [5.2.3], sles: [5.2.3]}, estado: MAPEADO}
+  106: {control: "5.2.4", patron: "password for escalation", ids: {v2: [5.2.4], v4: [5.2.4], sles: [5.2.4]}, estado: MAPEADO_TITULO_ACTUALIZADO,
+        nota: "Relacionado con el prerrequisito interno PRE-2 (NOPASSWD: ALL para cuentas de automatización), que se informa por separado y no modifica este control CIS."}
+  107: {control: "5.2.5", patron: "re-authentication", ids: {v2: [5.2.5], v4: [5.2.5], sles: [5.2.5]}, estado: MAPEADO}
+  108: {control: "5.2.6", patron: "timeout|timestamp_timeout", ids: {v2: [5.2.6], v4: [5.2.6], sles: [5.2.6]}, estado: MAPEADO,
+        estado_familia: {v4: MAPEADO_TITULO_ACTUALIZADO}}
+  109: {control: "5.2.7", patron: "su command", ids: {v2: [5.2.7], v4: [5.2.7], sles: [5.2.7]}, estado: MAPEADO}
+  110: {control: "5.2.8", patron: "authselect profile", ids: {v2: [5.3.2.1], v4: [5.3.2.1]}, estado: MAPEADO_TITULO_ACTUALIZADO,
+        estado_familia: {sles: NO_APLICA_PLATAFORMA},
+        nota: "El CIS vigente exige un perfil authselect activo que incluya los módulos PAM requeridos (recomienda perfil personalizado). SLES no usa authselect (pam-config)."}
+  111: {control: "5.2.9", patron: "pam_faillock", ids: {v2: [5.3.2.2], v4: [5.3.2.2]}, estado: MAPEADO_TITULO_ACTUALIZADO,
+        estado_familia: {sles: NO_APLICA_PLATAFORMA},
+        nota: "SLES no usa authselect; el bloqueo por intentos se evalúa en el control 5.4.2 (5.3.2.1.x)."}
+  112: {control: "5.3.1", patron: "/etc/ssh/sshd_config", ids: {v2: [5.1.1], v4: [5.1.2], sles: [5.1.1]}, estado: MAPEADO,
+        estado_familia: {v4: MAPEADO_TITULO_ACTUALIZADO, sles: MAPEADO_TITULO_ACTUALIZADO}}
+  113: {control: "5.3.2", patron: "private host key", ids: {v2: [5.1.2], v4: [5.1.4], sles: [5.1.2]}, estado: MAPEADO,
+        estado_familia: {v4: MAPEADO_TITULO_ACTUALIZADO, sles: MAPEADO_TITULO_ACTUALIZADO}}
+  114: {control: "5.3.3", patron: "public host key", ids: {v2: [5.1.3], v4: [5.1.5], sles: [5.1.3]}, estado: MAPEADO,
+        estado_familia: {v4: MAPEADO_TITULO_ACTUALIZADO, sles: MAPEADO_TITULO_ACTUALIZADO}}
+  115: {control: "5.3.4", patron: "sshd access", ids: {v2: [5.1.7], v4: [5.1.6], sles: [5.1.7]}, estado: MAPEADO_TITULO_ACTUALIZADO}
+  116: {control: "5.3.5", patron: "LogLevel", ids: {v2: [5.1.15], v4: [5.1.16], sles: [5.1.15]}, estado: MAPEADO_TITULO_ACTUALIZADO}
+  117: {control: "5.3.6", patron: "DisableForwarding", ids: {v2: [5.1.10], v4: [5.1.10], sles: [5.1.10]}, estado: MAPEADO_CONSOLIDADO,
+        nota: "X11Forwarding quedó absorbido en 'DisableForwarding yes' (también cubre AllowTcpForwarding, control 5.3.17)."}
+  118: {control: "5.3.7", patron: "MaxAuthTries", ids: {v2: [5.1.16], v4: [5.1.18], sles: [5.1.16]}, estado: MAPEADO_TITULO_ACTUALIZADO}
+  119: {control: "5.3.8", patron: "IgnoreRhosts", ids: {v2: [5.1.13], v4: [5.1.13], sles: [5.1.13]}, estado: MAPEADO}
+  120: {control: "5.3.9", patron: "HostbasedAuthentication", ids: {v2: [5.1.12], v4: [5.1.12], sles: [5.1.12]}, estado: MAPEADO}
+  121: {control: "5.3.10", patron: "PermitRootLogin", ids: {v2: [5.1.20], v4: [5.1.22], sles: [5.1.20]}, estado: MAPEADO_TITULO_ACTUALIZADO}
+  122: {control: "5.3.11", patron: "PermitEmptyPasswords", ids: {v2: [5.1.19], v4: [5.1.21], sles: [5.1.19]}, estado: MAPEADO}
+  123: {control: "5.3.12", patron: "PermitUserEnvironment", ids: {v2: [5.1.21], v4: [5.1.23], sles: [5.1.21]}, estado: MAPEADO}
+  124: {control: "5.3.13", patron: "ClientAlive", ids: {v2: [5.1.9], v4: [5.1.9], sles: [5.1.9]}, estado: MAPEADO_TITULO_ACTUALIZADO}
+  125: {control: "5.3.14", patron: "LoginGraceTime", ids: {v2: [5.1.14], v4: [5.1.15], sles: [5.1.14]}, estado: MAPEADO_TITULO_ACTUALIZADO}
+  126: {control: "5.3.15", patron: "Banner", ids: {v2: [5.1.8], v4: [5.1.7], sles: [5.1.8]}, estado: MAPEADO_TITULO_ACTUALIZADO}
+  127: {control: "5.3.16", patron: "UsePAM", ids: {v2: [5.1.22], v4: [5.1.24], sles: [5.1.22]}, estado: MAPEADO_TITULO_ACTUALIZADO}
+  128: {control: "5.3.17", patron: "DisableForwarding", ids: {v2: [5.1.10], v4: [5.1.10], sles: [5.1.10]}, estado: MAPEADO_CONSOLIDADO,
+        nota: "AllowTcpForwarding quedó absorbido en 'DisableForwarding yes' (comparte control y evidencia con el control 5.3.6)."}
+  129: {control: "5.3.18", patron: "MaxStartups", ids: {v2: [5.1.17], v4: [5.1.20], sles: [5.1.17]}, estado: MAPEADO}
+  130: {control: "5.3.19", patron: "MaxSessions", ids: {v2: [5.1.18], v4: [5.1.19], sles: [5.1.18]}, estado: MAPEADO_TITULO_ACTUALIZADO}
+  131: {control: "5.4.1", patron: "pwquality|password length|password complexity",
+        ids: {v2: [5.3.2.3, 5.3.3.2.2, 5.3.3.2.3], v4: [5.3.2.3, 5.3.3.2.2, 5.3.3.2.3], sles: [5.3.2.2.3, 5.3.2.2.4]}, estado: MAPEADO_DIVIDIDO,
+        nota: "Requisitos de creación de contraseña = módulo pam_pwquality habilitado (OL/RHEL), longitud (minlen >= 14) y complejidad. Los demás controles pwquality vigentes (difok, maxrepeat, maxsequence, dictcheck, enforce_for_root) no forman parte de la línea base Parte 1."}
+  132: {control: "5.4.2", patron: "lockout|unlock time",
+        ids: {v2: [5.3.3.1.1, 5.3.3.1.2], v4: [5.3.3.1.1, 5.3.3.1.2], sles: [5.3.2.1.1, 5.3.2.1.2]}, estado: MAPEADO_DIVIDIDO,
+        criterio_excel: "5 intentos", nota: "CIS vigente: deny <= 5 (coincide con el Excel) y unlock_time 0 o >= 900."}
+  133: {control: "5.4.3", patron: "password history remember", ids: {v2: [5.3.3.3.1], v4: [5.3.3.3.1], sles: [5.3.2.3.1]}, estado: MAPEADO_TITULO_ACTUALIZADO,
+        criterio_excel: "12", nota: "DIFERENCIA DE CRITERIO: el Excel exige recordar 12 contraseñas; el CIS vigente exige remember >= 24. El Resultado CIS usa 24."}
+  134: {control: "5.4.4", patron: "hashing algorithm",
+        ids: {v2: [5.4.1.4, 5.3.3.4.3], v4: [5.4.1.4, 5.3.3.4.3], sles: [5.4.1.4, 5.3.2.4.3]}, estado: MAPEADO_DIVIDIDO,
+        criterio_excel: "SHA-512", nota: "CIS vigente acepta SHA512 o YESCRYPT en login.defs (ENCRYPT_METHOD) y en pam_unix."}
+  135: {control: "5.5.1", patron: "password expiration is configured", ids: {v2: [5.4.1.1], v4: [5.4.1.1], sles: [5.4.1.1]}, estado: MAPEADO_TITULO_ACTUALIZADO,
+        criterio_excel: "42 días o menos", nota: "DIFERENCIA DE CRITERIO: CIS vigente PASS_MAX_DAYS <= 365 (el Excel es más estricto, 42)."}
+  136: {control: "5.5.2", patron: "minimum password days", ids: {v2: [5.4.1.2], v4: [5.4.1.2], sles: [5.4.1.2]}, estado: MAPEADO_TITULO_ACTUALIZADO,
+        criterio_excel: "3", nota: "DIFERENCIA DE CRITERIO: CIS vigente PASS_MIN_DAYS >= 1 (el Excel es más estricto, 3). En OL/RHEL el control es Manual."}
+  137: {control: "5.5.3", patron: "warning days", ids: {v2: [5.4.1.3], v4: [5.4.1.3], sles: [5.4.1.3]}, estado: MAPEADO_TITULO_ACTUALIZADO,
+        criterio_excel: "5 o más", nota: "DIFERENCIA DE CRITERIO: CIS vigente PASS_WARN_AGE >= 7 (el Excel es menos estricto, 5). El Resultado CIS usa 7."}
+  138: {control: "5.5.4", patron: "inactive password lock", ids: {v2: [5.4.1.5], v4: [5.4.1.5], sles: [5.4.1.5]}, estado: MAPEADO_TITULO_ACTUALIZADO,
+        criterio_excel: "30 días o menos", nota: "DIFERENCIA DE CRITERIO: CIS vigente INACTIVE <= 45 (el Excel es más estricto, 30)."}
+  139: {control: "5.5.5", patron: "last password change date", ids: {v2: [5.4.1.6], v4: [5.4.1.6], sles: [5.4.1.6]}, estado: MAPEADO}
+  140: {control: "5.5.6", patron: "valid login shell", ids: {v2: [5.4.2.7, 5.4.2.8], v4: [5.4.2.7, 5.4.2.8], sles: [5.4.2.7, 5.4.2.8]}, estado: MAPEADO_DIVIDIDO,
+        nota: "Cuentas de sistema aseguradas = sin shell de login válida (5.4.2.7) y bloqueadas si no tienen shell válida (5.4.2.8)."}
+  141: {control: "5.5.7", patron: "GID 0 account", ids: {v2: [5.4.2.2], v4: [5.4.2.2], sles: [5.4.2.2]}, estado: MAPEADO_TITULO_ACTUALIZADO,
+        nota: "El Audit de 5.4.2.2 verifica que el GID primario de root sea 0 y que ningún otro usuario tenga GID 0."}
+  142: {control: "5.5.8", patron: "default user umask", ids: {v2: [5.4.3.3], v4: [5.4.3.3], sles: [5.4.3.3]}, estado: MAPEADO_TITULO_ACTUALIZADO,
+        criterio_excel: "027 o más restrictivo"}
+  143: {control: "5.5.9", patron: "shell timeout", ids: {v2: [5.4.3.2], v4: [5.4.3.2], sles: [5.4.3.2]}, estado: MAPEADO_TITULO_ACTUALIZADO,
+        criterio_excel: "900 segundos o menos"}
+  144: {control: "5.5.10", estado: RETIRADO,
+        nota: "La restricción de root a la consola (/etc/securetty) no figura en los Benchmarks vigentes (búsqueda verificada)."}

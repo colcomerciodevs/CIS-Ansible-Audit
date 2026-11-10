@@ -1,0 +1,21 @@
+# =============================================================================
+# /etc/sudoers.d/cis_audit_fs — Auditoría CIS: FILESYSTEM PROFUNDO (SOLO LECTURA) — TEMPORAL
+# =============================================================================
+# Se instala ÚNICAMENTE durante una ventana autorizada de filesystem profundo y se elimina al terminar
+# (después: visudo -c y sudo -l -U srvinnops). Independiente de /etc/sudoers.d/cis_audit (no lo modifica).
+# Una única regla: srvinnops ejecuta como root un único script, por ruta fija, digest SHA-256 y sin argumentos ("").
+# Prohibido: NOPASSWD: ALL, shells, find, bash, sh, cat o cualquier otro binario.
+#
+# PLANTILLA. Archivo final con el digest real: collectors/fs-<versión>/cis_audit_fs.sudoers
+#   (python3 src/auditar.py generar-recolector-fs). Validar siempre con: visudo -cf <archivo>
+#   Instalación y retiro: docs/Instalacion_Collectors.html.
+# =============================================================================
+
+Cmnd_Alias CIS_AUDIT_COLLECT_FS = sha256:9b3fa54edb054ea1d4ad54022257bd9fec0ccb5bc73036a477b9f38ec0f6b91c /usr/local/libexec/cis-audit/cis-audit-collect-fs ""
+
+Defaults!CIS_AUDIT_COLLECT_FS env_reset
+Defaults!CIS_AUDIT_COLLECT_FS secure_path="/usr/sbin:/usr/bin:/sbin:/bin"
+Defaults!CIS_AUDIT_COLLECT_FS !setenv
+Defaults!CIS_AUDIT_COLLECT_FS umask=0077
+
+srvinnops ALL=(root) NOPASSWD: CIS_AUDIT_COLLECT_FS

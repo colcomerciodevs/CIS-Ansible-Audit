@@ -1,0 +1,171 @@
+---
+# Recolección de evidencias CIS — SOLO LECTURA.
+#
+# - Usa exclusivamente ansible.builtin.raw: no se copia ningún archivo ni módulo al host
+#   y no se requiere Python remoto.
+# - El script recolector del benchmark del host (generado por `src/auditar.py ejecutar`, solo con
+#   los comandos que exigen las filas YES) se envía en base64 y se ejecuta con "bash -s";
+#   no se escribe en disco del host. Si el SO no tiene script, no se ejecuta nada.
+# - Elevación solo con "sudo -n" dentro de los comandos; nunca become ni contraseñas.
+# - Recolector privilegiado (opción A): solo si el precheck lo declaró CONFIABLE
+#   (cis_privilegiado=1). Se ejecuta "sudo -n <ruta fija>" SIN argumentos, tras volver a comprobar
+#   el SHA-256 inmediatamente antes. Su salida se guarda aparte (raw/privilegiado.out).
+# - Filesystem profundo: solo con --filesystem-profundo (cis_fs_profundo=1) y recolector FS CONFIABLE.
+#   "sudo -n <ruta fija FS>" SIN argumentos, tras volver a comprobar su SHA-256; salida en raw/filesystem.out.
+# - La salida se redacta en el controlador (filtro cis_redactar) antes de guardarse.
+#
+# Ejecutar únicamente vía: python3 src/auditar.py ejecutar --limit <host>
+- name: Recolección de evidencias CIS (solo lectura)
+  hosts: "{{ cis_hosts | default('all') }}"
+  gather_facts: false
+  become: false
+  serial: "{{ cis_serial | default(10) }}"
+  any_errors_fatal: false
+
+  tasks:
+    - name: Validar parámetros de ejecución  # noqa: run-once[task] (estrategia linear; validación única en el controlador)
+      ansible.builtin.assert:
+        that:
+          - cis_run_id is defined
+          - cis_run_id | regex_search('^[A-Za-z0-9_.-]+$')
+          - cis_destino is defined
+          - ansible_limit is defined
+        fail_msg: "cis_run_id, cis_destino y --limit son obligatorios (ejecutar mediante src/auditar.py ejecutar)"
+      delegate_to: localhost
+      run_once: true
+
+    - name: Crear directorio local de evidencia (controlador)
+      ansible.builtin.file:
+        path: "{{ cis_destino }}/{{ inventory_hostname }}/raw"
+        state: directory
+        mode: "0700"
+      delegate_to: localhost
+
+    - name: Identificar sistema operativo (cat /etc/os-release)
+      ansible.builtin.raw: cat /etc/os-release
+      register: cis_osr
+      changed_when: false
+      failed_when: false
+      ignore_unreachable: true
+      no_log: true
+
+    - name: Determinar benchmark del host (ID y versión mayor de /etc/os-release)
+      ansible.builtin.set_fact:
+        cis_os_id: "{{ ((cis_osr.stdout | default('')) | regex_search('(?m)^ID=\"?([a-z]+)', '\\1') or ['']) | first }}"
+        cis_os_major: "{{ ((cis_osr.stdout | default('')) | regex_search('(?m)^VERSION_ID=\"?([0-9]+)', '\\1') or ['']) | first }}"
+
+    - name: Seleccionar script recolector del benchmark
+      ansible.builtin.set_fact:
+        cis_benchmark: >-
+          {{ ({'rhel': 'RHEL', 'ol': 'ORACLE', 'sles': 'SLES'}[cis_os_id] ~ cis_os_major)
+             if cis_os_id in ['rhel', 'ol', 'sles'] else 'NO_SOPORTADO' }}
+
+    - name: Ejecutar recolector read-only del benchmark
+      ansible.builtin.raw: >-
+        printf %s {{ lookup('ansible.builtin.file', cis_scripts_dir ~ '/recolector_' ~ cis_benchmark ~ (cis_variante | default('')) ~ '.sh') | b64encode }}
+        | base64 -d | bash -s
+      register: cis_out
+      changed_when: false
+      failed_when: false
+      ignore_unreachable: true
+      no_log: true  # la salida cruda no va al log de Ansible; se guarda solo redactada
+      when:
+        - not (cis_osr.unreachable | default(false))
+        - (cis_scripts_dir ~ '/recolector_' ~ cis_benchmark ~ (cis_variante | default('')) ~ '.sh') is file
+
+    - name: Guardar salida redactada (controlador)
+      ansible.builtin.copy:
+        content: "{{ (cis_out.stdout | default('')) | cis_redactar }}"
+        dest: "{{ cis_destino }}/{{ inventory_hostname }}/raw/recolector.out"
+        mode: "0600"
+      delegate_to: localhost
+      no_log: true
+      when: cis_out.stdout is defined
+
+    - name: Ejecutar recolector privilegiado controlado (sudo -n, sin argumentos)
+      ansible.builtin.raw: >-
+        P={{ cis_priv_ruta | quote }};
+        h="$(sha256sum -- "$P" 2>&1 | cut -d' ' -f1)";
+        if [ -L "$P" ] || [ ! -f "$P" ]; then echo "@@CIS_FATAL|no_es_archivo_regular";
+        elif [ "$h" = {{ cis_priv_sha | quote }} ]; then sudo -n "$P"; else echo "@@CIS_FATAL|digest_no_coincide|$h"; fi
+      register: cis_priv
+      changed_when: false
+      failed_when: false
+      ignore_unreachable: true
+      no_log: true
+      when:
+        - (cis_privilegiado | default('0')) == '1'
+        - cis_priv_ruta is defined
+        - cis_priv_sha is defined
+        - cis_priv_sha | regex_search('^[0-9a-f]{64}$')
+        - not (cis_osr.unreachable | default(false))
+
+    - name: Guardar salida redactada del recolector privilegiado (controlador)
+      ansible.builtin.copy:
+        # Fail-closed: si el recolector termina con rc distinto de 0 o emite @@CIS_FATAL (p. ej.
+        # redaccion_fallida), NO se almacena su evidencia: solo las marcas @@CIS_FATAL.
+        content: "{{ ((cis_priv.stdout | default('')) | cis_redactar)
+                     if ((cis_priv.rc | default(1)) == 0 and '@@CIS_FATAL|' not in (cis_priv.stdout | default('')))
+                     else ((cis_priv.stdout_lines | default([]) | select('match', '^@@CIS_FATAL[|]') | list | join('\n'))
+                           or ('@@CIS_FATAL|recoleccion_privilegiada_rc=' ~ (cis_priv.rc | default('n/d')))) }}"
+        dest: "{{ cis_destino }}/{{ inventory_hostname }}/raw/privilegiado.out"
+        mode: "0600"
+      delegate_to: localhost
+      no_log: true
+      when: cis_priv.stdout is defined
+
+    - name: Guardar estado del recolector privilegiado (controlador)
+      ansible.builtin.copy:
+        content: "{{ {'host': inventory_hostname, 'rc': cis_priv.rc | default(None),
+                      'inalcanzable': cis_priv.unreachable | default(false),
+                      'stderr': (cis_priv.stderr | default('')) | cis_redactar} | to_nice_json }}"
+        dest: "{{ cis_destino }}/{{ inventory_hostname }}/raw/privilegiado_estado.json"
+        mode: "0600"
+      delegate_to: localhost
+      no_log: true
+      when: cis_priv.stdout is defined
+
+    - name: Ejecutar recolector de filesystem profundo (solo --filesystem-profundo; sudo -n, sin argumentos)
+      ansible.builtin.raw: >-
+        F={{ cis_fs_ruta | quote }};
+        h="$(sha256sum -- "$F" 2>&1 | cut -d' ' -f1)";
+        if [ -L "$F" ] || [ ! -f "$F" ]; then echo "@@CIS_FATAL|no_es_archivo_regular";
+        elif [ "$h" = {{ cis_fs_sha | quote }} ]; then sudo -n "$F"; else echo "@@CIS_FATAL|digest_no_coincide|$h"; fi
+      register: cis_fs
+      changed_when: false
+      failed_when: false
+      ignore_unreachable: true
+      no_log: true
+      when:
+        - (cis_fs_profundo | default('0')) == '1'
+        - cis_fs_ruta is defined
+        - cis_fs_sha is defined
+        - cis_fs_sha | regex_search('^[0-9a-f]{64}$')
+        - not (cis_osr.unreachable | default(false))
+
+    - name: Guardar salida redactada del recolector FS (controlador)
+      ansible.builtin.copy:
+        # Fail-closed: rc distinto de 0 o @@CIS_FATAL -> solo se guardan las marcas @@CIS_FATAL.
+        content: "{{ ((cis_fs.stdout | default('')) | cis_redactar)
+                     if ((cis_fs.rc | default(1)) == 0 and '@@CIS_FATAL|' not in (cis_fs.stdout | default('')))
+                     else ((cis_fs.stdout_lines | default([]) | select('match', '^@@CIS_FATAL[|]') | list | join('\n'))
+                           or ('@@CIS_FATAL|recoleccion_fs_rc=' ~ (cis_fs.rc | default('n/d')))) }}"
+        dest: "{{ cis_destino }}/{{ inventory_hostname }}/raw/filesystem.out"
+        mode: "0600"
+      delegate_to: localhost
+      no_log: true
+      when: cis_fs.stdout is defined
+
+    - name: Guardar estado de la recolección (controlador)
+      ansible.builtin.copy:
+        content: "{{ {'host': inventory_hostname,
+                      'grupo_inventario': group_names,
+                      'inalcanzable': cis_osr.unreachable | default(false),
+                      'mensaje': ((cis_osr.msg | default('')) ~ ' ' ~ (cis_out.msg | default(''))) | cis_redactar,
+                      'benchmark_detectado': cis_benchmark | default('NO_SOPORTADO'),
+                      'rc': cis_out.rc | default(None),
+                      'stderr': (cis_out.stderr | default('')) | cis_redactar} | to_nice_json }}"
+        dest: "{{ cis_destino }}/{{ inventory_hostname }}/raw/estado.json"
+        mode: "0600"
+      delegate_to: localhost
+      no_log: true

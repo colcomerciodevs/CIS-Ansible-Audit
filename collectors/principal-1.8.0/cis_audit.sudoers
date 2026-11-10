@@ -1,0 +1,40 @@
+# =============================================================================
+# /etc/sudoers.d/cis_audit — Auditoría CIS de hardening (SOLO LECTURA)
+# =============================================================================
+# CIS Linux Audit — recolector principal. Una única regla, que autoriza a srvinnops a ejecutar
+# como root un único script de recolección:
+#   - con ruta fija;
+#   - fijado por digest SHA-256 (si el archivo cambia, sudo deja de autorizarlo);
+#   - SIN argumentos: "" hace que sudo rechace cualquier argumento.
+#
+# PLANTILLA. El proyecto NO instala este archivo ni modifica sudoers.
+#   - Archivo final con el digest real: collectors/principal-<versión>/cis_audit.sudoers
+#     (python3 src/auditar.py generar-recolector-privilegiado).
+#   - Instalación por Infraestructura, mediante cambio controlado:
+#     docs/Instalacion_Collectors.html.
+#   - Validar siempre con: visudo -cf <archivo>
+#
+# Prohibido añadir a la cuenta de auditoría:
+#   - NOPASSWD: ALL, ALL=(ALL);
+#   - shells: bash, sh, su, "sudo -i", "sudo -s";
+#   - find, awk, sed, python, perl;
+#   - env, xargs, nice, timeout;
+#   - cat, grep, less, vi con rutas libres;
+#   - auditctl o grubby con argumentos libres;
+#   - systemctl, journalctl;
+#   - cualquier regla con comodín '*'.
+#
+# NOEXEC no es aplicable: el script necesita ejecutar sus comandos de consulta.
+# =============================================================================
+
+Cmnd_Alias CIS_AUDIT_COLLECT = sha256:f4d5a4a7166e52e906329b7e374db6877e3599182ebe299c58648715d01cf257 /usr/local/libexec/cis-audit/cis-audit-collect ""
+
+Defaults!CIS_AUDIT_COLLECT env_reset
+Defaults!CIS_AUDIT_COLLECT secure_path="/usr/sbin:/usr/bin:/sbin:/bin"
+Defaults!CIS_AUDIT_COLLECT !setenv
+Defaults!CIS_AUDIT_COLLECT umask=0077
+
+srvinnops ALL=(root) NOPASSWD: CIS_AUDIT_COLLECT
+
+# Auditoría de filesystem profundo (7.1.11, 7.1.12, 7.1.13, 6.3.3.6 y dotfiles completos):
+# NO incluida en este script. La cubre el recolector temporal cis-audit-collect-fs (/etc/sudoers.d/cis_audit_fs).

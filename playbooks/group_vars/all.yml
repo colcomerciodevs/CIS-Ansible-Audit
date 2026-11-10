@@ -1,0 +1,9 @@
+---
+# Variables de la recolección CIS. Las rutas son del CONTROLADOR (nunca del host auditado).
+# src/auditar.py ejecutar pasa siempre cis_destino y cis_scripts_dir de la ejecución (results/<RUN_ID>/).
+cis_root: "{{ playbook_dir }}/.."
+cis_scripts_dir: "{{ cis_root }}/build/scripts"
+# Hosts en paralelo por lote.
+cis_serial: 10
+# Nunca usar become de Ansible: la elevación es "sudo -n" explícito en cada comando.
+ansible_become: false
